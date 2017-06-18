@@ -1,6 +1,6 @@
 {
   "name": "zeronet",
-  "version": "0.0.1-alpha0",
+  "version": "0.0.1-alpha1",
   "description": "ZeroNet JS",
   "main": "index.js",
   "directories": {
@@ -19,5 +19,13 @@
     "p2p"
   ],
   "author": "Maciej Krüger <mkg20001@gmail.com>",
-  "license": "GPL-3.0"
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkg20001/zeronet-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mkg20001/zeronet-js/issues"
+  },
+  "homepage": "https://github.com/mkg20001/zeronet-js#readme"
 }
