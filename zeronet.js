@@ -21,4 +21,5 @@ const c = new Client({
     key: read("./key.pem")
   }
 }, zeronet)
-c.getFile("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D", "content.json", 1, console.log)
+//
+c.handshake(() => c.getFile("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D", "content.json", 1, console.log))
