@@ -17,7 +17,7 @@
     "mocha": "^3.4.2"
   },
   "scripts": {
-    "test": "set -o pipefail && mocha | bunyan -l 0"
+    "test": "bash -c 'set -o pipefail && mocha | bunyan -l 0'"
   },
   "keywords": [
     "zeronet",
