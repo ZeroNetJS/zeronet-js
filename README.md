@@ -26,6 +26,9 @@ It is not planned to support protocol version v1. Only v2+ will be supported.
 
 # Running
 
-Just run `zeronet.js` and it should connect to localhost:15411
-and get the content.json of HelloZeroNet
-and also start a server
+Just run `zeronet.js` and it should:
+
+-   Launch a server on 0.0.0.0:15542
+-   Connect to it
+
+To connect to your locally running client just change the port in the `new Client` line to 15441
