@@ -5,13 +5,18 @@ What works:
  Well, nothing at the moment
 
 WIP:
- - The protocol
+ - ZeroNet Protocol
+ - TLS
+ - Basic Protocol functions
+ - Server
 
 ToDo:
  - Everything else
 
 # Running
-Just run `client.js` and it should connect to localhost:15411 and get the content.json of HelloZeroNet (that's all it does for now)
+Just run `zeronet.js` and it should connect to localhost:15411
+and get the content.json of HelloZeroNet
+and also start a server
 
 # Certificate
 That will be useful later
