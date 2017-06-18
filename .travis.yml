@@ -1,5 +1,12 @@
 language: node_js
 node_js:
-  - "8"
-  - "6"
+- '8'
+- '6'
 dist: trusty
+deploy:
+  provider: releases
+  api_key:
+    secure: DvHYEbD0wJWlg12gHHyqYIss5HcijjXel0fas3PX8p1+DjWFAGcn7M6/N7Lo177FF284kbOHzsy+tI2mCeK0CsNvtYpGhebeivVuWqKhAXpqv4PXUp+HbRYxHy9IsHUUbxgwmlQDx0+txytflvvuHbOVGA/pRFdLVv9VJi2cgNf6xGZIihZ8hAKRRjVAaa1czmTQBjhcG+W97T06CaTo+VBUWa98jldD3UAfZq0q52iU16Oq+bL8avC0gh5eYZ4NOBSvXC1VGuSP9VJ5aOOrDc1GYagQvjPg1bI6FR1n4zeL5gsKXhU3JUxorMxpB8ARvw17kW1gfavOjcvbB0FtfnDcs67KAIyzAEDuw7pC/0Bn8vEP2gTOnYt8uqs9s1lUYpDZpxgvTNQ0PzjbuzolQA03Kr0fheUxZBB8mFwacc1UTXw9fmOhbVXjlikQge+eTejRalgn+RZrKVj3NL8428Lmeb5vQOm07DglF5Ej7siNwGIEySAqYYUHAyYyTXIrWfjuXqmeaTFyNCKbyo06vS02lVwz6GVypsJOztOHsBpKjyxLm8zM0gpWeTcJXokKnbs3Q9wqCzprIPT/PT6gPvxeARi4z7Iv7TAAOGmdi9IoEjQ4Wy9S3W3/pdIAAGrBKTl+atkTSykIIju+ei3ZmB7BG7aMb4QHOcxa6YGoMnA=
+  file: zeronet-*
+  on:
+    repo: mkg20001/zeronet-js
