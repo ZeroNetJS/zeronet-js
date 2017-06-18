@@ -7,6 +7,7 @@
     "lib": "lib"
   },
   "dependencies": {
+    "bunyan": "^1.8.10",
     "msgpack": "^1.0.2",
     "uuid": "^3.1.0"
   },
