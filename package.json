@@ -8,12 +8,16 @@
   },
   "dependencies": {
     "bunyan": "^1.8.10",
+    "clone": "^2.1.1",
     "msgpack": "^1.0.2",
     "uuid": "^3.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "app-module-path": "^2.2.0",
+    "mocha": "^3.4.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "keywords": [
     "zeronet",
