@@ -21,4 +21,4 @@ const c = new Client({
     port: 15543
   }
 }, zeronet)
-c.handshake(() => c.getFile("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D", "content.json", 1, console.log))
+c.handshake(() => c.getFile("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D", "content.json", 1, () => console.log("TLS\nFINALLY\nWORKS")))
