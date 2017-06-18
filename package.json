@@ -1,10 +1,11 @@
 {
   "name": "zeronet",
-  "version": "0.0.1-alpha2",
+  "version": "0.0.1-alpha3",
   "description": "ZeroNet JS",
   "main": "index.js",
   "directories": {
-    "lib": "lib"
+    "lib": "lib",
+    "test": "test"
   },
   "dependencies": {
     "bunyan": "^1.8.10",
@@ -14,16 +15,24 @@
   },
   "devDependencies": {
     "app-module-path": "^2.2.0",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "pkg": "^4.1.0"
   },
   "scripts": {
-    "test": "bash -c 'set -o pipefail && mocha | bunyan -l 0'"
+    "test": "bash -c 'set -o pipefail && mocha | bunyan -l 0'",
+    "pkg": "pkg -t node8-linux-x64,node8-macos-x64,node8-win-x64 ."
   },
   "keywords": [
     "zeronet",
     "js",
     "p2p"
   ],
+  "bin": {
+    "zeronet": "zeronet.js"
+  },
+  "pkg": {
+    "scripts": "lib/**/*.js"
+  },
   "author": "Maciej Krüger <mkg20001@gmail.com>",
   "license": "GPL-3.0",
   "repository": {

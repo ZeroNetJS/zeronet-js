@@ -14,7 +14,7 @@ Stuff that might work:
 WIP:
 
 -   ZeroNet Protocol
--   TLS
+-   TLS (client => server OK, server => client TIMEOUT)
 
 ToDo:
 
