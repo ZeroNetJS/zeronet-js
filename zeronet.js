@@ -17,7 +17,7 @@ const zeronet = new ZeroNet({
 
 const c = new Client({
   target: {
-    host: "localhost",
+    host: "172.17.0.1",
     port: 15543
   }
 }, zeronet)
