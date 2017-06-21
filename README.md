@@ -1,6 +1,14 @@
 # ZeroNet JS
 
-A JS version of ZeroNet
+A JS version of ZeroNet, using libp2p
+
+# About
+
+This project was mainly created to see how the zeronet protocol can be improved and to provide better programmaticall usage of zeronet.
+
+But it will also be compatible with zeronet-py (and will have an uiserver).
+
+---
 
 What works:
 
@@ -20,7 +28,7 @@ ToDo:
 
 -   Everything else
 
-# Notes
+## Notes
 
 It is not planned to support protocol version v1. Only v2+ will be supported.
 
