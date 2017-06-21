@@ -14,15 +14,16 @@ const multiaddr = require('multiaddr')
 const Client = require(__dirname + "/lib/client")
 const zdial = require(__dirname + "/lib/dial")
 const each = require('async/each')
+const clone = require("clone")
 
 class Node extends libp2p {
   constructor(options, cb) {
     options = options || {}
 
     const peerInfo = new PeerInfo(options.id)
-    const zeronet = new ZeroNet({
-      tls: "disabled"
-    })
+    const zOPT = clone(options)
+    delete zOPT.server
+    const zeronet = new ZeroNet(zOPT)
 
     const log = zeronet.logger("p2p")
 
