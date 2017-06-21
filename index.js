@@ -16,14 +16,17 @@ const multiaddr = require('multiaddr')
 const Client = require(__dirname + "/lib/client")
 const zdial = require(__dirname + "/lib/dial")
 const each = require('async/each')
-const getRaw = require("pull-stream-to-stream")
 
 class Node extends libp2p {
   constructor(options, cb) {
     options = options || {}
 
     const peerInfo = new PeerInfo(options.id)
-    const zeronet = new ZeroNet({})
+    const zeronet = new ZeroNet({
+      tls: "disabled"
+    })
+
+    const log = zeronet.logger("p2p")
 
     if (options.server)
       peerInfo.multiaddrs.add(multiaddr("/ip4/" + options.server.host + "/tcp/" + options.server.port))
@@ -66,17 +69,16 @@ class Node extends libp2p {
     super(modules, peerInfo, /*peerBook*/ null, options)
 
     function incomingHandler(conn) {
-      const stream = getRaw(conn)
-      conn.zero = new Client({
-        stream: stream
-      }, zeronet)
+      Client.upgradeConn(conn, zeronet, err => {
+        if (err) log.error(err, "Connection error")
+      })
     }
 
     const self = this
     self.zeronet = zeronet
 
     /* if it's hacky and you know it clap your hands. *clap* */
-    self.swarm.dial = zdial(self.swarm)
+    self.swarm.dial = zdial(self.swarm, zeronet)
     self.dial = self.swarm.dial
 
     self.swarm.listen = cb => {
