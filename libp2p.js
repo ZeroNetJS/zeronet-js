@@ -13,8 +13,6 @@ PeerId.create((e, id) => {
     if (err) throw err
     node.dial(node.peerInfo, "/zeronet/v2", console.log)
 
-    console.log(node.transports)
-
     const c = new Client({
       target: {
         host: "localhost",
