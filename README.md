@@ -8,7 +8,7 @@ This project was mainly created to see how the zeronet protocol can be improved 
 
 But it will also be compatible with zeronet-py (and will have an uiserver).
 
----
+* * *
 
 What works:
 
@@ -32,11 +32,11 @@ ToDo:
 
 It is not planned to support protocol version v1. Only v2+ will be supported.
 
+Also for now all connections are **unencrypted**. So don't use this in production until beta.
+
 # Running
 
-Just run `zeronet.js` and it should:
+Just run `npm start` and it should:
 
 -   Launch a server on 0.0.0.0:15542
--   Connect to it
-
-To connect to your locally running client just change the port in the `new Client` line to 15441
+-   Make itself visible in the mdns

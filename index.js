@@ -2,9 +2,7 @@
 
 const libp2p = require('libp2p')
 const TCP = require('libp2p-tcp')
-//const WS = require('libp2p-websockets')
-//const spdy = require('libp2p-spdy')
-//const secio = require('libp2p-secio')
+//const WS = require(libp2p-websockets)
 const MulticastDNS = require('libp2p-mdns')
 const DHT = require('libp2p-kad-dht')
 
@@ -51,16 +49,9 @@ class Node extends libp2p {
         new TCP(),
         //new WS()
       ],
-      connection: {
-        /*muxer: [
-          spdy
-        ],
-        crypto: [
-          secio
-        ]*/
-      },
+      connection: {},
       discovery: [
-        new MulticastDNS(peerInfo, 'zeronet')
+        new MulticastDNS(peerInfo, 'zeronet') //allows us to find network-local nodes easier
       ],
       // DHT is passed as its own enabling PeerRouting, ContentRouting and DHT itself components
       dht: DHT
@@ -69,6 +60,9 @@ class Node extends libp2p {
     super(modules, peerInfo, /*peerBook*/ null, options)
 
     function incomingHandler(conn) {
+      conn.zinfo = {
+        isServer: true
+      }
       Client.upgradeConn(conn, zeronet, err => {
         if (err) log.error(err, "Connection error")
       })
