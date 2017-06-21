@@ -4,6 +4,13 @@ const MergeRecursive = require("merge-recursive")
 const ZeroNet = require(__dirname + "/")
 const fs = require("fs")
 const path = require("path")
+const cp = require("child_process")
+
+const bunyan = cp.spawn(process.argv[0], [__dirname + "/node_modules/.bin/bunyan"], {
+  stdio: ["pipe", process.stderr, process.stderr]
+})
+delete process.stdout
+process.stdout = bunyan.stdin
 
 const defaults = {
   tls: "disabled",
