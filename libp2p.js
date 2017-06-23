@@ -11,13 +11,15 @@ PeerId.create((e, id) => {
     }
   }, err => {
     if (err) throw err
-    
+
     const c = new Client({
       target: {
         host: "localhost",
         port: 15443
       }
     }, node.zeronet)
-    c.getFile("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D", "content.json", 1, console.log)
+    c.handshake(() => {
+      c.getFile("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D", "content.json", 1, console.log)
+    })
   })
 })
