@@ -30,4 +30,4 @@ done
 
 git commit -m "Bump version to $newver"
 
-git tag $newver
+git tag v$newver
