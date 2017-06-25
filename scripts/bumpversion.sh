@@ -22,6 +22,11 @@ for dir in $files; do
   cd $dir
     for f in package.json package-lock.json; do
       sed -r 's|^(  "version" *: *").*"|\1'$newver'"|' -i $f
+      git add $f
     done
   cd ..
 done
+
+git commit -m "Bump version to $ver"
+
+git tag $ver
