@@ -1,6 +1,6 @@
 {
   "name": "zeronet-zite",
-  "version": "0.0.1-alpha7",
+  "version": "0.0.1-alpha8",
   "description": "ZeroNet Zite Class",
   "main": "index.js",
   "scripts": {
