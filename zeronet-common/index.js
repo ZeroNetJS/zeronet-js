@@ -1,7 +1,7 @@
 "use strict"
 
 const path = require("path")
-const Server = require(path.join(__dirname, "/../lib/server"))
+const Server = require("zeronet-fileserver")
 const UiServer = require("zeronet-uiserver")
 const uuid = require("uuid").v4
 const tls = require("tls")

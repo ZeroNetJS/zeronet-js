@@ -1,5 +1,6 @@
 "use strict"
-const Tracker = require("bittorent-tracker")
+
+const Tracker = require("bittorrent-tracker")
 const crypto = require("crypto")
 const sha1 = text => crypto.createHash('sha1').update(text).digest('hex')
 module.exports = function ZeroNetTracker(zite, zeronet) {

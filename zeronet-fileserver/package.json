@@ -1,14 +1,14 @@
 {
-  "name": "zeronet-common",
+  "name": "zeronet-fileserver",
   "version": "0.0.1-alpha8",
-  "description": "Common ZeroNet modules",
+  "description": "ZeroNet fileserver",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "zeronet",
-    "common"
+    "fileserver"
   ],
   "author": "Maciej Krüger <mkg20001@gmail.com>",
   "license": "GPL-3.0",
@@ -20,9 +20,5 @@
     "url": "https://github.com/mkg20001/zeronet-js/issues"
   },
   "homepage": "https://github.com/mkg20001/zeronet-js#readme",
-  "dependencies": {
-    "bittorrent-tracker": "^9.2.3",
-    "bunyan": "^1.8.10",
-    "uuid": "^3.1.0"
-  }
+  "dependencies": {}
 }

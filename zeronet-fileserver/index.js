@@ -1,6 +1,5 @@
 "use strict"
 
-const path = require("path")
 const Client = require("zeronet-client")
 const net = require("net")
 

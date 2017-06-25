@@ -95,7 +95,7 @@ function OpenSSLGenerator() {
   }
 
   const tmpfile = "/tmp/__zn_cert_tmp_" + process.pid + Math.random()
-  const certdefault = "-new -key $TMP -batch -nodes -config".replace("$TMP", tmpfile).split(" ").concat([path.join(__dirname, "..", "..", "cert.conf")])
+  const certdefault = "-new -key $TMP -batch -nodes -config".replace("$TMP", tmpfile).split(" ").concat([path.join(__dirname, "cert.conf")])
 
   function gen(opt, cb) {
     run(["gen" + opt.keytype, opt.keylength], (err, _privkey) => {
