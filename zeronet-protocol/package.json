@@ -1,6 +1,6 @@
 {
   "name": "zeronet-protocol",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha6",
   "description": "ZeroNet protocol",
   "main": "index.js",
   "scripts": {

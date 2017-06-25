@@ -10,7 +10,6 @@ for file in $(dir -w 1 | grep "^zeronet-"); do
   if [ -d $file ]; then
     files="$files $file"
   fi
-  npm i
 done
 
 files="$files . "
@@ -22,7 +21,7 @@ newver="$1"
 for dir in $files; do
   cd $dir
     for f in package.json package-lock.json; do
-      sed -r 's|("version" *: *").*"|\1'$newver'"|' -i $f
+      sed -r 's|^(  "version" *: *").*"|\1'$newver'"|' -i $f
     done
   cd ..
 done

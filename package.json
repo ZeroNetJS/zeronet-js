@@ -1,6 +1,6 @@
 {
   "name": "zeronet",
-  "version": "0.0.1-alpha5",
+  "version": "0.0.1-alpha6",
   "description": "ZeroNet JS",
   "main": "index.js",
   "directories": {
