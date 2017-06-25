@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "merge-recursive": "0.0.3",
+    "zeronet-common": "file:zeronet-common",
     "zeronet-crypto": "file:zeronet-crypto",
     "zeronet-protocol": "file:zeronet-protocol",
     "zeronet-uiserver": "file:zeronet-uiserver",
