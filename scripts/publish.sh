@@ -34,3 +34,5 @@ for dir in $files; do
     npm publish
   cd ..
 done
+
+sed -r 's|"(zeronet-[a-z-]+)": ".*"|"\1": "file:\1"|g' -i package.json
