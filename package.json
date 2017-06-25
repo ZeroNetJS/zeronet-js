@@ -12,6 +12,7 @@
     "zeronet-common": "file:zeronet-common",
     "zeronet-crypto": "file:zeronet-crypto",
     "zeronet-protocol": "file:zeronet-protocol",
+    "zeronet-swarm": "file:zeronet-swarm",
     "zeronet-uiserver": "file:zeronet-uiserver",
     "zeronet-zite": "file:zeronet-zite"
   },
