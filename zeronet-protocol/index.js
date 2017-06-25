@@ -3,13 +3,12 @@
 const msgpack = require("msgpack")
 const clone = require("clone")
 
-const crypto = require(__dirname + "/crypto")
-const tls = require(__dirname + "/tls")
+const crypto = require("zeronet-crypto/protocol")
+const tls = require("zeronet-crypto/tls")
 const handshake = require(__dirname + "/handshake")
 
-const path = require("path")
-const msgpackstream = require(path.join(__dirname, "/../msgpack-stream"))
-const validate = require(path.join(__dirname, "/../verify")).verifyProtocol
+const msgpackstream = require(__dirname + "/msgpack-stream")
+const validate = require("zeronet-common/verify").verifyProtocol
 
 module.exports = function Protocol(stream, config, zeronet) {
   //Turns a stream into a zeronet protocol client

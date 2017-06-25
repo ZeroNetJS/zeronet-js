@@ -6,13 +6,13 @@ const TCP = require('libp2p-tcp')
 const MulticastDNS = require('libp2p-mdns')
 const DHT = require('libp2p-kad-dht')
 
-const ZeroNet = require(__dirname + "/lib/zeronet") //shared class, used for storage and worker management
+const ZeroNet = require("zeronet-common") //shared class, used for storage and worker management
 
 const PeerInfo = require('peer-info')
 const multiaddr = require('multiaddr')
 
-const Client = require(__dirname + "/lib/client")
-const zdial = require(__dirname + "/lib/dial")
+const Client = require(__dirname + "/../lib/client")
+const zdial = require(__dirname + "/../lib/dial")
 const each = require('async/each')
 const clone = require("clone")
 
@@ -87,6 +87,6 @@ class Node extends libp2p {
   }
 }
 
-Node.zeronet = require(__dirname + "/lib/zeronet")
+Node.zeronet = require("zeronet-common")
 
 module.exports = Node

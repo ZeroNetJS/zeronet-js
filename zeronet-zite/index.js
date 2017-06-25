@@ -1,7 +1,7 @@
 "use strict"
 
-const verify = require(__dirname + "/../verify")
-const Nonces = require(__dirname + "/../nonce")
+const verify = require("zeronet-common/verify")
+const Nonces = require("zeronet-common/nonce")
 
 module.exports = function Zite(config, zeronet) { //describes a single zite
   const self = this

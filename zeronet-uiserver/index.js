@@ -1,8 +1,8 @@
 "use strict"
 
 const express = require("express")
-const verify = require(__dirname + "/../verify")
-const Zite = require(__dirname + "/../zite")
+const verify = require("zeronet-common/verify")
+const Zite = require("zeronet-zite")
 
 function URLParser(url) {
   let s = url.split("/")

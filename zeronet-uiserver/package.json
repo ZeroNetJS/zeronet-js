@@ -1,0 +1,28 @@
+{
+  "name": "zeronet-uiserver",
+  "version": "0.0.1",
+  "description": "ZeroNet ui and uiserver",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "zeronet",
+    "uiserver",
+    "ui",
+    "coffescript"
+  ],
+  "author": "Maciej Krüger <mkg20001@gmail.com>",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkg20001/zeronet-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mkg20001/zeronet-js/issues"
+  },
+  "homepage": "https://github.com/mkg20001/zeronet-js#readme",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}

@@ -1,7 +1,7 @@
 "use strict"
 
 const MergeRecursive = require("merge-recursive")
-const ZeroNet = require(__dirname + "/")
+const ZeroNet = require("zeronet-swarm")
 const fs = require("fs")
 const path = require("path")
 const cp = require("child_process")

@@ -2,7 +2,7 @@
 
 const path = require("path")
 const Server = require(path.join(__dirname, "/../server"))
-const UiServer = require(path.join(__dirname, "/../uiserver"))
+const UiServer = require("zeronet-uiserver")
 const uuid = require("uuid").v4
 const tls = require("tls")
 const logger = require(path.join(__dirname, "/../logger"))

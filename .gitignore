@@ -1,7 +1,9 @@
 *.pem
 node_modules
 NOTES.*
-zeronet-*
+zeronet-linux*
+zeronet-macos*
+zeronet-win*
 *.bak
 config.json
 *.log
