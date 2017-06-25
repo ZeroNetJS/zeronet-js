@@ -6,7 +6,7 @@ const fs = require("fs")
 const path = require("path")
 const cp = require("child_process")
 
-const bunyan = cp.spawn(process.argv[0], [__dirname + "/node_modules/.bin/bunyan"], {
+const bunyan = cp.spawn(process.argv[0], [__dirname + "/zeronet-common/node_modules/.bin/bunyan"], {
   stdio: ["pipe", process.stderr, process.stderr]
 })
 delete process.stdout
@@ -44,7 +44,7 @@ if (fs.existsSync(confpath)) {
   config = MergeRecursive(config_data, defaults)
 } else config = defaults
 
-require("peer-id").create((err, id) => {
+require("zeronet-crypto/node_modules/peer-id").create((err, id) => {
   config.id = id
   new ZeroNet(config, errCB)
 })

@@ -3,7 +3,7 @@
 const Connection = require('interface-connection').Connection
 const debug = require('debug')
 const log = debug('zeronet:dial')
-const ZClient = require(__dirname + "/../client")
+const ZClient = require("zeronet-client")
 
 module.exports = function dial(swarm, zeronet) {
   return (pi, protocol, callback) => {

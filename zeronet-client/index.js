@@ -2,7 +2,7 @@
 
 const path = require("path")
 const protocol = require("zeronet-protocol")
-const connection = require(path.join(__dirname, "/../connection"))
+const connection = require(path.join(__dirname, "/connection"))
 const getRaw = require("pull-stream-to-stream")
 
 function Client(options, zeronet) { //zeronet client

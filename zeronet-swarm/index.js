@@ -11,8 +11,8 @@ const ZeroNet = require("zeronet-common") //shared class, used for storage and w
 const PeerInfo = require('peer-info')
 const multiaddr = require('multiaddr')
 
-const Client = require(__dirname + "/../lib/client")
-const zdial = require(__dirname + "/../lib/dial")
+const Client = require("zeronet-client")
+const zdial = require(__dirname + "/dial")
 const each = require('async/each')
 const clone = require("clone")
 
