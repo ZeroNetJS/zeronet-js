@@ -7,3 +7,4 @@ zeronet-win*
 *.bak
 config.json
 *.log
+.pkg

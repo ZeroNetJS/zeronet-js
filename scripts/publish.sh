@@ -16,7 +16,7 @@ done
 
 files="$files . "
 
-ver=$(echo $(cat package.json | grep "version" | sed "s|\"||g" | sed "s|  ||g" | grep " .*" -o))
+ver=$(echo $(cat package.json | grep "version" | sed "s|\"||g" | sed "s|  ||g" | grep " .*" -o) | sed "s|,||g")
 
 echo "Publishing $files @ $ver"
 
