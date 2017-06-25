@@ -5,6 +5,7 @@
 set -e
 
 files=""
+op="$PWD"
 
 for file in $(dir -w 1 | grep "^zeronet-"); do
   if [ -d $file ]; then
@@ -24,9 +25,9 @@ for dir in $files; do
       sed -r 's|^(  "version" *: *").*"|\1'$newver'"|' -i $f
       git add $f
     done
-  cd ..
+  cd $op
 done
 
-git commit -m "Bump version to $ver"
+git commit -m "Bump version to $newver"
 
-git tag $ver
+git tag $newver
