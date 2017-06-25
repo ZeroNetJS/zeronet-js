@@ -2,7 +2,7 @@
 
 const path = require("path")
 
-const msgpackstream = require(path.join(__dirname, "/../msgpack-stream"))
+const msgpackstream = require("zeronet-protocol/msgpack-stream")
 
 function Crypto(opt) {
   const self = this

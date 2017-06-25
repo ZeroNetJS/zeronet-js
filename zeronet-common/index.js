@@ -1,11 +1,11 @@
 "use strict"
 
 const path = require("path")
-const Server = require(path.join(__dirname, "/../server"))
+const Server = require(path.join(__dirname, "/../lib/server"))
 const UiServer = require("zeronet-uiserver")
 const uuid = require("uuid").v4
 const tls = require("tls")
-const logger = require(path.join(__dirname, "/../logger"))
+const logger = require(__dirname+"/logger")
 const fs = require("fs")
 
 module.exports = function ZeroNet(config) {
