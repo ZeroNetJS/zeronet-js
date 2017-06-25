@@ -18,6 +18,12 @@ const defaults = {
     host: "0.0.0.0",
     port: 15543
   },
+  uiserver: {
+    listen: {
+      host: "127.0.0.1",
+      port: 15544
+    }
+  },
   debug_file: path.resolve(process.cwd(""), "debug.log"),
   debug_shift_file: path.resolve(process.cwd(""), "debug-last.log")
 }
