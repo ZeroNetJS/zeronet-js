@@ -1,6 +1,6 @@
 {
   "name": "zeronet-uiserver",
-  "version": "0.0.1-alpha8",
+  "version": "0.0.1-alpha9",
   "description": "ZeroNet ui and uiserver",
   "main": "index.js",
   "scripts": {
