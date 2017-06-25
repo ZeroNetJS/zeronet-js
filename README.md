@@ -22,17 +22,19 @@ Stuff that might work:
 WIP:
 
 -   ZeroNet Protocol
--   TLS (client => server OK, server => client TIMEOUT)
+-   UIServer
+-   libp2p-secio crypto
 
 ToDo:
 
 -   Everything else
+-   TLS (client => server OK, server => client TIMEOUT)
 
 ## Notes
 
 It is not planned to support protocol version v1. Only v2+ will be supported.
 
-Also for now all connections are **unencrypted**. So don't use this in production until beta.
+Also for now all connections are **unencrypted**. So don't use this in production until beta or until we get tls running.
 
 # Running
 

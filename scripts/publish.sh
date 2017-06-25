@@ -4,6 +4,8 @@
 
 set -e
 
+op="$PWD"
+
 files=""
 
 for file in $(dir -w 1 | grep "^zeronet-"); do
@@ -35,4 +37,5 @@ for dir in $files; do
   cd ..
 done
 
+cd $op
 sed -r 's|"(zeronet-[a-z-]+)": ".*"|"\1": "file:\1"|g' -i package.json
