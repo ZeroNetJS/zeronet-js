@@ -67,6 +67,7 @@ Client.upgradeConn = (conn, zeronet, cb) => {
     stream.remoteFamily = addrs[0].toString().split("/")[1].replace("ip", "IPv")
     stream.remoteAddress = addrs[0].toString().split("/")[2]
     stream.remotePort = parseInt(addrs[0].toString().split("/")[4], 10)
+    stream.conn = conn
     conn.zero = new Client({
       stream: stream,
       isServer: conn.zinfo.isServer

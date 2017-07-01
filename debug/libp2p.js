@@ -1,6 +1,6 @@
-const ZeroNetNode = require(__dirname)
+const ZeroNetNode = require("zeronet-swarm")
 const PeerId = require("peer-id")
-const Client = require("./lib/client/index.js")
+const Client = require("zeronet-client")
 
 PeerId.create((e, id) => {
   const node = new ZeroNetNode({
@@ -8,11 +8,18 @@ PeerId.create((e, id) => {
     server: {
       host: "0.0.0.0",
       port: 15443
-    }
+    },
+    tls: "disabled"
   }, err => {
     if (err) throw err
 
-    const c = new Client({
+    node.dial(node.peerInfo,(e,c) => {
+      c.handshake(() => {
+        c.getFile("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D", "content.json", 1, console.log)
+      })
+    })
+
+    /*const c = new Client({
       target: {
         host: "localhost",
         port: 15443
@@ -20,6 +27,6 @@ PeerId.create((e, id) => {
     }, node.zeronet)
     c.handshake(() => {
       c.getFile("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D", "content.json", 1, console.log)
-    })
+    })*/
   })
 })

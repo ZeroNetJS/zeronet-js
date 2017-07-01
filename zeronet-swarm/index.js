@@ -71,6 +71,7 @@ class Node extends libp2p {
 
     const self = this
     self.zeronet = zeronet
+    self.peerInfo = peerInfo
 
     /* if it's hacky and you know it clap your hands. *clap* */
     self.swarm.dial = zdial(self.swarm, zeronet)
