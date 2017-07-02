@@ -3,9 +3,8 @@
 const Connection = require('interface-connection').Connection
 const debug = require('debug')
 const log = debug('zeronet:dial')
-const ZClient = require("zeronet-client")
 
-module.exports = function dial(swarm, zeronet) {
+module.exports = function dial(swarm, ZProtocol) {
   return (pi, protocol, callback) => {
     if (typeof protocol === 'function') {
       callback = protocol
@@ -25,9 +24,6 @@ module.exports = function dial(swarm, zeronet) {
           return callback(err)
         }
         conn.setPeerInfo(pi)
-        conn.zinfo = {
-          isServer: false
-        }
         protocolLayer(conn, err => {
           if (err) return callback(err)
           swarm.conns[b58Id] = conn
@@ -64,7 +60,7 @@ module.exports = function dial(swarm, zeronet) {
     }
 
     function protocolLayer(conn, cb) {
-      ZClient.upgradeConn(conn, zeronet, cb)
+      ZProtocol.upgradeConn(conn, cb)
     }
   }
 }

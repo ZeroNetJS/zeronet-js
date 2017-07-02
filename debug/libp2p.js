@@ -14,9 +14,9 @@ PeerId.create((e, id) => {
     if (err) throw err
 
     node.dial(node.peerInfo,(e,c) => {
-      c.handshake(() => {
+      /*c.handshake(() => {
         c.getFile("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D", "content.json", 1, console.log)
-      })
+      })*/
     })
 
     /*const c = new Client({

@@ -12,6 +12,7 @@ const PeerInfo = require('peer-info')
 const multiaddr = require('multiaddr')
 
 const Client = require("zeronet-client")
+const Protocol = require("zeronet-protocol")
 const zdial = require(__dirname + "/dial")
 const each = require('async/each')
 const clone = require("clone")
@@ -60,27 +61,23 @@ class Node extends libp2p {
 
     super(modules, peerInfo, /*peerBook*/ null, options)
 
-    function incomingHandler(conn) {
-      conn.zinfo = {
-        isServer: true
-      }
-      Client.upgradeConn(conn, zeronet, err => {
-        if (err) log.error(err, "Connection error")
-      })
-    }
-
     const self = this
     self.zeronet = zeronet
     self.peerInfo = peerInfo
 
     /* if it's hacky and you know it clap your hands. *clap* */
-    self.swarm.dial = zdial(self.swarm, zeronet)
+    self.protocol = new Protocol(self.swarm, self, zeronet)
+    self.handle = self.protocol.handle.bind(self.protocol)
+
+    self.swarm.dial = zdial(self.swarm, self.protocol)
     self.dial = self.swarm.dial
+
+    self.protocol.applyDefaults()
 
     self.swarm.listen = cb => {
       each(self.swarm.availableTransports(peerInfo), (ts, cb) => {
         // Listen on the given transport
-        self.swarm.transport.listen(ts, {}, incomingHandler, cb)
+        self.swarm.transport.listen(ts, {}, self.protocol.upgradeConn, cb)
       }, cb)
     }
 
