@@ -9,6 +9,9 @@ module.exports = function Defaults(protocol, zeronet) {
     body: Buffer.isBuffer,
     location: "number",
     size: "number"
+  }, (data, cb) => {
+    if (!zeronet.zites[data.zite]) return cb(new Error("Unknown site"))
+    //TODO: finish
   })
 
   protocol.handle("ping", {}, {
@@ -58,10 +61,4 @@ module.exports = function Defaults(protocol, zeronet) {
     peers: "object",
     peers_onion: "object"
   })
-
-  protocol.handle("ping", {}, {
-    body: b => b == "pong"
-  }, (data, cb) => cb({
-    body: "pong"
-  }))
 }

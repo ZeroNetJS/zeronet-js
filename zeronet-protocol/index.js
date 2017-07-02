@@ -5,6 +5,7 @@ const PeerRequestHandler = require(__dirname + "/peer-request-handler")
 
 const Defaults = require(__dirname + "/defaults")
 const Crypto = require("zeronet-crypto/protocol")
+//const Crypto_secio = require("zeronet-crypto/secio")
 const debug = require("debug")
 
 module.exports = function Protocol(swarm, node, zeronet) {
@@ -26,6 +27,7 @@ module.exports = function Protocol(swarm, node, zeronet) {
   }
 
   self.handle = (name, def, defret, cb) => {
+    if (commands[name]) throw new Error(name + " is already handled")
     log("Handling", name)
     commands[name] = new PeerRequest(name, def, defret)
     handlers[name] = cb
@@ -50,5 +52,6 @@ module.exports = function Protocol(swarm, node, zeronet) {
   }
 
   Crypto(self)
+  //Crypto_secio(self, zeronet)
 
 }

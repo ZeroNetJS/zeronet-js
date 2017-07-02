@@ -1,5 +1,6 @@
 const ZeroNetNode = require("zeronet-swarm")
 const PeerId = require("peer-id")
+const multiaddr=require("multiaddr")
 //const Client = require("zeronet-client")
 
 PeerId.create((e, id) => {
@@ -17,7 +18,7 @@ PeerId.create((e, id) => {
   }, err => {
     if (err) throw err
 
-    node.dial(node.peerInfo, (e, c) => {
+    node.dial(/*node.peerInfo*/multiaddr("/ip4/127.0.0.1/tcp/15543/"), (e, c) => {
       c.client.cmd.getFile({
         site: "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
         inner_path: "content.json",

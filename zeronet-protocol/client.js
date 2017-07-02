@@ -9,12 +9,18 @@ const pull = require('pull-stream')
 const Pushable = require('pull-pushable')
 const Readable = require("stream").Readable
 
+const debug = require("debug")
+
 module.exports = function Client(conn, protocol, zeronet, opt) {
   const self = this
+  const log = debug("zeronet:protocol:client")
 
   /* Handling */
 
   const handlers = self.handlers = protocol.getHandlers(self)
+  let addrs
+  conn.getObservedAddrs((e, a) => addrs = (opt.isServer ? "=> " : "<= ") + a.map(a => a.toString()).join(", "))
+  log("initializing", addrs)
 
   function handleIn(data) {
     if (handlers[data.cmd]) handlers[data.cmd].recv(data)
@@ -40,6 +46,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   self.addCallback = addCallback
 
   self.write = d => {
+    log("sent data", addrs, d)
     p.json(d)
   }
 
@@ -63,6 +70,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   const m = msgstream(r)
 
   m.on("msg", data => {
+    log("got data", addrs, data)
     if (data.cmd == "response") {
       handleResponse(data)
     } else {
@@ -85,5 +93,17 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
     }),
     pull.drain(() => {})
   )
+
+  /* getRaw */
+
+  self.getRaw = cb => {
+    try {
+      //p.destroy()
+      r.destroy()
+    } catch (e) {
+      cb(e)
+    }
+    cb(null, conn)
+  }
 
 }

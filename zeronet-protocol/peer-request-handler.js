@@ -14,7 +14,7 @@ module.exports = function PeerRequestHandler(name, _req, client, handler) {
         to: req_id
       }
       if (err) {
-        data.error = err instanceof Error ? err.toString().split("\n")[0] : err.toString()
+        resp.error = err instanceof Error ? err.toString().split("\n")[0] : err.toString()
       } else {
         for (var p in _req.defOut)
           resp[p] = res[p]
