@@ -5,11 +5,13 @@ const PeerRequestHandler = require(__dirname + "/peer-request-handler")
 
 const Defaults = require(__dirname + "/defaults")
 const Crypto = require("zeronet-crypto/protocol")
+const debug = require("debug")
 
 module.exports = function Protocol(swarm, node, zeronet) {
   let handlers = {}
   let commands = {}
   const self = this
+  const log = debug("zeronet:protocol")
 
   self.getHandler = (name, client) => {
     if (!commands[name]) throw new Error("Unknown command " + name)
@@ -24,17 +26,21 @@ module.exports = function Protocol(swarm, node, zeronet) {
   }
 
   self.handle = (name, def, defret, cb) => {
+    log("Handling", name)
     commands[name] = new PeerRequest(name, def, defret)
     handlers[name] = cb
   }
 
   self.upgradeConn = opt =>
     (conn, cb) => {
+      log("upgrading conn", opt)
       if (!cb) cb = (() => {})
-      const c = new Client(conn, self, zeronet, Object.assign(opt))
+      const c = conn.client = new Client(conn, self, zeronet, Object.assign(opt))
+      c.conn = conn.client
       const d = opt.isServer ? c.waitForHandshake : c.handshake
       d(err => {
         if (err) return cb(err)
+        log("finished upgrade", opt)
         return cb(null, c)
       })
     }

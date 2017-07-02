@@ -32,7 +32,7 @@ module.exports = function dial(swarm, ZProtocol) {
       })
     } else {
       const conn = swarm.conns[b58Id]
-      return callback(null, conn)
+      return callback(null, conn.client)
     }
 
     return proxyConn

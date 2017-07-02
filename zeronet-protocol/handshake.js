@@ -66,13 +66,13 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
 
       handshake.link(remoteHandshake)
 
-      protocol.crypto.wrap(handshake.commonCrypto(), {
+      protocol.crypto.wrap(handshake.commonCrypto(), client, {
         isServer: false
       }, err => {
         if (err) return cb(err)
         client.handshakeData = handshake
         client.remoteHandshake = remoteHandshake
-        log.debug("Finished handshake")
+        log("Finished handshake")
         return cb(null, handshake)
       })
 
@@ -87,7 +87,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
     handshake.link(remoteHandshake)
     client.handshakeData = handshake
     client.remoteHandshake = remoteHandshake
-    protocol.crypto.wrap(client, handshake.commonCrypto(), {
+    protocol.crypto.wrap(handshake.commonCrypto(), client, {
       isServer: true
     }, err => {
       waiting.forEach(w => w(err))
@@ -97,7 +97,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
     })
   }
 
-  client.handlers.handshake = new PeerRequestHandler("handshake", module.exports.req, client, "handshakeGet")
+  client.handlers.handshake = new PeerRequestHandler("handshake", module.exports.req, client, handshakeGet)
   log("init handshake", opt)
 
   client.handshake = handshakeInit

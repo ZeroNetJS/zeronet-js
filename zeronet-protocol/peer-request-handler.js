@@ -1,6 +1,6 @@
 "use strict"
 
-module.exports = function PeerRequestHandler(name, req, client, handler) {
+module.exports = function PeerRequestHandler(name, _req, client, handler) {
   const self = this
 
   function recv(data, handler, write) {
@@ -8,7 +8,7 @@ module.exports = function PeerRequestHandler(name, req, client, handler) {
       req_id,
       params
     } = data
-    req.handleRequest((err, res) => {
+    _req.handleRequest((err, res) => {
       let resp = {
         cmd: "response",
         to: req_id
@@ -16,7 +16,7 @@ module.exports = function PeerRequestHandler(name, req, client, handler) {
       if (err) {
         data.error = err instanceof Error ? err.toString().split("\n")[0] : err.toString()
       } else {
-        for (var p in req.defOut)
+        for (var p in _req.defOut)
           resp[p] = res[p]
       }
       write(resp)
@@ -25,15 +25,15 @@ module.exports = function PeerRequestHandler(name, req, client, handler) {
 
   function send(data, cb, write) {
     let res = {}
-    for (var p in req.defOut)
+    for (var p in _req.defOut)
       res[p] = data[p]
-    req.sendRequest((data, cb) => {
+    _req.sendRequest((data, cb) => {
       const req = {
         cmd: name,
         params: data,
         req_id: client.req_id++
       }
-      client.addCallback(req.id, data => {
+      client.addCallback(req.req_id, data => {
         if (data.error) {
           let e = new Error(data.error)
           e.raw = data.error
@@ -41,7 +41,7 @@ module.exports = function PeerRequestHandler(name, req, client, handler) {
           return cb(e)
         } else {
           let res = {}
-          for (var p in req.defIn)
+          for (var p in _req.defIn)
             res[p] = data[p]
           return cb(null, res)
         }
@@ -51,5 +51,5 @@ module.exports = function PeerRequestHandler(name, req, client, handler) {
   }
 
   self.send = (data, cb) => send(data, cb, client.write)
-  self.recv = data => recv(handler, data, client.write)
+  self.recv = data => recv(data, handler, client.write)
 }

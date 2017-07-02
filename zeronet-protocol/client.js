@@ -1,6 +1,6 @@
 "use strict"
 
-const msg = require(__dirname + "/stream")
+//const msg = require(__dirname + "/stream")
 const msgstream = require(__dirname + "/msgstream")
 const handshake = require(__dirname + "/handshake")
 const msgpack = require("msgpack")
@@ -18,10 +18,6 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
 
   function handleIn(data) {
     if (handlers[data.cmd]) handlers[data.cmd].recv(data)
-  }
-
-  function handleOut(data, cb) {
-
   }
 
   /* Callbacks */
