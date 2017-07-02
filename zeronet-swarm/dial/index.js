@@ -60,7 +60,9 @@ module.exports = function dial(swarm, ZProtocol) {
     }
 
     function protocolLayer(conn, cb) {
-      ZProtocol.upgradeConn(conn, cb)
+      ZProtocol.upgradeConn({
+        isServer: false
+      })(conn, cb)
     }
   }
 }

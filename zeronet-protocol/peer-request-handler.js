@@ -1,9 +1,9 @@
 "use strict"
 
-module.exports = function PeerRequestHandler(name, req, client) {
+module.exports = function PeerRequestHandler(name, req, client, handler) {
   const self = this
 
-  function recv(data, handler) {
+  function recv(data, handler, send) {
     const {
       req_id,
       params
@@ -19,11 +19,11 @@ module.exports = function PeerRequestHandler(name, req, client) {
         for (var p in req.defOut)
           resp[p] = res[p]
       }
-      client.write(resp)
+      send(resp)
     }, params, handler)
   }
 
-  function send(data, cb) {
+  function send(data, cb, send) {
     req.sendRequest((data, cb) => {
       const req = {
         cmd: name,
@@ -43,10 +43,10 @@ module.exports = function PeerRequestHandler(name, req, client) {
           return cb(null, res)
         }
       })
-      client.write(req)
+      send(req)
     }, data, cb)
   }
 
   self.send = send
-  self.recv = recv
+  self.recv = (data, send) => recv(handler, data, send)
 }

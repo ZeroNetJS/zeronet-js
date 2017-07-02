@@ -1,9 +1,12 @@
 "use strict"
 
-function genHandshakeData(client, zeronet) {
+const PeerRequest = require(__dirname + "/peer-request")
+const PeerRequestHandler = require(__dirname + "/peer-request-handler")
+
+function genHandshakeData(protocol, client, zeronet) {
   let d = {
     crypt: null,
-    crypt_supported: client.crypto.supported(),
+    crypt_supported: protocol.crypto.supported(),
     fileserver_port: zeronet.server ? zeronet.server.port : 0,
     protocol: "v2",
     port_opened: false, //TODO: implent
@@ -45,26 +48,30 @@ function Handshake(data) {
 
 }
 
-module.exports = function ZeroNetHandshake(self) {
+const debug = require("debug")
 
-  const log = self.logger("handshake")
+module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
+
+  const log = debug("zeronet:protocol:handshake")
+
+  let waiting = []
 
   function handshakeInit(cb) {
-    log.debug("Start handshake")
-    const handshake = new Handshake(genHandshakeData(self, self.zeronet))
+    log("Start handshake")
+    const handshake = new Handshake(genHandshakeData(protocol, client, zeronet))
 
-    self._handshake(handshake, (err, data) => {
+    client.cmd.handshake(handshake, (err, data) => {
       if (err) return cb(err)
       const remoteHandshake = new Handshake(data)
 
       handshake.link(remoteHandshake)
 
-      self.crypto.wrap(handshake.commonCrypto(), {
+      protocol.crypto.wrap(handshake.commonCrypto(), {
         isServer: false
       }, err => {
         if (err) return cb(err)
-        self.handshakeData = handshake
-        self.remoteHandshake = remoteHandshake
+        client.handshakeData = handshake
+        client.remoteHandshake = remoteHandshake
         log.debug("Finished handshake")
         return cb(null, handshake)
       })
@@ -73,36 +80,45 @@ module.exports = function ZeroNetHandshake(self) {
   }
 
   function handshakeGet(data, cb) {
-    log.debug("Got handshake")
-    const handshake = new Handshake(genHandshakeData(self, self.zeronet))
+    log("Got handshake")
+    const handshake = new Handshake(genHandshakeData(protocol, client, zeronet))
     const remoteHandshake = new Handshake(data)
     cb(null, handshake)
     handshake.link(remoteHandshake)
-    self.handshakeData = handshake
-    self.remoteHandshake = remoteHandshake
-    self.crypto.wrap(handshake.commonCrypto(), {
+    client.handshakeData = handshake
+    client.remoteHandshake = remoteHandshake
+    protocol.crypto.wrap(client, handshake.commonCrypto(), {
       isServer: true
     }, err => {
-      if (err) log.error(err, "Handshake error")
-      log.debug("Finished handshake")
+      waiting.forEach(w => w(err))
+      waiting = err
+      if (err) log(err, "Handshake error")
+      log("Finished handshake")
     })
   }
 
-  const def = { //Definitions are symmetric
-    crypt: a => a === null || typeof a == "string",
-    crypt_supported: Array.isArray,
-    fileserver_port: "number",
-    peer_id: "string",
-    port_opened: "boolean",
-    protocol: "string",
-    rev: "number",
-    target_ip: "string",
-    version: "string",
+  client.handlers.handshake = new PeerRequestHandler("handshake", module.exports.req, client, "handshakeGet")
+  log("init handshake", opt)
+
+  client.handshake = handshakeInit
+
+  client.waitForHandshake = cb => {
+    if (Array.isArray(waiting)) waiting.push(cb)
+    else cb(waiting)
   }
 
-  self.handle("handshake", def, def, {
-    data: true,
-    clientHandle: handshakeInit,
-    serverHandle: handshakeGet
-  })
 }
+
+module.exports.def = { //Definitions are symmetric
+  crypt: a => a === null || typeof a == "string",
+  crypt_supported: Array.isArray,
+  fileserver_port: "number",
+  peer_id: "string",
+  port_opened: "boolean",
+  protocol: "string",
+  rev: "number",
+  target_ip: "string",
+  version: "string",
+}
+
+module.exports.req = new PeerRequest("handshake", module.exports.def, module.exports.def)

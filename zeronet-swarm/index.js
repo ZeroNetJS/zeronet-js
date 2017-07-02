@@ -77,7 +77,9 @@ class Node extends libp2p {
     self.swarm.listen = cb => {
       each(self.swarm.availableTransports(peerInfo), (ts, cb) => {
         // Listen on the given transport
-        self.swarm.transport.listen(ts, {}, self.protocol.upgradeConn, cb)
+        self.swarm.transport.listen(ts, {}, self.protocol.upgradeConn({
+          isServer: true
+        }), cb)
       }, cb)
     }
 

@@ -16,20 +16,18 @@ const Connection = require("interface-connection").Connection
 
 const OpenSSLGenerator = require(__dirname + "/helper").OpenSSLGenerator
 
-module.exports = function TLSSupport(self) {
+module.exports = function TLSSupport(protocol) {
 
   const log = self.log
 
-  self.constants = constants
-
   //TODO: replace if true/false with options
 
-  if (self.zeronet.config.id) {
+  /*if (self.zeronet.config.id) {
 
     const def = {
       "id": "string"
     }
-    self.handle("secioIdentify", def, def)
+    //self.handle("secioIdentify", def, def)
 
     const secio = (options, cb) => {
       let stream = self.getStream()
@@ -83,7 +81,7 @@ module.exports = function TLSSupport(self) {
 
     self.crypto.add("secio", secio)
 
-  }
+  }*/
 
   /* live traffic
   {'cmd': 'handshake',
