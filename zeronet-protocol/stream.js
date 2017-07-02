@@ -37,6 +37,7 @@ module.exports.unpack = function () {
   var buffer = null
 
   return function (read) {
+    console.log("do")
     return function (abort, callback) {
       if (abort) return read(abort, callback)
 
@@ -44,6 +45,7 @@ module.exports.unpack = function () {
         return callback(ended)
 
       read(abort, function next(end, chunk) {
+        console.log("ch",chunk)
         if (end) {
           if (ended) return
           ended = end

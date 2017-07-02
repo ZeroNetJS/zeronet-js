@@ -11,7 +11,7 @@ const ZeroNet = require("zeronet-common") //shared class, used for storage and w
 const PeerInfo = require('peer-info')
 const multiaddr = require('multiaddr')
 
-const Client = require("zeronet-client")
+const debug = require("debug")
 const Protocol = require("zeronet-protocol")
 const zdial = require(__dirname + "/dial")
 const each = require('async/each')
@@ -26,10 +26,14 @@ class Node extends libp2p {
     delete zOPT.server
     const zeronet = new ZeroNet(zOPT)
 
-    const log = zeronet.logger("p2p")
+    const log = debug("zeronet:swarm")
 
     if (options.server)
       peerInfo.multiaddrs.add(multiaddr("/ip4/" + options.server.host + "/tcp/" + options.server.port))
+    if (options.server6)
+      peerInfo.multiaddrs.add(multiaddr("/ip6/" + options.server6.host + "/tcp/" + options.server6.port))
+
+    if (peerInfo.multiaddrs._multiaddrs.length) log("starting server on", peerInfo.multiaddrs._multiaddrs.map(m => m.toString()))
 
     if (!options.trackers)
       options.trackers = [

@@ -1,43 +1,23 @@
 "use strict"
 
 const msg = require(__dirname + "/stream")
-const pull = require("pull-stream")
+const msgstream = require(__dirname + "/msgstream")
 const handshake = require(__dirname + "/handshake")
+const msgpack = require("msgpack")
+
+const pull = require('pull-stream')
+const Pushable = require('pull-pushable')
+const Readable = require("stream").Readable
 
 module.exports = function Client(conn, protocol, zeronet, opt) {
   const self = this
-
-  function handler() {
-    return function map(read, map) {
-      //return a readable function!
-      return function (end, cb) {
-        read(end, function (end, data) {
-          //we've got an object
-          if (end) return cb(end)
-          if (data == null) return cb(new Error("Malformed data"))
-          //Go trough all handlers and call "map" with the final res
-
-          function next(data) {
-            cb(end, map(data))
-          }
-
-          if (data.cmd == "response") {
-            handleResponse(data, next)
-          } else {
-            handleIn(data, next)
-          }
-          //cb(end, data != null ? map(data) : null)
-        })
-      }
-    }
-  }
 
   /* Handling */
 
   const handlers = self.handlers = protocol.getHandlers(self)
 
-  function handleIn(data, send) {
-    if (handlers[data.cmd]) handlers[data.cmd](data, send)
+  function handleIn(data) {
+    if (handlers[data.cmd]) handlers[data.cmd].recv(data)
   }
 
   function handleOut(data, cb) {
@@ -52,14 +32,20 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
     cbs[id] = cb
   }
 
-  function handleResponse(data, send) {
+  function handleResponse(data) {
     if (cbs[data.to]) {
       cbs[data.to](data)
       delete cbs[data.to]
     }
   }
 
+  self.req_id = 0
+
   self.addCallback = addCallback
+
+  self.write = d => {
+    p.json(d)
+  }
 
   /* Handshake */
 
@@ -72,11 +58,36 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   for (var name in handlers)
     cmd[name] = handlers[name].send.bind(handlers[name])
 
+  /* how this works? just don't ask */
+
+  const p = Pushable()
+  const r = Readable()
+  r._read = () => {}
+
+  const m = msgstream(r)
+
+  m.on("msg", data => {
+    if (data.cmd == "response") {
+      handleResponse(data)
+    } else {
+      handleIn(data)
+    }
+  })
+
+  p.json = (o) => {
+    p.push(msgpack.pack(o))
+  }
+
+  /* logic */
+
   pull(
+    p,
     conn,
-    msg.unpack,
-    handler,
-    msg.pack,
-    conn
+    pull.map((data) => {
+      r.push(data)
+      return null
+    }),
+    pull.drain(() => {})
   )
+
 }

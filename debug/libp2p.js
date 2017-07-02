@@ -9,6 +9,10 @@ PeerId.create((e, id) => {
       host: "0.0.0.0",
       port: 15443
     },
+    server6: {
+      host: "::",
+      port: 15543
+    },
     tls: "disabled"
   }, err => {
     if (err) throw err

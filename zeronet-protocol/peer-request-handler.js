@@ -3,7 +3,7 @@
 module.exports = function PeerRequestHandler(name, req, client, handler) {
   const self = this
 
-  function recv(data, handler, send) {
+  function recv(data, handler, write) {
     const {
       req_id,
       params
@@ -19,11 +19,14 @@ module.exports = function PeerRequestHandler(name, req, client, handler) {
         for (var p in req.defOut)
           resp[p] = res[p]
       }
-      send(resp)
+      write(resp)
     }, params, handler)
   }
 
-  function send(data, cb, send) {
+  function send(data, cb, write) {
+    let res = {}
+    for (var p in req.defOut)
+      res[p] = data[p]
     req.sendRequest((data, cb) => {
       const req = {
         cmd: name,
@@ -43,10 +46,10 @@ module.exports = function PeerRequestHandler(name, req, client, handler) {
           return cb(null, res)
         }
       })
-      send(req)
-    }, data, cb)
+      write(req)
+    }, res, cb)
   }
 
-  self.send = send
-  self.recv = (data, send) => recv(handler, data, send)
+  self.send = (data, cb) => send(data, cb, client.write)
+  self.recv = data => recv(handler, data, client.write)
 }
