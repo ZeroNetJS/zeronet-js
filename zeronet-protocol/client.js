@@ -46,7 +46,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   self.addCallback = addCallback
 
   self.write = d => {
-    log("sent data", addrs, d)
+    log("sent data", addrs, "\n", d)
     p.json(d)
   }
 
@@ -70,7 +70,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   const m = msgstream(r)
 
   m.on("msg", data => {
-    log("got data", addrs, data)
+    log("got  data", addrs, "\n", data)
     if (data.cmd == "response") {
       handleResponse(data)
     } else {

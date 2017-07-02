@@ -8,3 +8,4 @@ zeronet-win*
 config.json
 *.log
 .pkg
+py
