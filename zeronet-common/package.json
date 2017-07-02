@@ -1,6 +1,6 @@
 {
   "name": "zeronet-common",
-  "version": "0.0.1-alpha10",
+  "version": "0.0.1-alpha11",
   "description": "Common ZeroNet modules",
   "main": "index.js",
   "scripts": {
