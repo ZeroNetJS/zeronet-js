@@ -20,7 +20,7 @@ const multiaddr = require("multiaddr")
 let swarm
 
 cryptos.forEach(crypto => {
-  it("should handshake with " + crypto.name, (cb) => {
+  it.skip("should handshake with " + crypto.name, (cb) => {
     swarm = new Swarm({
       id: global.id,
       protocol: {
