@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "merge-recursive": "0.0.3",
+    "mockery": "^2.1.0",
     "peer-id": "^0.8.7",
     "zeronet-client": "file:zeronet-client",
     "zeronet-common": "file:zeronet-common",

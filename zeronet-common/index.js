@@ -5,7 +5,7 @@ const Server = require("zeronet-fileserver")
 const UiServer = require("zeronet-uiserver")
 const uuid = require("uuid").v4
 const tls = require("tls")
-const logger = require(__dirname+"/logger")
+const logger = require(__dirname + "/logger")
 const fs = require("fs")
 
 module.exports = function ZeroNet(config) {
@@ -24,17 +24,21 @@ module.exports = function ZeroNet(config) {
   }]
 
   if (config.debug_file) {
-    streams.push({
-      level: "debug",
-      path: config.debug_file
-    })
-
     if (config.debug_shift_file) {
       if (fs.existsSync(config.debug_file)) {
         if (fs.existsSync(config.debug_shift_file)) fs.unlinkSync(config.debug_shift_file)
         fs.renameSync(config.debug_file, config.debug_shift_file)
       }
     }
+
+    const ws = fs.createWriteStream(config.debug_file)
+
+    global.ZeroLogWS = ws
+
+    streams.push({
+      level: "debug",
+      stream: ws
+    })
   }
 
   self.logger = logger({
