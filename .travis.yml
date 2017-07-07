@@ -4,10 +4,12 @@ node_js:
   - "6"
 dist:           trusty
 before_install:
+  - bash scripts/tarball.sh
   - pip install --user codecov    #Install codecov
 install:
   - bash scripts/install.sh
 after_success:
+  - bash scripts/pkg.sh
   - npm run report-coverage       #Run codecov
 deploy:
   provider: releases
