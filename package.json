@@ -22,10 +22,11 @@
   "devDependencies": {
     "app-module-path": "^2.2.0",
     "mocha": "^3.4.2",
+    "nyc": "^11.0.3",
     "pkg": "^4.1.0"
   },
   "scripts": {
-    "test": "bash -c 'set -o pipefail && mocha | bunyan -l 20'",
+    "test": "bash -c 'set -o pipefail && nyc mocha | bunyan -l 20'",
     "pkg": "bash scripts/pkg.sh",
     "start": "node zeronet.js"
   },

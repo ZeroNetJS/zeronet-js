@@ -110,6 +110,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   self.cork = () => {
     stream2.destroy()
     stream2 = null
+    stream = new stable(conn)
   }
 
   self.getRaw = cb => {

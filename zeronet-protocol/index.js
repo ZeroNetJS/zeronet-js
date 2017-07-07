@@ -6,6 +6,7 @@ const PeerRequestHandler = require(__dirname + "/peer-request-handler")
 const Defaults = require(__dirname + "/defaults")
 const Crypto = require("zeronet-crypto/protocol")
 const Crypto_secio = require("zeronet-crypto/secio")
+const Crypto_tls = require("zeronet-crypto/tls")
 const debug = require("debug")
 
 module.exports = function Protocol(swarm, node, zeronet) {
@@ -52,6 +53,7 @@ module.exports = function Protocol(swarm, node, zeronet) {
   }
 
   Crypto(self)
-  Crypto_secio(self, zeronet)
+  //Crypto_secio(self, zeronet)
+  Crypto_tls(self, zeronet)
 
 }

@@ -33,7 +33,6 @@ function KeyStream(stream) {
     var files = []
     var file
     rl.on("line", line => {
-      console.log("ll", line)
       switch (true) {
       case !!line.match(begin_regex):
         const m = line.match(begin_regex)

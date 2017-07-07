@@ -1,3 +1,3 @@
-module.exports=function Conn(conn) {
-  
+module.exports = function Conn(conn) {
+
 }

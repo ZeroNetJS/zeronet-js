@@ -94,7 +94,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
     }, err => {
       waiting.forEach(w => w(err))
       waiting = err
-      if (err) log(err, "Handshake error")
+      if (err) return log("Handshake error") || log(err)
       log("Finished handshake")
     })
   }

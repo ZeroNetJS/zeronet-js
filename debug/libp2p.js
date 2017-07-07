@@ -2,12 +2,12 @@ const ZeroNetNode = require("zeronet-swarm")
 const PeerId = require("peer-id")
 const multiaddr = require("multiaddr")
 //const Client = require("zeronet-client")
-const Crypto = require("zeronet-crypto")
 
 PeerId.create((e, id) => {
   const opt = {
     id,
-    tls: "disabled"
+    //tls: "disabled".
+    secio:"disabled"
   }
 
   if (process.env.server) {

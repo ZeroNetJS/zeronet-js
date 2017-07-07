@@ -95,7 +95,6 @@ class Node extends libp2p {
         return callback(new Error('no transports were present'))
       }
 
-      let ws
       let transports = self.modules.transport
 
       transports = Array.isArray(transports) ? transports : [transports]
@@ -114,11 +113,6 @@ class Node extends libp2p {
       transports.forEach((transport) => {
         this.swarm.transport.add(
           transport.tag || transport.constructor.name, transport)
-        if (transport.constructor &&
-          transport.constructor.name === 'WebSockets') {
-          // XXX: That's from libp2p. no idea what it does.
-          ws = transport
-        }
       })
 
       series([
@@ -126,11 +120,6 @@ class Node extends libp2p {
         (cb) => {
           // listeners on, libp2p is on
           this.isOnline = true
-
-          if (ws) {
-            // always add dialing on websockets
-            this.swarm.transport.add(ws.tag || ws.constructor.name, ws)
-          }
 
           // all transports need to be setup before discover starts
           if (this.modules.discovery) {
