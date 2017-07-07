@@ -22,10 +22,10 @@
   },
   "homepage": "https://github.com/mkg20001/zeronet-js#readme",
   "dependencies": {
-    "async": "^2.4.1",
+    "async": "^2.5.0",
     "clone": "^2.1.1",
-    "libp2p": "^0.9.1",
-    "libp2p-kad-dht": "^0.1.0",
+    "libp2p": "^0.10.0",
+    "libp2p-kad-dht": "^0.2.0",
     "libp2p-mdns": "^0.7.0",
     "libp2p-tcp": "^0.10.1",
     "multiaddr": "^2.3.0",
