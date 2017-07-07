@@ -15,7 +15,10 @@ const debug = require("debug")
 const Protocol = require("zeronet-protocol")
 const zdial = require(__dirname + "/dial")
 const each = require('async/each')
+const series = require('async/series')
 const clone = require("clone")
+
+const mafmt = require('mafmt')
 
 class Node extends libp2p {
   constructor(options, cb) {
@@ -85,6 +88,63 @@ class Node extends libp2p {
           isServer: true
         }), cb)
       }, cb)
+    }
+
+    self.start = (callback) => { //modified from libp2p/src/index.js to allow dialing without listener
+      if (!self.modules.transport) {
+        return callback(new Error('no transports were present'))
+      }
+
+      let ws
+      let transports = self.modules.transport
+
+      transports = Array.isArray(transports) ? transports : [transports]
+
+      // so that we can have webrtc-star addrs without adding manually the id
+      const maOld = []
+      const maNew = []
+      this.peerInfo.multiaddrs.forEach((ma) => {
+        if (!mafmt.IPFS.matches(ma)) {
+          maOld.push(ma)
+          maNew.push(ma.encapsulate('/ipfs/' + this.peerInfo.id.toB58String()))
+        }
+      })
+      this.peerInfo.multiaddrs.replace(maOld, maNew)
+
+      transports.forEach((transport) => {
+        this.swarm.transport.add(
+          transport.tag || transport.constructor.name, transport)
+        if (transport.constructor &&
+          transport.constructor.name === 'WebSockets') {
+          // XXX: That's from libp2p. no idea what it does.
+          ws = transport
+        }
+      })
+
+      series([
+        (cb) => this.swarm.listen(cb),
+        (cb) => {
+          // listeners on, libp2p is on
+          this.isOnline = true
+
+          if (ws) {
+            // always add dialing on websockets
+            this.swarm.transport.add(ws.tag || ws.constructor.name, ws)
+          }
+
+          // all transports need to be setup before discover starts
+          if (this.modules.discovery) {
+            return each(this.modules.discovery, (d, cb) => d.start(cb), cb)
+          }
+          cb()
+        },
+        (cb) => {
+          if (this._dht) {
+            return this._dht.start(cb)
+          }
+          cb()
+        }
+      ], callback)
     }
 
     self.start(cb)

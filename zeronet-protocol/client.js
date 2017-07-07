@@ -9,6 +9,8 @@ const pull = require('pull-stream')
 const Pushable = require('pull-pushable')
 const Readable = require("stream").Readable
 
+const stable = require(__dirname + "/stable-stream")
+
 const debug = require("debug")
 
 module.exports = function Client(conn, protocol, zeronet, opt) {
@@ -61,6 +63,11 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   for (var name in handlers)
     cmd[name] = handlers[name].send.bind(handlers[name])
 
+  /* stable-stream */
+
+  let stream = new stable(conn)
+  let stream2 = stream.create()
+
   /* how this works? just don't ask */
 
   const p = Pushable()
@@ -85,8 +92,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   /* logic */
 
   pull(
-    p,
-    conn,
+    stream2.head,
     pull.map((data) => {
       r.push(data)
       return null
@@ -94,16 +100,26 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
     pull.drain(() => {})
   )
 
+  pull(
+    p,
+    stream2.tail
+  )
+
   /* getRaw */
+
+  self.cork = () => {
+    stream2.destroy()
+    stream2 = null
+  }
 
   self.getRaw = cb => {
     try {
-      //p.destroy()
-      r.destroy()
+      if (stream2) stream2.destroy()
     } catch (e) {
       cb(e)
     }
-    cb(null, conn)
+    stream2 = stream.create()
+    cb(null, stream2)
   }
 
 }

@@ -66,6 +66,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
 
       handshake.link(remoteHandshake)
 
+      client.cork()
       protocol.crypto.wrap(handshake.commonCrypto(), client, {
         isServer: false
       }, err => {
@@ -87,6 +88,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
     handshake.link(remoteHandshake)
     client.handshakeData = handshake
     client.remoteHandshake = remoteHandshake
+    client.cork()
     protocol.crypto.wrap(handshake.commonCrypto(), client, {
       isServer: true
     }, err => {

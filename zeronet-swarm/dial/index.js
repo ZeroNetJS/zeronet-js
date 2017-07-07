@@ -70,7 +70,7 @@ module.exports = function dial(swarm, ZProtocol) {
     return proxyConn
 
     function attemptDial(pi, cb) {
-      const tKeys = swarm.availableTransports(pi)
+      const tKeys = Object.keys(swarm.transports)
 
       if (tKeys.length === 0) {
         return cb(new Error('No available transport to dial to'))
