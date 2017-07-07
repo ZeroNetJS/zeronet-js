@@ -1,44 +1,54 @@
+"use strict"
+
 const fs = require("fs")
 const path = require("path")
 
-const cryptoEx = /self\.crypto\.add\("([a-z0-9_-]+)", [a-z0-9_-]+\)/gmi
-
-function getMatches(string, regex, index) {
-  index = index || 1 // default to the first capturing group
-  var matches = []
-  var match
-  while ((match = regex.exec(string)))
-    matches.push(match[index])
-  return matches
+const crypto_data = {
+  "secio": require("zeronet-crypto/secio"),
+  "tls-rsa": require("zeronet-crypto/tls")
 }
-
-const cryptos = getMatches(fs.readFileSync(path.join(__dirname, "..", "..", "lib", "protocol", "tls.js")).toString(),
-  cryptoEx, 1).map(c => {
+const cryptos = Object.keys(crypto_data).map(c => {
   return {
-    name: c
+    name: c,
+    fnc: crypto_data[c]
   }
 })
+const Swarm = require("zeronet-swarm")
+
+const multiaddr = require("multiaddr")
+
+let swarm
 
 cryptos.forEach(crypto => {
-  it("should connect via " + crypto.name, (cb) => {
-    const c = new global.Client({
-      target: {
-        host: "localhost",
-        port: crypto.name.startsWith("tls") ? 15544 : 15543
+  it("should handshake with " + crypto.name, (cb) => {
+    swarm = new Swarm({
+      id: global.id,
+      protocol: {
+        crypto: crypto.fnc
+      },
+      server: {
+        host: "127.0.0.1",
+        port: 25335
       }
-    }, crypto.name.startsWith("tls") ? global.zeronetN : global.zeronetS)
-    try {
-      cryptos.filter(c => c.name != crypto.name).forEach(_c => c.p.crypto.disable(_c.name))
-    } catch (e) {
-      console.error(e)
-    }
-    c.handshake((err, handshake) => {
+    }, err => {
       if (err) return cb(err)
-      if (handshake.commonCrypto() != crypto.name) return cb(new Error("Failing: Wrong crypto used " + handshake.commonCrypto() + " != " + crypto.name))
-      else c.getFile("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D", "content.json", 1, err => {
-        if (err) console.error("Error, but not failing the test", err)
-        return cb()
+
+      swarm.dial(multiaddr("/ip4/127.0.0.1/tcp/25335"), (e, c) => {
+        if (e) return cb(e)
+        c.client.waitForHandshake((err, handshake) => {
+          if (handshake.commonCrypto() != crypto.name) return cb(new Error("Failing: Wrong crypto used " + handshake.commonCrypto() + " != " + crypto.name))
+          c.client.cmd.getFile({
+            site: "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
+            inner_path: "content.json",
+            location: 1
+          }, err => {
+            if (err) console.error("Error, but not failing the test", err)
+            return cb()
+          })
+        })
       })
     })
   })
 })
+
+afterEach(cb => swarm.stop(cb))

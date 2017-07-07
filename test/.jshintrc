@@ -1,0 +1,7 @@
+{
+  "node": true,
+  "esnext": true,
+  "asi": true,
+  "mocha": true,
+  "-W016": true
+}

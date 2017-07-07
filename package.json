@@ -26,7 +26,8 @@
     "pkg": "^4.1.0"
   },
   "scripts": {
-    "test": "bash -c 'set -o pipefail && nyc mocha | bunyan -l 20'",
+    "test": "nyc mocha",
+    "test:watch": "nodemon -x \"DEBUG=zeronet*,libp2p* npm run test || echo\"",
     "pkg": "bash scripts/pkg.sh",
     "start": "node zeronet.js"
   },

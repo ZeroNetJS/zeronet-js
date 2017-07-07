@@ -1,46 +1,42 @@
+"use strict"
+
 const path = require("path")
 require("app-module-path").addPath(path.join(__dirname, ".."))
 
-const ZeroNet = require("lib/zeronet")
-const Client = require("lib/client/index.js")
 const PeerId = require("peer-id")
 
-/*const zeronet = new ZeroNet({
-  server: {
-    host: "0.0.0.0",
-    port: 15543
-  }
-})*/
-global.Client = Client
-
-const libp2p = require("index")
+const common = require("../zeronet-common")
+const swarm = require("../zeronet-swarm")
 
 before(function (cb) {
   this.timeout(5000)
   PeerId.create((e, id) => {
     if (e) return cb(e)
-    const zeroswarm = new libp2p({
+
+    global.id = id
+
+    const listenSwarm = new swarm({
       id,
       server: {
         host: "0.0.0.0",
         port: 15543
+      },
+      server6: {
+        host: "::",
+        port: 15543
       }
+    }, err => {
+      if (err) return cb(err)
+
+      const dialSwarm = new swarm({
+        id
+      }, err => {
+        if (err) return cb(err)
+      })
+
+      return cb()
+
     })
-    const zeronet_swarm = zeroswarm.zeronet
-
-    global.zeronetS = zeronet_swarm
-    global.zeroswarm = zeroswarm
-
-    const zeronet = new ZeroNet({
-      server: {
-        host: "0.0.0.0",
-        port: 15544
-      }
-    })
-
-    global.zeronetN = zeronet
-
-    return cb()
   })
 })
 

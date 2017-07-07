@@ -73,7 +73,7 @@ class Node extends libp2p {
     self.peerInfo = peerInfo
 
     /* if it's hacky and you know it clap your hands. *clap* */
-    self.protocol = new Protocol(self.swarm, self, zeronet)
+    self.protocol = new Protocol(self.swarm, self, zeronet, options.protocol)
     self.handle = self.protocol.handle.bind(self.protocol)
 
     self.swarm.dial = zdial(self.swarm, self.protocol)
