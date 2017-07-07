@@ -42,7 +42,7 @@ cryptos.forEach(crypto => {
             inner_path: "content.json",
             location: 1
           }, err => {
-            if (err) console.error("Error, but not failing the test", err)
+            if (err) console.error("Unrelated error", err)
             return cb()
           })
         })

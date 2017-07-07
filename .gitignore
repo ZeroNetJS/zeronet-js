@@ -11,3 +11,4 @@ config.json
 py
 coverage
 .nyc_output
+*.tar.gz

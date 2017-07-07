@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#TODO: replace by better solution
-
 set -e
 
 op="$PWD"
@@ -20,22 +18,43 @@ ver=$(echo $(cat package.json | grep "version" | sed "s|\"||g" | sed "s|  ||g" |
 
 echo "Publishing $files @ $ver"
 
-echo "Sure?"
+for file in . $(dir -w 1 | grep "^zeronet-"); do
+  if [ -d $file ]; then
+    cd $file
+    sed -r 's|"([a-z-]+)": "file:.*"|"\1": "'$ver'"|g' -i package.json
+    cd $op
+  fi
+done
 
-sed -r 's|"([a-z-]+)": "file:.*"|"\1": "'$ver'"|g' -i package.json
+for dir in $files; do
+  cd $dir
+    [ ! -e .gitignore ] && ln -s ../.gitignore
+  cd $op
+done
+
+bash scripts/tarball.sh
+
+tarfiles="zeronet.tar.gz"
+for file in files; do
+  tarfiles="$tarfiles $file.tar.gz"
+done
+
+echo "This will 'npm publish $tarfiles'"
+
+echo "Sure?"
 
 read foo
 
 [ "$foo" != "yes" ] && echo "Abort." && exit 2
 
-set -x
-
-for dir in $files; do
-  cd $dir
-    [ ! -e .gitignore ] && ln -s ../.gitignore
-    npm publish
-  cd ..
-done
+npm publish $tarfiles
 
 cd $op
-sed -r 's|"(zeronet-[a-z-]+)": ".*"|"\1": "file:\1"|g' -i package.json
+
+for file in . $(dir -w 1 | grep "^zeronet-"); do
+  if [ -d $file ]; then
+    cd $file
+    sed -r 's|"(zeronet-[a-z-]+)": ".*"|"\1": "file:\1"|g' -i package.json
+    cd $op
+  fi
+done
