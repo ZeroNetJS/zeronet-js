@@ -1,4 +1,4 @@
-# ZeroNet JS
+# ZeroNet JS [![Build Status](https://travis-ci.org/mkg20001/zeronet-js.svg?branch=master)](https://travis-ci.org/mkg20001/zeronet-js) [![codecov](https://codecov.io/gh/mkg20001/zeronet-js/branch/master/graph/badge.svg)](https://codecov.io/gh/mkg20001/zeronet-js)
 
 A JS version of ZeroNet, using libp2p
 
@@ -34,7 +34,7 @@ ToDo:
 
 It is not planned to support protocol version v1. Only v2+ will be supported.
 
-Also for now all connections are **unencrypted**. So don't use this in production until beta or until we get tls running.
+Also for now all connections are **unencrypted**. So don't use this in production until beta or until we get tls/secio running.
 
 # Running
 
