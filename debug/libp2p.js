@@ -2,12 +2,13 @@ const ZeroNetNode = require("zeronet-swarm")
 const PeerId = require("peer-id")
 const multiaddr = require("multiaddr")
 //const Client = require("zeronet-client")
+const Crypto = require("zeronet-crypto")
 
 PeerId.create((e, id) => {
   const opt = {
     id,
     //tls: "disabled".
-    secio:"disabled"
+    secio: "disabled"
   }
 
   if (process.env.server) {
@@ -41,6 +42,16 @@ PeerId.create((e, id) => {
     if (process.env.dial) node.dial(multiaddr("/ip4/127.0.0.1/tcp/15543/"), (e, c) => {
       if (e) return console.error(e)
       console.log("Connected", c.client.cmd.getFile)
+      c.client.cmd.getFile({
+        site: "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
+        inner_path: "content.json",
+        location: 0
+      }, (err, data) => {
+        if (err) throw err
+        const cj = JSON.parse(data.body.toString())
+        console.log(cj)
+        console.log(Crypto.VerifyContentJSON("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D", "content.json", cj))
+      })
     })
 
     /*const c = new Client({

@@ -57,13 +57,14 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
   let waiting = []
 
   function handshakeComplete(err) {
+    console.log(waiting,opt,new Error("."))
     if (!Array.isArray(waiting)) throw new Error("HandshakeError: Complete called multiple times")
     waiting.forEach(w => w(err, client.handshakeData))
     waiting = err
   }
 
   function handshakeInit(cb) {
-    log("Start handshake")
+    log("Start handshake", opt)
     const handshake = new Handshake(genHandshakeData(protocol, client, zeronet))
 
     client.cmd.handshake(handshake, (err, data) => {
@@ -78,20 +79,20 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
       client.handshakeData = handshake
       client.remoteHandshake = remoteHandshake
 
-      if (protocol.crypto) {
+      if (protocol.crypto && handshake.commonCrypto()) {
         client.cork()
         protocol.crypto.wrap(handshake.commonCrypto(), client, {
           isServer: false
         }, err => {
-          handshakeComplete(err)
           if (err) return cb(err)
-          log("Finished handshake")
+          log("Finished handshake", opt)
+          handshakeComplete(err)
           client.isSecure = true
           return cb(null, handshake)
         })
       } else {
+        log("Finished crypto-less handshake", opt)
         handshakeComplete(err)
-        log("Finished crypto-less handshake")
         return cb(null, handshake)
       }
 
@@ -99,34 +100,33 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
   }
 
   function handshakeGet(data, cb) {
-    log("Got handshake")
+    log("Got handshake", opt)
     const handshake = new Handshake(genHandshakeData(protocol, client, zeronet))
     const remoteHandshake = new Handshake(data)
     cb(null, handshake)
     handshake.link(remoteHandshake)
     client.handshakeData = handshake
     client.remoteHandshake = remoteHandshake
-    if (protocol.crypto) {
+    if (protocol.crypto && handshake.commonCrypto()) {
       client.cork()
       protocol.crypto.wrap(handshake.commonCrypto(), client, {
         isServer: true
       }, err => {
         waiting.forEach(w => w(err, client.handshakeData))
         waiting = err
-        handshakeComplete(err)
         if (err) return log("Handshake error") || log(err)
-        log("Finished handshake")
+        log("Finished handshake", opt)
+        handshakeComplete(err)
         client.isSecure = true
       })
     } else {
+      log("Finished crypto-less handshake", opt)
       handshakeComplete(null)
-      log("Finished crypto-less handshake")
-      return cb(null, handshake)
     }
   }
 
   client.handlers.handshake = new PeerRequestHandler("handshake", module.exports.req, client, handshakeGet)
-  log("init handshake", opt)
+  log("use handshake", opt)
 
   client.handshake = handshakeInit
 

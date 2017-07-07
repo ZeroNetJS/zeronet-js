@@ -63,11 +63,6 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   for (var name in handlers)
     cmd[name] = handlers[name].send.bind(handlers[name])
 
-  /* stable-stream */
-
-  let stream = new stable(conn)
-  let stream2 = stream.create()
-
   /* how this works? just don't ask */
 
   const p = Pushable()
@@ -92,7 +87,8 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   /* logic */
 
   pull(
-    stream2.head,
+    p,
+    conn,
     pull.map((data) => {
       r.push(data)
       return null
@@ -100,27 +96,16 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
     pull.drain(() => {})
   )
 
-  pull(
-    p,
-    stream2.tail
-  )
-
   /* getRaw */
-
-  self.cork = () => {
-    stream2.destroy()
-    stream2 = null
-    stream = new stable(conn)
-  }
 
   self.getRaw = cb => {
     try {
-      if (stream2) stream2.destroy()
+      //p.destroy()
+      r.destroy()
     } catch (e) {
       cb(e)
     }
-    stream2 = stream.create()
-    cb(null, stream2)
+    cb(null, conn)
   }
 
 }
