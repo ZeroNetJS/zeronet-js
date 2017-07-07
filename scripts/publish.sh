@@ -35,8 +35,8 @@ done
 bash scripts/tarball.sh
 
 tarfiles="zeronet.tar.gz"
-for file in files; do
-  tarfiles="$tarfiles $file.tar.gz"
+for file in $files; do
+  [ "$file" != "." ] && tarfiles="$tarfiles $file.tar.gz"
 done
 
 echo "This will 'npm publish $tarfiles'"
@@ -47,7 +47,17 @@ read foo
 
 [ "$foo" != "yes" ] && echo "Abort." && exit 2
 
-npm publish $tarfiles
+tmpfo="/tmp/zjs-publish-$$"
+
+set -x
+for f in $tarfiles; do
+  rm -rf $tmpfo
+  mkdir -p $tmpfo
+  cd $tmpfo
+  tar xvfz $op/$f
+  npm publish
+done
+set +x
 
 cd $op
 
