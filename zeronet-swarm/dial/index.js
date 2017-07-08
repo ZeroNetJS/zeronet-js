@@ -13,21 +13,9 @@ const Peer = require('peer-info')
 const BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 const bs58 = require('base-x')(BASE58)
 
+const getId = require("zeronet-protocol/zeronet-peer").piFromAddr
+
 module.exports = function dial(swarm, ZProtocol) {
-  function getId(pi, cb) {
-    if (multiaddr.isMultiaddr(pi)) {
-      const ad = pi.toString()
-      const md = pi
-      let pid = Id.createFromB58String("Q" + bs58.encode(sha5(ad).substr(0, 34)))
-      Peer.create(pid, (err, pi) => {
-        if (err) return cb(err)
-        pi.multiaddrs.add(md)
-        return cb(null, pi)
-      })
-    } else if (Peer.isPeerInfo(pi)) {
-      return cb(null, pi)
-    }
-  }
 
   return (pi, protocol, callback) => {
     if (typeof protocol === 'function') {

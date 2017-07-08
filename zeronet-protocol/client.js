@@ -10,8 +10,32 @@ const Pushable = require('pull-pushable')
 const Readable = require("stream").Readable
 
 const stable = require(__dirname + "/stable-stream")
+const clone = require("clone")
 
 const debug = require("debug")
+
+function thingInspect(d, n) {
+  if (Buffer.isBuffer(d)) return "<Buffer length=" + d.length + ">"
+  return JSON.stringify(d)
+}
+
+function objectInspect(data, type) {
+  let d = clone(data)
+  let r = []
+  switch (type) {
+  case "resp":
+    delete d.cmd
+    delete d.to
+    break;
+  case "req":
+    d = d.params
+    break;
+  }
+  for (var p in d) {
+    r.push(p + "=" + thingInspect(d[p], p))
+  }
+  return r.join(", ")
+}
 
 module.exports = function Client(conn, protocol, zeronet, opt) {
   const self = this
@@ -47,9 +71,14 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
 
   self.addCallback = addCallback
 
-  self.write = d => {
-    log("sent data", addrs, "\n", d)
-    p.json(d)
+  self.write = data => {
+    //log("sent data", addrs, "\n", d)
+    if (data.cmd == "response") {
+      log("sent response", addrs, data.to, objectInspect(data, "resp"))
+    } else {
+      log("sent  request", addrs, data.cmd, objectInspect(data, "req"))
+    }
+    p.json(data)
   }
 
   /* Handshake */
@@ -72,10 +101,12 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   const m = msgstream(r)
 
   m.on("msg", data => {
-    log("got  data", addrs, "\n", data)
+    //log("got  data", addrs, "\n", data)
     if (data.cmd == "response") {
+      log("got  response", addrs, data.to, objectInspect(data, "resp"))
       handleResponse(data)
     } else {
+      log("got   request", addrs, data.cmd, objectInspect(data, "req"))
       handleIn(data)
     }
   })

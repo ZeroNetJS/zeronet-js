@@ -39,7 +39,7 @@ PeerId.create((e, id) => {
       })
     })*/
 
-    if (process.env.dial) node.dial(multiaddr("/ip4/127.0.0.1/tcp/15543/"), (e, c) => {
+    if (process.env.dial) node.dial(multiaddr("/ip4/127.0.0.1/tcp/15542/"), (e, c) => {
       if (e) return console.error(e)
       console.log("Connected", c.client.cmd.getFile)
       c.client.cmd.getFile({
