@@ -13,8 +13,8 @@ const bs58 = require('base-x')(BASE58)
 const ip = require("ip")
 const assert = require("assert")
 
-const debug=require("debug")
-const log=debug("zeronet:peer")
+const debug = require("debug")
+const log = debug("zeronet:peer")
 
 function ip2multi(ip, proto) {
   const i = ip2multi.split(ip)

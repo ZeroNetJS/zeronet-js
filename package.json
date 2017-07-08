@@ -8,6 +8,7 @@
     "test": "test"
   },
   "dependencies": {
+    "bunyan": "^1.8.10",
     "merge-recursive": "0.0.3",
     "mockery": "^2.1.0",
     "peer-id": "^0.8.7",
@@ -41,7 +42,15 @@
   "bin": {
     "zeronet": "zeronet.js"
   },
-  "pkg": {},
+  "pkg": {
+    "scripts": [
+      "node_modules/zeronet-*/**/*.js",
+      "node_modules/.bin/bunyan"
+    ],
+    "assets": [
+      "node_modules/zeronet-uiserver/ui/**"
+    ]
+  },
   "author": "Maciej Krüger <mkg20001@gmail.com>",
   "license": "GPL-3.0",
   "repository": {
