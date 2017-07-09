@@ -1,4 +1,4 @@
-# ZeroNet JS [![Build Status](https://travis-ci.org/mkg20001/zeronet-js.svg?branch=master)](https://travis-ci.org/mkg20001/zeronet-js) [![codecov](https://codecov.io/gh/mkg20001/zeronet-js/branch/master/graph/badge.svg)](https://codecov.io/gh/mkg20001/zeronet-js)
+# ZeroNet JS [![Build Status](https://travis-ci.org/ZeroNetJS/zeronet-js.svg?branch=master)](https://travis-ci.org/ZeroNetJS/zeronet-js) [![codecov](https://codecov.io/gh/ZeroNetJS/zeronet-js/branch/master/graph/badge.svg)](https://codecov.io/gh/ZeroNetJS/zeronet-js)
 
 A JS version of ZeroNet, using libp2p
 
@@ -18,12 +18,14 @@ Stuff that might work:
 
 -   Basic Protocol functions (response and cmd)
 -   Server (listening and accepting connections)
+-   Swarm (dialing peers)
 
 WIP:
 
--   ZeroNet Protocol
+-   ZeroNet Protocol (crypto)
 -   UIServer
 -   libp2p-secio crypto
+-   Some pull stream bugs
 
 ToDo:
 
@@ -40,5 +42,6 @@ Also for now all connections are **unencrypted**. So don't use this in productio
 
 Just run `npm start` and it should:
 
--   Launch a server on 0.0.0.0:15542
+-   Launch a server on 0.0.0.0:15543
+-   Launch a uiserver on 0.0.0.0:15544
 -   Make itself visible in the mdns
