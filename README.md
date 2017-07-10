@@ -1,4 +1,5 @@
 # ZeroNet JS [![Build Status](https://travis-ci.org/ZeroNetJS/zeronet-js.svg?branch=master)](https://travis-ci.org/ZeroNetJS/zeronet-js) [![codecov](https://codecov.io/gh/ZeroNetJS/zeronet-js/branch/master/graph/badge.svg)](https://codecov.io/gh/ZeroNetJS/zeronet-js)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FZeroNetJS%2Fzeronet-js.svg?type=shield)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FZeroNetJS%2Fzeronet-js?ref=badge_shield)
 
 A JS version of ZeroNet, using libp2p
 
@@ -45,3 +46,7 @@ Just run `npm start` and it should:
 -   Launch a server on 0.0.0.0:15543
 -   Launch a uiserver on 0.0.0.0:15544
 -   Make itself visible in the mdns
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FZeroNetJS%2Fzeronet-js.svg?type=large)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FZeroNetJS%2Fzeronet-js?ref=badge_large)
