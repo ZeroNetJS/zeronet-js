@@ -105,11 +105,11 @@ module.exports.piFromAddr = (pi, cb) => {
       pi.multiaddrs.add(md)
       return cb(null, pi)
     })
-  } else throw new Error("Not a valid ip:port, multiaddr or peerInfo")
+  } else cb(new Error("Not a valid ip:port, multiaddr or peerInfo"))
 }
 
 module.exports.fromAddr = (pi, cb) => {
-  module.exports.piFromAddr(pi, (err, info) => {
+  module.exports.piFromAddr(pi, (err, pi) => {
     if (err) return cb(err)
     return cb(null, new module.exports(pi))
   })

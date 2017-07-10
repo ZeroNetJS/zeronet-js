@@ -2,10 +2,6 @@
 
 const hypercache = require("hypercache")
 
-const multiaddr = require("multiaddr")
-const Id = require("peer-id")
-const peerInfo = require("peer-info")
-
 const Peer = require("./zeronet-peer")
 
 const each = require("async/each")
@@ -15,10 +11,12 @@ const log = debug("zeronet:peer-pool")
 log.error = debug("zeronet:peer-pool:error")
 
 module.exports = function PeerPool() {
+  const self = this
+
   const cache = new hypercache(null, {
     name: "peers",
     keys: ["addr", "id", "multiaddr"],
-    //sets: ["zites"], - for non-unique. get prop from object and either concat or append to set
+    sets: ["zites"],
     manual: true
   })
 
@@ -29,6 +27,7 @@ module.exports = function PeerPool() {
   }
 
   function update() {
+    log("update cache")
     cache.update(peers)
   }
 
@@ -36,11 +35,13 @@ module.exports = function PeerPool() {
     if (isInList(peerLike)) return cb(null, isInList(peerLike))
     Peer.fromAddr(peerLike, (err, peer) => {
       log("added", peer.multiaddr)
+      update()
       if (err) return cb(err)
     })
   }
 
-  function addBunch(list, cb) {
+  function addMany(list, cb) {
+    if (!Array.isArray(list)) list = [list]
     log("adding", list.length)
     each(list, (addr, next) => {
       add(addr, err => {
@@ -49,4 +50,18 @@ module.exports = function PeerPool() {
       })
     }, cb ? cb : () => {})
   }
+
+  function getAll() {
+    return cache.getAll()
+  }
+
+  function getZite(zite) {
+    return cache.getSet("zites", zite)
+  }
+
+  self.add = add
+  self.addMany = addMany
+  self.getAll = getAll
+  self.getZite = getZite
+  self.cache = cache
 }

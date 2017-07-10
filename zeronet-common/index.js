@@ -47,7 +47,7 @@ module.exports = function ZeroNet(config) {
   })
   const log = self.logger("main")
 
-  self.peer_id = "-ZN" + ("0" + self.version.replace(/\./g, "")) + "-" + uuid().replace(/-/g, "").substr(0, 12)
+  self.peer_id = "-ZN" + ("0" + self.version.replace(/\./g, "")) + "-" + new Buffer(uuid().replace(/-/g, "").substr(0, 12)).toString("base64").substr(0, 12)
 
   if (config.tls == "disabled") {
     self.tls_disabled = true

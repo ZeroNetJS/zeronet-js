@@ -3,6 +3,9 @@
 const verify = require("zeronet-common/verify")
 const Nonces = require("zeronet-common/nonce")
 
+const Tracker = require("zeronet-common/tracker")
+const Pool = require("./pool.js")
+
 module.exports = function Zite(config, zeronet) { //describes a single zite
   const self = this
 
@@ -21,6 +24,17 @@ module.exports = function Zite(config, zeronet) { //describes a single zite
   const nonce = new Nonces()
   self.getNonce = nonce.add
   self.redemNonce = nonce.redem
+
+  /* Peers */
+
+  const tracker = self.tracker = Tracker(address, zeronet)
+  const mainpool = zeronet.pool
+  const pool = new Pool(address, zeronet)
+  tracker.on("peer", (addr) => {
+    console.log("got a peer", addr)
+    mainpool.addMany([addr], address) //using addMany instead of add because addMany was built to "just don't care"
+  })
+  tracker.update()
 
   /* App */
 
