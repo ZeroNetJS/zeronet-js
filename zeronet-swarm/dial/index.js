@@ -35,7 +35,7 @@ module.exports = function dial(swarm, ZProtocol) {
       pi = _pi
 
       const b58Id = pi.id.toB58String()
-      log('dialing %s', b58Id)
+      log('dialing %s', b58Id, pi.multiaddrs._multiaddrs.map(a => a.toString()).join(", "))
 
       if (!swarm.conns[b58Id]) {
         attemptDial(pi, (err, conn) => {

@@ -57,7 +57,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
   let waiting = []
 
   function handshakeComplete(err) {
-    console.log(waiting,opt,new Error("."))
+    //console.log(waiting,opt,new Error("."))
     if (!Array.isArray(waiting)) throw new Error("HandshakeError: Complete called multiple times")
     waiting.forEach(w => w(err, client.handshakeData))
     waiting = err

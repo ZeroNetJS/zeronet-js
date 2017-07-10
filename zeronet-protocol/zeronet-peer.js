@@ -91,9 +91,11 @@ module.exports.piFromAddr = (pi, cb) => {
   if (Peer.isPeerInfo(pi)) {
     return cb(null, pi)
   }
+
   if (ip2multi.isIp(pi)) {
     pi = multiaddr(ip2multi(pi, "tcp"))
   }
+
   if (multiaddr.isMultiaddr(pi)) {
     const ad = pi.toString()
     const md = pi
@@ -103,7 +105,7 @@ module.exports.piFromAddr = (pi, cb) => {
       pi.multiaddrs.add(md)
       return cb(null, pi)
     })
-  } else throw new Error("Not a valid host:port, multiaddr or peerInfo")
+  } else throw new Error("Not a valid ip:port, multiaddr or peerInfo")
 }
 
 module.exports.fromAddr = (pi, cb) => {

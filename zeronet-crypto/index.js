@@ -9,13 +9,13 @@ function VerifySig(address, data, sig) {
 function OrderObject(unordered) {
   const ordered = {}
   Object.keys(unordered).sort().forEach(function (key) {
-    ordered[key] = typeof unordered[key] == "object" ? OrderObject(unordered[key]) : unordered[key]
+    ordered[key] = ((typeof unordered[key] == "object") && !Array.isArray(unordered[key])) ? OrderObject(unordered[key]) : unordered[key]
   })
   return ordered
 }
 
-function JSONBlock(data) { //zeronet sign's json in this format
-  return JSON.stringify(OrderObject(data))
+function JSONBlock(data) { //python json dump style
+  return JSON.stringify(OrderObject(data), null, 1).replace(/\n/g, "").replace(/  +/g, " ").replace(/([\{\[]) /g, "$1").replace(/ ([\}\]])/g, "$1")
 }
 
 function GetValidSigners(address, inner_path, data) {
@@ -47,8 +47,6 @@ function VerifyContentJSON(address, inner_path, data) {
 
   delete data.sign
   delete data.signs
-  delete data.signs_required
-  delete data.signers_sign
 
   const real = JSONBlock(data) //the data that was actually signed
   const sigsig = signers_sign //signers_sign
@@ -60,10 +58,8 @@ function VerifyContentJSON(address, inner_path, data) {
   let vss = 0 //valid signs found
 
   vs.forEach(addr => {
-    if (vss < signs_required) {
-      //console.log(addr, real, signs[addr], VerifySig(addr, real, signs[addr]))
+    if (vss < signs_required)
       if (VerifySig(addr, real, signs[addr])) vss++
-    }
   })
 
   if (vss < signs_required) throw new Error("Found " + vss + " vaild sign(s) but " + signs_required + " is/are needed")

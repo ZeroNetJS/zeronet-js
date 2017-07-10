@@ -19,7 +19,12 @@ function thingInspect(d, n) {
   return JSON.stringify(d)
 }
 
+const log = debug("zeronet:protocol:client")
+const plog = debug("zeronet:protocol:client")
+plog.enabled = !!process.env.DEBUG_PACKETS
+
 function objectInspect(data, type) {
+  if (!plog.enabled) return "-"
   let d = clone(data)
   let r = []
   switch (type) {
@@ -39,7 +44,6 @@ function objectInspect(data, type) {
 
 module.exports = function Client(conn, protocol, zeronet, opt) {
   const self = this
-  const log = debug("zeronet:protocol:client")
 
   /* Handling */
 
@@ -74,9 +78,9 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   self.write = data => {
     //log("sent data", addrs, "\n", d)
     if (data.cmd == "response") {
-      log("sent response", addrs, data.to, objectInspect(data, "resp"))
+      plog("sent response", addrs, data.to, objectInspect(data, "resp"))
     } else {
-      log("sent  request", addrs, data.cmd, objectInspect(data, "req"))
+      plog("sent  request", addrs, data.cmd, objectInspect(data, "req"))
     }
     p.json(data)
   }
@@ -103,10 +107,10 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   m.on("msg", data => {
     //log("got  data", addrs, "\n", data)
     if (data.cmd == "response") {
-      log("got  response", addrs, data.to, objectInspect(data, "resp"))
+      plog("got  response", addrs, data.to, objectInspect(data, "resp"))
       handleResponse(data)
     } else {
-      log("got   request", addrs, data.cmd, objectInspect(data, "req"))
+      plog("got   request", addrs, data.cmd, objectInspect(data, "req"))
       handleIn(data)
     }
   })
