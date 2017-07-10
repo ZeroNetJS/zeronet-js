@@ -124,6 +124,7 @@ const defaults = {
     "http://tracker.opentrackr.org:1337/announce",
     "http://explodie.org:6969/announce",
     "http://tracker1.wasabii.com.tw:6969/announce"
+    //"http://localhost:25534/announce"
   ],
   debug_file: path.resolve(process.cwd(""), "debug.log"),
   debug_shift_file: path.resolve(process.cwd(""), "debug-last.log")

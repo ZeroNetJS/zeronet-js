@@ -30,10 +30,25 @@ module.exports = function Zite(config, zeronet) { //describes a single zite
   const tracker = self.tracker = Tracker(address, zeronet)
   const mainpool = zeronet.pool
   const pool = new Pool(address, zeronet)
+
+  let plist
   tracker.on("peer", (addr) => {
-    console.log("got a peer", addr)
-    mainpool.addMany([addr], address) //using addMany instead of add because addMany was built to "just don't care"
+    if (!plist) { //add async as the tracker client yields many peers sync
+      plist = []
+      process.nextTick(() => {
+        mainpool.addMany(plist, address)
+        plist = null
+      })
+    }
+    plist.push(addr)
   })
+  /*tracker.on('update', function (data) {
+    console.log('got an announce response from tracker: ' + data.announce)
+    console.log('number of seeders in the swarm: ' + data.complete)
+    console.log('number of leechers in the swarm: ' + data.incomplete)
+  })*/
+  tracker.complete()
+  tracker.start()
   tracker.update()
 
   /* App */

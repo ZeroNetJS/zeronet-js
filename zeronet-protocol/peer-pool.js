@@ -23,7 +23,7 @@ module.exports = function PeerPool() {
   let peers = []
 
   function isInList(peerLike) {
-    return cache.search(peerLike.toString())
+    return cache.search(peerLike.toString())[0]
   }
 
   function update() {
@@ -31,24 +31,32 @@ module.exports = function PeerPool() {
     cache.update(peers)
   }
 
-  function add(peerLike, zite, cb) {
+  function add(peerLike, zite, cb, lazy) {
     if (isInList(peerLike)) return cb(null, isInList(peerLike))
     Peer.fromAddr(peerLike, (err, peer) => {
-      log("added", peer.multiaddr)
-      update()
       if (err) return cb(err)
+
+      if (isInList(peerLike)) log.error("race for %s: already added", peerLike)
+      else peers.push(peer)
+
+      log("added", peer.multiaddr)
+      if (!lazy) update()
+      return cb()
     })
   }
 
-  function addMany(list, cb) {
+  function addMany(list, zite, cb) {
     if (!Array.isArray(list)) list = [list]
     log("adding", list.length)
     each(list, (addr, next) => {
-      add(addr, err => {
+      add(addr, zite, err => {
         if (err) log.error(err)
         return next()
-      })
-    }, cb ? cb : () => {})
+      }, true)
+    }, () => {
+      update()
+      if (cb) cb()
+    })
   }
 
   function getAll() {
@@ -58,6 +66,8 @@ module.exports = function PeerPool() {
   function getZite(zite) {
     return cache.getSet("zites", zite)
   }
+
+  update()
 
   self.add = add
   self.addMany = addMany

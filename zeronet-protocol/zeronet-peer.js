@@ -17,8 +17,8 @@ const debug = require("debug")
 const log = debug("zeronet:peer")
 
 function ip2multi(ip, proto) {
-  const i = ip2multi.split(ip)
-  return "/ip" + i.v + "/" + ip.ip + "/" + proto + "/" + ip.port + "/"
+  ip = ip2multi.split(ip)
+  return "/ip" + ip.v + "/" + ip.ip + "/" + proto + "/" + ip.port + "/"
 }
 
 ip2multi.split = ipHost => {
@@ -32,6 +32,8 @@ ip2multi.split = ipHost => {
   assert(ip.isV4Format(r.ip) || ip.isV6Format(r.ip), "not a valid ip")
   if (ip.isV4Format(r.ip)) r.v = 4
   else if (ip.isV6Format(r.ip)) r.v = 6
+
+  return r
 }
 
 ip2multi.isIp = ipHost => {
@@ -66,8 +68,8 @@ module.exports = function ZeroNetPeer(peerInfo) {
   const pi = self.info = peerInfo
 
   self.id = pi.id.toB58String()
-  assert.equal(pi.multiaddrs.length, "peer must have exactly 1 address for now")
-  self.multiaddr = pi.multiaddrs[0].toString()
+  assert.equal(pi.multiaddrs._multiaddrs.length, 1, "peer must have exactly 1 address for now")
+  self.multiaddr = pi.multiaddrs._multiaddrs[0].toString()
   self.addr = multi2ip(self.multiaddr)
 
   log("creating", self.multiaddr)

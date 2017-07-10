@@ -7,6 +7,7 @@ const uuid = require("uuid").v4
 const tls = require("tls")
 const logger = require(__dirname + "/logger")
 const fs = require("fs")
+const Pool = require("zeronet-protocol/peer-pool.js")
 
 module.exports = function ZeroNet(config) {
   //shared module that contains database access, file functions, util functions, etc
@@ -46,8 +47,8 @@ module.exports = function ZeroNet(config) {
     streams
   })
   const log = self.logger("main")
-
-  self.peer_id = "-ZN" + ("0" + self.version.replace(/\./g, "")) + "-" + new Buffer(uuid().replace(/-/g, "").substr(0, 12)).toString("base64").substr(0, 12)
+  //-ZNXXXX- 8 chars + 12 chars random
+  self.peer_id = "-ZN" + ("0" + self.version.replace(/\./g, "")) + "-" + uuid().replace(/-/g, "").substr(0, 12)
 
   if (config.tls == "disabled") {
     self.tls_disabled = true
@@ -69,6 +70,8 @@ module.exports = function ZeroNet(config) {
     }, "Seeding %s", address)
     self.zites[address] = zite
   }
+
+  self.pool = new Pool()
 
   //Start a file server
   if (config.server) self.server = new Server(config.server, self)
