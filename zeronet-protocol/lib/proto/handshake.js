@@ -1,7 +1,7 @@
 "use strict"
 
-const PeerRequest = require(__dirname + "/peer-request")
-const PeerRequestHandler = require(__dirname + "/peer-request-handler")
+const PeerRequest = require("zeronet-protocol/lib/request/peer-request")
+const PeerRequestHandler = require("zeronet-protocol/lib/request/peer-request-handler")
 
 function genHandshakeData(protocol, client, zeronet) {
   let d = {

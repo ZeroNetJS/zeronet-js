@@ -2,7 +2,7 @@
   "name": "zeronet-protocol",
   "version": "0.0.1-alpha12",
   "description": "ZeroNet protocol",
-  "main": "index.js",
+  "main": "lib/proto/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,5 +27,9 @@
     "msgpack": "^1.0.2",
     "pull-pushable": "^2.1.1",
     "pull-stream": "^3.6.0"
-  }
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "devDependencies": {}
 }

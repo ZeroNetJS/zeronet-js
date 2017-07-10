@@ -1,6 +1,6 @@
 "use strict"
 
-const validate = require("zeronet-common/verify").verifyProtocol
+const validate = require("zeronet-common/lib/verify").verifyProtocol
 
 function PeerRequest(name, params, ret) {
   const self = this

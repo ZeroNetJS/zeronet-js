@@ -1,7 +1,7 @@
 "use strict"
 
 const express = require("express")
-const verify = require("zeronet-common/verify")
+const verify = require("zeronet-common/lib/verify")
 const Zite = require("zeronet-zite")
 
 function URLParser(url) {
@@ -25,7 +25,7 @@ function getMatches(string, regex, index) {
 }
 
 function UI(zeronet) {
-  const uipath = path.join(__dirname, "ui")
+  const uipath = path.join(__dirname, "..", "ui")
   const ui = fs.readFileSync(path.join(uipath, "template", "wrapper.html")).toString()
 
   const need_replace = getMatches(ui, /{([a-z_]+)}/g)

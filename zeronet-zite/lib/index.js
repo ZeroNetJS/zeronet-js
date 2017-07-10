@@ -1,9 +1,9 @@
 "use strict"
 
-const verify = require("zeronet-common/verify")
-const Nonces = require("zeronet-common/nonce")
+const verify = require("zeronet-common/lib/verify")
+const Nonces = require("zeronet-common/lib/nonce")
 
-const Tracker = require("zeronet-common/tracker")
+const Tracker = require("zeronet-common/lib/tracker")
 const Pool = require("./pool.js")
 
 module.exports = function Zite(config, zeronet) { //describes a single zite

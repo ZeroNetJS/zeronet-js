@@ -1,20 +1,19 @@
 "use strict"
 
 //const msg = require(__dirname + "/stream")
-const msgstream = require(__dirname + "/msgstream")
-const handshake = require(__dirname + "/handshake")
+const msgstream = require("zeronet-protocol/lib/stream/msgstream")
+const handshake = require("zeronet-protocol/lib/proto/handshake")
 const msgpack = require("msgpack")
 
 const pull = require('pull-stream')
 const Pushable = require('pull-pushable')
 const Readable = require("stream").Readable
 
-const stable = require(__dirname + "/stable-stream")
 const clone = require("clone")
 
 const debug = require("debug")
 
-function thingInspect(d, n) {
+function thingInspect(d /*, n*/ ) {
   if (Buffer.isBuffer(d)) return "<Buffer length=" + d.length + ">"
   return JSON.stringify(d)
 }

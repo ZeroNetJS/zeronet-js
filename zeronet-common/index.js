@@ -5,9 +5,9 @@ const Server = require("zeronet-fileserver")
 const UiServer = require("zeronet-uiserver")
 const uuid = require("uuid").v4
 const tls = require("tls")
-const logger = require(__dirname + "/logger")
+const logger = require("zeronet-common/lib/logger")
 const fs = require("fs")
-const Pool = require("zeronet-protocol/peer-pool.js")
+const Pool = require("zeronet-common/lib/peer/pool.js")
 
 module.exports = function ZeroNet(config) {
   //shared module that contains database access, file functions, util functions, etc

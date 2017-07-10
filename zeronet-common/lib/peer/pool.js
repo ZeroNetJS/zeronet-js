@@ -2,7 +2,7 @@
 
 const hypercache = require("hypercache")
 
-const Peer = require("./zeronet-peer")
+const Peer = require("zeronet-common/lib/peer")
 
 const each = require("async/each")
 

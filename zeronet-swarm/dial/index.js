@@ -3,17 +3,8 @@
 const Connection = require('interface-connection').Connection
 const debug = require('debug')
 const log = debug('zeronet:dial')
-const crypto = require("crypto")
 
-const sha5 = text => crypto.createHash('sha512').update(text).digest('hex')
-const multiaddr = require("multiaddr")
-const Id = require("peer-id")
-const Peer = require('peer-info')
-
-const BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
-const bs58 = require('base-x')(BASE58)
-
-const getId = require("zeronet-protocol/zeronet-peer").piFromAddr
+const getId = require("zeronet-common/lib/peer").piFromAddr
 
 module.exports = function dial(swarm, ZProtocol) {
 

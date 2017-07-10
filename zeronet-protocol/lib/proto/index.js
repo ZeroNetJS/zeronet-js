@@ -1,9 +1,9 @@
-const Client = require(__dirname + "/client")
+const Client = require("zeronet-protocol/lib/client")
 
-const PeerRequest = require(__dirname + "/peer-request")
-const PeerRequestHandler = require(__dirname + "/peer-request-handler")
+const PeerRequest = require("zeronet-protocol/lib/request/peer-request")
+const PeerRequestHandler = require("zeronet-protocol/lib/request/peer-request-handler.js")
 
-const Defaults = require(__dirname + "/defaults")
+const Defaults = require("zeronet-protocol/lib/proto/defaults")
 const Crypto = require("zeronet-crypto/protocol")
 const debug = require("debug")
 

@@ -2,7 +2,7 @@
   "name": "zeronet-zite",
   "version": "0.0.1-alpha12",
   "description": "ZeroNet Zite Class",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/mkg20001/zeronet-js/issues"
   },
-  "homepage": "https://github.com/mkg20001/zeronet-js#readme"
+  "homepage": "https://github.com/mkg20001/zeronet-js#readme",
+  "directories": {
+    "lib": "lib"
+  }
 }
