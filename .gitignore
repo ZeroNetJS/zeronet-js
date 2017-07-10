@@ -12,3 +12,11 @@ py
 coverage
 .nyc_output
 *.tar.gz
+
+#snap
+parts
+prime
+stage
+*.tar.bz2
+*.snap
+snap/.snapcraft
