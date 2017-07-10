@@ -74,10 +74,11 @@ module.exports = function ZeroNetPeer(peerInfo) {
 
   log("creating", self.multiaddr)
 
-  let known_zites = self.known_zites = []
+  let known_zites = self.zites = []
 
   function setZite(zite) {
     if (hasZite(zite)) return
+    log("%s now seeds %s", self.multiaddr, zite)
     known_zites.push(new ZitePeerInfo(zite))
   }
 
