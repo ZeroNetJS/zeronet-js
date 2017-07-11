@@ -31,11 +31,6 @@ module.exports = function Zite(config, zeronet) { //describes a single zite
   const pool = new Pool(address, zeronet)
 
   zeronet.trackers.add(tracker, address)
-  /*tracker.on('update', function (data) {
-    console.log('got an announce response from tracker: ' + data.announce)
-    console.log('number of seeders in the swarm: ' + data.complete)
-    console.log('number of leechers in the swarm: ' + data.incomplete)
-  })*/
 
   /* App */
 

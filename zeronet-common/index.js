@@ -3,7 +3,6 @@
 const Server = require("zeronet-fileserver")
 const UiServer = require("zeronet-uiserver")
 const uuid = require("uuid").v4
-const tls = require("tls")
 const logger = require("zeronet-common/lib/logger")
 const fs = require("fs")
 const PeerPool = require("zeronet-common/lib/peer/pool")
@@ -20,7 +19,7 @@ module.exports = function ZeroNet(config) {
   self.config = config
 
   let streams = [{
-    level: config.debug ? 0 : "info",
+    level: (config.debug || process.env.DEBUG) ? 0 : "info",
     stream: process.stdout
   }]
 

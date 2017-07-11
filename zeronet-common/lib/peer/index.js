@@ -10,40 +10,12 @@ const Peer = require("peer-info")
 const BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 const bs58 = require('base-x')(BASE58)
 
-const ip = require("ip")
 const assert = require("assert")
 
 const debug = require("debug")
 const log = debug("zeronet:peer")
 
-function ip2multi(ip, proto) {
-  ip = ip2multi.split(ip)
-  return "/ip" + ip.v + "/" + ip.ip + "/" + proto + "/" + ip.port + "/"
-}
-
-ip2multi.split = ipHost => {
-  const s = ipHost.split(":")
-  assert.equal(s.length, 2, "not host:port")
-  let r = {
-    ip: s[0],
-    port: parseInt(s[1], 10)
-  }
-  assert(!isNaN(r.port), "not a valid port")
-  assert(ip.isV4Format(r.ip) || ip.isV6Format(r.ip), "not a valid ip")
-  if (ip.isV4Format(r.ip)) r.v = 4
-  else if (ip.isV6Format(r.ip)) r.v = 6
-
-  return r
-}
-
-ip2multi.isIp = ipHost => {
-  try {
-    ip2multi.split(ipHost)
-    return true
-  } catch (e) {
-    return false
-  }
-}
+const ip2multi = require("zeronet-common/lib/util/ip2multi")
 
 function multi2ip(multi) {
   const s = multi.split("/")
@@ -53,11 +25,11 @@ function multi2ip(multi) {
 
 function ZitePeerInfo(addr) {
   const self = this
-  let opt = self.optional = []
+  /*let opt = self.optional = []
 
   function setHashfield(hf) {
     //TODO: add
-  }
+  }*/
 
   self.zite = addr
 }
@@ -77,9 +49,14 @@ module.exports = function ZeroNetPeer(peerInfo) {
   let known_zites = self.zites_info = []
 
   let zites = self.zites = []
+  let zites_id = self.zites_id = {}
 
   function updateZites() {
-    zites = known_zites.map(z => z.zite)
+    zites_id = {}
+    zites = known_zites.map(z => {
+      zites_id[z.zite] = z
+      return z.zite
+    })
   }
 
   function setZite(zite) {
@@ -90,7 +67,7 @@ module.exports = function ZeroNetPeer(peerInfo) {
   }
 
   function hasZite(zite) {
-    return known_zites.filter(z => z.zite == zite)[0]
+    return zites_id[zite]
   }
 
   function toJSON() {
