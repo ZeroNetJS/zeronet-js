@@ -17,6 +17,7 @@
     "zeronet-crypto": "file:zeronet-crypto",
     "zeronet-fileserver": "file:zeronet-fileserver",
     "zeronet-protocol": "file:zeronet-protocol",
+    "zeronet-storage-fs": "file:zeronet-storage-fs",
     "zeronet-swarm": "file:zeronet-swarm",
     "zeronet-uiserver": "file:zeronet-uiserver",
     "zeronet-zite": "file:zeronet-zite"

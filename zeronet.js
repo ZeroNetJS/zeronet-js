@@ -99,6 +99,8 @@ const bunyan = cp.spawn(process.argv[0], [__dirname + "/node_modules/.bin/bunyan
 delete process.stdout
 process.stdout = bunyan.stdin
 
+const FS = require("zeronet-storage-fs")
+
 const defaults = {
   tls: "disabled",
   server: {
@@ -115,6 +117,7 @@ const defaults = {
       port: 15544
     }
   },
+  storage: new FS(path.join(process.cwd(), "data")),
   trackers: [
     //"zero://boot3rdez4rzn36x.onion:15441",
     //"zero://boot.zeronet.io#f36ca555bee6ba216b14d10f38c16f7769ff064e0e37d887603548cc2e64191d:15441",
@@ -148,7 +151,8 @@ if (fs.existsSync(confpath)) {
 
 require("zeronet-crypto/node_modules/peer-id").create((err, id) => {
   config.id = id
-  node = new ZeroNet(config, errCB)
+  node = new ZeroNet(config)
   dwait.map(d => d())
   dwait = null
+  node.start(err => err?errCB(err):node.bootstrap(errCB))
 })

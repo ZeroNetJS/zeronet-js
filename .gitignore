@@ -6,12 +6,15 @@ zeronet-macos*
 zeronet-win*
 *.bak
 config.json
-*.log
 .pkg
 py
 coverage
 .nyc_output
 *.tar.gz
+
+#zn
+*.log
+/data
 
 #snap
 parts

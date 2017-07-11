@@ -12,7 +12,7 @@ module.exports = function ZeroNetStorageFS(folder) {
   function getPath() {
     const a = [...arguments]
     a.unshift(folder)
-    path.join.apply(path, a)
+    return path.join.apply(path, a)
   }
 
   const self = this
@@ -28,7 +28,7 @@ module.exports = function ZeroNetStorageFS(folder) {
   self.json = {
     exists: (key, cb) => fs.exists(getPath("json", key), res => cb(null, res)),
     read: (key, cb) => jsonfile.readFile(getPath("json", key), cb),
-    write: (key, cb) => jsonfile.readFile(getPath("json", key), cb),
+    write: (key, data, cb) => jsonfile.writeFile(getPath("json", key), data, cb),
     remove: (key, cb) => fs.unlink(getPath("json", key), cb)
   }
 
