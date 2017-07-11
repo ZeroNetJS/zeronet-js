@@ -1,13 +1,13 @@
 "use strict"
 
-const path = require("path")
 const Server = require("zeronet-fileserver")
 const UiServer = require("zeronet-uiserver")
 const uuid = require("uuid").v4
 const tls = require("tls")
 const logger = require("zeronet-common/lib/logger")
 const fs = require("fs")
-const Pool = require("zeronet-common/lib/peer/pool.js")
+const PeerPool = require("zeronet-common/lib/peer/pool")
+const TrackerManager = require("zeronet-common/lib/tracker/manager")
 
 module.exports = function ZeroNet(config) {
   //shared module that contains database access, file functions, util functions, etc
@@ -50,14 +50,7 @@ module.exports = function ZeroNet(config) {
   //-ZNXXXX- 8 chars + 12 chars random
   self.peer_id = "-ZN" + ("0" + self.version.replace(/\./g, "")) + "-" + uuid().replace(/-/g, "").substr(0, 12)
 
-  if (config.tls == "disabled") {
-    self.tls_disabled = true
-    log.warn("TLS IS DISABLED")
-    log.warn("ALL CONNECTIONS ARE UNENCRYPTED (WHICH MEANS THE NSA PROBABLY ALREADY LISTENS)")
-    log.warn("PLEASE ONLY ENABLE THIS IF YOU ARE SURE WHAT YOU ARE DOING")
-  } else if (config.tls) {
-    self.tls_context = tls.createSecureContext(config.tls)
-  } else {}
+  if (!config.protocol || !config.protocol.crypto || !config.protocol.crypto.length) log.warn("CRYPTO DISABLED! ALL COMMUNICATION IS IN PLAINTEXT!")
 
   log("ZeroNet v[alpha] with peer_id %s", self.peer_id)
 
@@ -71,7 +64,9 @@ module.exports = function ZeroNet(config) {
     self.zites[address] = zite
   }
 
-  self.pool = new Pool()
+  //Globals
+  self.pool = new PeerPool()
+  self.trackers = new TrackerManager(self)
 
   //Start a file server
   if (config.server) self.server = new Server(config.server, self)

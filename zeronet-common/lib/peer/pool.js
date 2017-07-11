@@ -5,6 +5,7 @@ const hypercache = require("hypercache")
 const Peer = require("zeronet-common/lib/peer")
 
 const each = require("async/each")
+const map = require("async/map")
 
 const debug = require("debug")
 const log = debug("zeronet:peer-pool")
@@ -34,7 +35,7 @@ module.exports = function PeerPool() {
   function add(peerLike, zite, cb, lazy) {
     if (isInList(peerLike)) {
       const peer = isInList(peerLike)
-      peer.setZite(zite)
+      if (zite) peer.setZite(zite)
       return cb(null, peer)
     }
     Peer.fromAddr(peerLike, (err, peer) => {
@@ -49,7 +50,7 @@ module.exports = function PeerPool() {
       }
 
       peers.push(peer)
-      peer.setZite(zite)
+      if (zite) peer.setZite(zite)
 
       log("added", peer.multiaddr)
       if (!lazy) update()
@@ -79,6 +80,17 @@ module.exports = function PeerPool() {
     return cache.getSet("zites", zite)
   }
 
+  function fromJSON(data, cb) {
+    map(data, Peer.fromJSON, (err, res) => {
+      if (err) return cb(err)
+      else addMany(res, null, cb)
+    })
+  }
+
+  function toJSON() {
+    return cache.getAll().map(p => p.toJSON())
+  }
+
   update()
 
   self.add = add
@@ -86,4 +98,7 @@ module.exports = function PeerPool() {
   self.getAll = getAll
   self.getZite = getZite
   self.cache = cache
+
+  self.fromJSON = fromJSON
+  self.toJSON = toJSON
 }

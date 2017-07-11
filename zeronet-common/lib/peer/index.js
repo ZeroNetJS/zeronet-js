@@ -74,20 +74,36 @@ module.exports = function ZeroNetPeer(peerInfo) {
 
   log("creating", self.multiaddr)
 
-  let known_zites = self.zites = []
+  let known_zites = self.zites_info = []
+
+  let zites = self.zites = []
+
+  function updateZites() {
+    zites = known_zites.map(z => z.zite)
+  }
 
   function setZite(zite) {
     if (hasZite(zite)) return
     log("%s now seeds %s", self.multiaddr, zite)
     known_zites.push(new ZitePeerInfo(zite))
+    updateZites()
   }
 
   function hasZite(zite) {
     return known_zites.filter(z => z.zite == zite)[0]
   }
 
+  function toJSON() {
+    return {
+      addr: self.multiaddr,
+      zites
+    }
+  }
+
   self.setZite = setZite
   self.hasZite = hasZite
+
+  self.toJSON = toJSON
 }
 
 module.exports.piFromAddr = (pi, cb) => {
@@ -115,5 +131,12 @@ module.exports.fromAddr = (pi, cb) => {
   module.exports.piFromAddr(pi, (err, pi) => {
     if (err) return cb(err)
     return cb(null, new module.exports(pi))
+  })
+}
+
+module.exports.fromJSON = (data, cb) => {
+  module.exports.fromAddr(multiaddr(data.addr), (err, peer) => {
+    if (err) return cb(err)
+    data.zites.forEach(zite => peer.setZite(zite))
   })
 }
