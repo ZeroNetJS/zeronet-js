@@ -21,7 +21,7 @@ module.exports = function TrackerManager(zeronet) {
     if (lastid) setTimeout(updateAll, 1000)
   }
 
-  setInterval(() => {
+  const main = setInterval(() => {
     lastid = 0
     updateAll()
   }, (30 + trackers.length) * 1000) //every 30secs + per tracker 1sec
@@ -40,7 +40,7 @@ module.exports = function TrackerManager(zeronet) {
       plist.push(addr)
     })
 
-    tracker.on("update", console.log)
+    //tracker.on("update", console.log)
 
     tracker.complete()
     tracker.start()
@@ -50,6 +50,7 @@ module.exports = function TrackerManager(zeronet) {
   }
 
   function stop() {
+    clearInterval(main)
     each(trackers, (tracker, next) => {
       tracker.once("error", next)
       tracker.once("stop", next)

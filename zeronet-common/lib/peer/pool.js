@@ -33,6 +33,7 @@ module.exports = function PeerPool() {
   }
 
   function add(peerLike, zite, cb, lazy) {
+    if (peerLike.toString().endsWith(":0") || peerLike.toString().endsWith("/0")) return cb(lazy ? null : new Error("ignore " + peerLike.toString()))
     if (isInList(peerLike)) {
       const peer = isInList(peerLike)
       if (zite) peer.setZite(zite)
@@ -40,9 +41,6 @@ module.exports = function PeerPool() {
     }
     Peer.fromAddr(peerLike, (err, peer) => {
       if (err) return cb(err)
-
-      if (peer.multiaddr.endsWith("/0")) //no port, ignore
-        return cb("ignore " + peer.multiaddr)
 
       if (isInList(peerLike)) {
         log.error("race for %s: already added", peerLike)
@@ -83,7 +81,8 @@ module.exports = function PeerPool() {
   function fromJSON(data, cb) {
     map(data, Peer.fromJSON, (err, res) => {
       if (err) return cb(err)
-      else addMany(res, null, cb)
+      peers = res
+      update()
     })
   }
 

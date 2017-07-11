@@ -1,0 +1,29 @@
+{
+  "name": "zeronet-storage-fs",
+  "version": "0.0.1-alpha13pre",
+  "description": "ZeroNet filesystem storage module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "zeronet",
+    "storage",
+    "fs",
+    "plain"
+  ],
+  "author": "Maciej Krüger <mkg20001@gmail.com>",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkg20001/zeronet-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mkg20001/zeronet-js/issues"
+  },
+  "homepage": "https://github.com/mkg20001/zeronet-js#readme",
+  "dependencies": {
+    "jsonfile": "^3.0.1",
+    "mkdirp": "^0.5.1"
+  }
+}
