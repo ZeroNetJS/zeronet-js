@@ -1,12 +1,10 @@
 "use strict"
 
-const fs = require("fs")
-const path = require("path")
-
 const crypto_data = {
   "secio": require("zeronet-crypto/secio"),
   "tls-rsa": require("zeronet-crypto/tls")
 }
+
 const cryptos = Object.keys(crypto_data).map(c => {
   return {
     name: c,
@@ -16,6 +14,7 @@ const cryptos = Object.keys(crypto_data).map(c => {
 const Swarm = require("zeronet-swarm")
 
 const multiaddr = require("multiaddr")
+const memstore = require("zeronet-storage-memory")
 
 let swarm
 
@@ -29,7 +28,8 @@ cryptos.forEach(crypto => {
       server: {
         host: "127.0.0.1",
         port: 25335
-      }
+      },
+      storage: new memstore()
     }, err => {
       if (err) return cb(err)
 
