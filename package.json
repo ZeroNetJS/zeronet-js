@@ -45,7 +45,6 @@
   },
   "pkg": {
     "scripts": [
-      "node_modules/zeronet-*/**/*.js",
       "node_modules/.bin/bunyan"
     ],
     "assets": [

@@ -29,8 +29,9 @@ function verifyProtocol(def, param) {
 }
 
 function verifyAddress(adr) {
+  console.log(adr,adr.length)
   if (typeof adr != "string") return false
-  return !!adr.match(/^1[A-Z0-9a-z]{33}$/)
+  return !!adr.match(/^1[A-Z0-9a-z]{32,33}$/)
 }
 
 function verifyNamecoin(adr) {

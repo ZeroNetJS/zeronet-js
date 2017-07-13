@@ -14,7 +14,7 @@ const multiaddr = require('multiaddr')
 
 const debug = require("debug")
 const Protocol = require("zeronet-protocol")
-const zdial = require(__dirname + "/dial")
+const zdial = require("zeronet-swarm/dial")
 const each = require('async/each')
 const series = require('async/series')
 const clone = require("clone")
@@ -158,7 +158,7 @@ class Node extends libp2p {
       series([
         cb => storage.getJSON("peers", [], (err, res) => {
           if (err) return cb(err)
-          zeronet.pool.fromJSON(res)
+          zeronet.pool.fromJSON(res, cb)
         })
       ], cb)
     }

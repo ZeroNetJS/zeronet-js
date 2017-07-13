@@ -83,6 +83,7 @@ module.exports = function PeerPool() {
       if (err) return cb(err)
       peers = res
       update()
+      return cb()
     })
   }
 

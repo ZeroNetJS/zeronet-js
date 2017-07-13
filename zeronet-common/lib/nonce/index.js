@@ -1,6 +1,6 @@
 "use strict"
 
-const verify = require(__dirname + "/../verify")
+const verify = require("zeronet-common/lib/verify")
 
 module.exports = function Nonces() {
   let nonces = {}

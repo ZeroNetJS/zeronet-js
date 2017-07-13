@@ -2,9 +2,11 @@
 
 set -e
 
+op="$PWD"
+
 ex_re() {
   ex="--exclude=zeronet* --exclude=package-lock.json"
-  for f in .git .gitignore .travis.yml debug scripts $(cat .gitignore); do
+  for f in .git .gitignore .travis.yml debug scripts empty $(cat $op/.gitignore); do
     ex="$ex --exclude=$f"
   done
 }
