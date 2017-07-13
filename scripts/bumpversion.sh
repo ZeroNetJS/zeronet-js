@@ -18,7 +18,7 @@ newver="$1"
 
 [ -z "$newver" ] && echo "Usage: $0 <new-version>" && exit 2
 
-sed -r "s|version: .*|version: $newver" -i snap/snapcraft.yml
+sed -r "s|version: .*|version: $newver|g" -i snap/snapcraft.yml
 git add snap/snapcraft.yml
 
 for dir in $files; do
