@@ -26,12 +26,6 @@ for file in . $(dir -w 1 | grep "^zeronet-"); do
   fi
 done
 
-for dir in $files; do
-  cd $dir
-    [ ! -e .gitignore ] && ln -s ../.gitignore
-  cd $op
-done
-
 bash scripts/tarball.sh
 
 tarfiles="zeronet.tar.gz"
