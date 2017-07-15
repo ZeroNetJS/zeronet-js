@@ -60,6 +60,9 @@ class ZeroNetNode {
     }
     /* jshint ignore: end */
 
+    if (!Array.isArray(options.trackers))
+      options.trackers = [options.trackers]
+
     log("creating a new node", options)
 
     assert(options.storage, "no zeronet storage given")

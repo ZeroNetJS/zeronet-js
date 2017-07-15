@@ -32,21 +32,6 @@ class Node extends libp2p {
 
     if (peerInfo.multiaddrs._multiaddrs.length) log("starting server on", peerInfo.multiaddrs._multiaddrs.map(m => m.toString()))
 
-    if (!options.trackers)
-      options.trackers = [
-        "zero://boot3rdez4rzn36x.onion:15441",
-        "zero://boot.zeronet.io#f36ca555bee6ba216b14d10f38c16f7769ff064e0e37d887603548cc2e64191d:15441",
-        "udp://tracker.coppersurfer.tk:6969",
-        "udp://tracker.leechers-paradise.org:6969",
-        "udp://9.rarbg.com:2710",
-        "http://tracker.opentrackr.org:1337/announce",
-        "http://explodie.org:6969/announce",
-        "http://tracker1.wasabii.com.tw:6969/announce"
-      ]
-
-    if (!Array.isArray(options.trackers))
-      options.trackers = [options.trackers]
-
     const modules = {
       transport: [
         new TCP(),
