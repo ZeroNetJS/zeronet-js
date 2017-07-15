@@ -1,0 +1,26 @@
+{
+  "name": "zeronet-node",
+  "version": "0.0.1-alpha14pre",
+  "description": "ZeroNet full node",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "zeronet",
+    "node"
+  ],
+  "author": "Maciej Krüger <mkg20001@gmail.com>",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkg20001/zeronet-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mkg20001/zeronet-js/issues"
+  },
+  "homepage": "https://github.com/mkg20001/zeronet-js#readme",
+  "dependencies": {
+    "async": "^2.5.0"
+  }
+}

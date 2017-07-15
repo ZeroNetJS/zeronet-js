@@ -6,9 +6,6 @@ const TCP = require('libp2p-tcp')
 const MulticastDNS = require('libp2p-mdns')
 const DHT = require('libp2p-kad-dht')
 
-const ZeroNet = require("zeronet-common") //shared class, used for coordination
-const StorageWrapper = require("zeronet-common/lib/storage/wrapper") //wraps a storage into a more usable api
-
 const PeerInfo = require('peer-info')
 const multiaddr = require('multiaddr')
 
@@ -17,24 +14,14 @@ const Protocol = require("zeronet-protocol")
 const zdial = require("zeronet-swarm/dial")
 const each = require('async/each')
 const series = require('async/series')
-const clone = require("clone")
-const assert = require("assert")
 
 const mafmt = require('mafmt')
 
 class Node extends libp2p {
-  constructor(options) {
+  constructor(options, zeronet) {
     options = options || {}
 
-    assert(options.storage, "no zeronet storage given")
-    const storage = new StorageWrapper(options.storage)
-    delete options.storage
-
     const peerInfo = new PeerInfo(options.id)
-    const zOPT = clone(options)
-    delete zOPT.server
-    zOPT.storage = storage
-    const zeronet = new ZeroNet(zOPT)
 
     const log = debug("zeronet:swarm")
 
@@ -73,7 +60,7 @@ class Node extends libp2p {
       dht: DHT
     }
 
-    super(modules, peerInfo, /*peerBook*/ null, options)
+    super(modules, peerInfo, /*peerBook*/ null)
 
     const self = this
     self.zeronet = zeronet
@@ -125,8 +112,6 @@ class Node extends libp2p {
       })
 
       series([
-        (cb) => storage.start(cb), //launch the storage
-        //(cb) => options.uiserver ? options.uiserver.start(cb) : cb(),
         (cb) => this.swarm.listen(cb),
         (cb) => {
           // listeners on, libp2p is on
@@ -153,30 +138,7 @@ class Node extends libp2p {
         }
       ], callback)
     }
-
-    self.bootstrap = cb => { //loads all the stuff from disk and starts everything
-      series([
-        cb => storage.getJSON("peers", [], (err, res) => {
-          if (err) return cb(err)
-          zeronet.pool.fromJSON(res, cb)
-        })
-      ], cb)
-    }
-
-    self.save = cb => { //save to disk
-      log("saving to disk")
-      const s = new Date().getTime()
-      series([
-        cb => storage.setJSON("peers", zeronet.pool.toJSON(), cb)
-      ], err => {
-        log("saved in %sms", new Date().getTime() - s)
-        if (err) log(err)
-        if (cb) cb(err)
-      })
-    }
   }
 }
-
-Node.zeronet = require("zeronet-common")
 
 module.exports = Node

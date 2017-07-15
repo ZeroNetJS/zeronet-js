@@ -1,7 +1,5 @@
 "use strict"
 
-const Server = require("zeronet-fileserver")
-const UiServer = require("zeronet-uiserver")
 const uuid = require("uuid").v4
 const logger = require("zeronet-common/lib/logger")
 const fs = require("fs")
@@ -66,10 +64,4 @@ module.exports = function ZeroNet(config) {
   //Globals
   self.pool = new PeerPool()
   self.trackers = new TrackerManager(self)
-
-  //Start a file server
-  if (config.server) self.server = new Server(config.server, self)
-
-  //Start a ui server
-  if (config.uiserver) self.uiserver = new UiServer(config.uiserver, self)
 }

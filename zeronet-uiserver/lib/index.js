@@ -75,6 +75,7 @@ function UI(zeronet) {
 module.exports = function UiServer(config, zeronet) {
   const log = zeronet.logger("uiserver")
   const app = express()
+  const self = this
 
   const ui = new UI(zeronet)
 
@@ -110,8 +111,13 @@ module.exports = function UiServer(config, zeronet) {
     }
   })
 
-  app.listen(config.listen, err => {
-    if (err) log.error(err, "Failed to listen")
-    else log(config.listen, "Listening on %s:%s", config.listen.host, config.listen.port)
-  })
+  self.start = cb => {
+    app.listen(config.listen, err => {
+      if (err) log.error(err, "Failed to listen")
+      else log(config.listen, "Listening on %s:%s", config.listen.host, config.listen.port)
+      return cb(err)
+    })
+  }
+
+  self.stop = cb => cb() //TODO: add
 }

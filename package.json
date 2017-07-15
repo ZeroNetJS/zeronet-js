@@ -16,6 +16,7 @@
     "zeronet-common": "file:zeronet-common",
     "zeronet-crypto": "file:zeronet-crypto",
     "zeronet-fileserver": "file:zeronet-fileserver",
+    "zeronet-node": "file:zeronet-node",
     "zeronet-protocol": "file:zeronet-protocol",
     "zeronet-storage-fs": "file:zeronet-storage-fs",
     "zeronet-swarm": "file:zeronet-swarm",
@@ -26,7 +27,7 @@
     "app-module-path": "^2.2.0",
     "mocha": "^3.4.2",
     "nyc": "^11.0.3",
-    "pkg": "^4.1.1"
+    "pkg": "^4.1.2"
   },
   "scripts": {
     "test": "nyc mocha",

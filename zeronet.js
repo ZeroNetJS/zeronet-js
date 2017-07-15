@@ -91,7 +91,7 @@ const path = require("path")
 const cp = require("child_process")
 
 const MergeRecursive = require("merge-recursive")
-const ZeroNet = require("zeronet-swarm")
+const ZeroNet = require("zeronet-node")
 
 const bunyan = cp.spawn(process.argv[0], [__dirname + "/node_modules/.bin/bunyan"], {
   stdio: ["pipe", process.stderr, process.stderr]
@@ -102,14 +102,18 @@ process.stdout = bunyan.stdin
 const FS = require("zeronet-storage-fs")
 
 const defaults = {
-  tls: "disabled",
-  server: {
-    host: "0.0.0.0",
-    port: 15543
-  },
-  server6: {
-    host: "::",
-    port: 15543
+  swarm: {
+    server: {
+      host: "0.0.0.0",
+      port: 15543
+    },
+    server6: {
+      host: "::",
+      port: 15543
+    },
+    protocol: {
+      crypto: []
+    }
   },
   uiserver: {
     listen: {
@@ -117,20 +121,22 @@ const defaults = {
       port: 15544
     }
   },
-  storage: new FS(path.join(process.cwd(), "data")),
-  trackers: [
-    //"zero://boot3rdez4rzn36x.onion:15441",
-    //"zero://boot.zeronet.io#f36ca555bee6ba216b14d10f38c16f7769ff064e0e37d887603548cc2e64191d:15441",
-    "udp://tracker.coppersurfer.tk:6969",
-    "udp://tracker.leechers-paradise.org:6969",
-    "udp://9.rarbg.com:2710",
-    "http://tracker.opentrackr.org:1337/announce",
-    "http://explodie.org:6969/announce",
-    "http://tracker1.wasabii.com.tw:6969/announce"
-    //"http://localhost:25534/announce"
-  ],
-  debug_file: path.resolve(process.cwd(""), "debug.log"),
-  debug_shift_file: path.resolve(process.cwd(""), "debug-last.log")
+  node: {
+    trackers: [
+      //"zero://boot3rdez4rzn36x.onion:15441",
+      //"zero://boot.zeronet.io#f36ca555bee6ba216b14d10f38c16f7769ff064e0e37d887603548cc2e64191d:15441",
+      "udp://tracker.coppersurfer.tk:6969",
+      "udp://tracker.leechers-paradise.org:6969",
+      "udp://9.rarbg.com:2710",
+      "http://tracker.opentrackr.org:1337/announce",
+      "http://explodie.org:6969/announce",
+      "http://tracker1.wasabii.com.tw:6969/announce"
+      //"http://localhost:25534/announce"
+    ],
+    debug_file: path.resolve(process.cwd(""), "debug.log"),
+    debug_shift_file: path.resolve(process.cwd(""), "debug-last.log")
+  },
+  storage: new FS(path.join(process.cwd(), "data"))
 }
 
 const errCB = err => {
@@ -154,5 +160,5 @@ require("zeronet-crypto/node_modules/peer-id").create((err, id) => {
   node = new ZeroNet(config)
   dwait.map(d => d())
   dwait = null
-  node.start(err => err?errCB(err):node.bootstrap(errCB))
+  node.start(err => err ? errCB(err) : node.bootstrap(errCB))
 })
