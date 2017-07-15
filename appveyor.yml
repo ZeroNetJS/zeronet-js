@@ -2,6 +2,9 @@
 environment:
   nodejs_version: "8"
 
+init: #fix for .cmd
+  - git config --global core.autocrlf true
+
 # Install scripts. (runs after repo cloning)
 install:
   # Get the latest stable version of Node.js or io.js
