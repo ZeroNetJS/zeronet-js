@@ -155,9 +155,22 @@ if (fs.existsSync(confpath)) {
   config = MergeRecursive(config_data, defaults)
 } else config = defaults
 
+function exit(code) {
+  node.stop(err => {
+    if (err) {
+      console.error("FAILED TO QUIT GRACEFULLY")
+      throw err
+    }
+    process.exit(code || 0)
+  })
+}
+
+["SIGTERM", "SIGINT", "SIGUSR2"].forEach(sig => process.on(sig, exit))
+
 require("zeronet-crypto/node_modules/peer-id").create((err, id) => {
   config.id = id
   node = new ZeroNet(config)
+  console.log(node.start)
   dwait.map(d => d())
   dwait = null
   node.start(err => err ? errCB(err) : node.bootstrap(errCB))

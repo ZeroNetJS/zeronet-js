@@ -6,12 +6,13 @@ const UiServer = require("zeronet-uiserver")
 const debug = require("debug")
 const log = debug("zeronet:node")
 const series = require('async/series')
+const clone = require("clone")
 
 const ZeroNet = require("zeronet-common") //shared class, used for coordination
 const StorageWrapper = require("zeronet-common/lib/storage/wrapper") //wraps a storage into a more usable api
 const assert = require("assert")
 
-module.exports.defaults = { //The defaults
+const defaults = ZeroNetNode.defaults = { //The defaults
   swarm: {
     server: {
       host: "0.0.0.0",
@@ -49,65 +50,63 @@ module.exports.defaults = { //The defaults
   //storage: new ZNStorage("path", "dbpath")
 }
 
-class ZeroNetNode {
-  construstor(options) {
+function ZeroNetNode(options) {
 
-    if (!options) options = {}
+  if (!options) options = {}
 
-    /* jshint ignore: start */
-    options = { ...module.exports.defaults,
-      ...options
-    }
-    /* jshint ignore: end */
+  console.log(clone(module.exports.defaults))
 
-    if (!Array.isArray(options.trackers))
-      options.trackers = [options.trackers]
+  options = Object.assign(clone(defaults), options)
 
-    log("creating a new node", options)
+  if (!Array.isArray(options.trackers))
+    options.trackers = [options.trackers]
 
-    assert(options.storage, "no zeronet storage given")
-    const storage = new StorageWrapper(options.storage)
+  options.swarm.id = options.id
 
-    const self = this
-    const zeronet = self.zeronet = new ZeroNet(options.node)
-    const swarm = self.swarm = new Swarm(options.swarm, zeronet)
-    const uiserver = self.uiserver = options.uiserver ? new UiServer(options.uiserver, zeronet) : false
+  log("creating a new node", options)
 
-    self.peerPool = zeronet.pool
-    self.peerInfo = swarm.peerInfo
+  assert(options.storage, "no zeronet storage given")
+  const storage = new StorageWrapper(options.storage)
 
-    self.start = cb => { //loads all the stuff from disk and starts everything
-      series([
-        storage.start,
-        cb => storage.getJSON("peers", [], (err, res) => {
-          if (err) return cb(err)
-          zeronet.pool.fromJSON(res, cb)
-        }),
-        swarm.start,
-        uiserver.start
-      ], cb)
-    }
+  const self = this
+  const zeronet = self.zeronet = new ZeroNet(options.node)
+  const swarm = self.swarm = new Swarm(options.swarm, zeronet)
+  const uiserver = self.uiserver = options.uiserver ? new UiServer(options.uiserver, zeronet) : false
 
-    self.save = cb => { //save to disk
-      log("saving to disk")
-      const s = new Date().getTime()
-      series([
-        cb => storage.setJSON("peers", zeronet.pool.toJSON(), cb)
-      ], err => {
-        log("saved in %sms", new Date().getTime() - s)
-        if (err) log(err)
-        if (cb) cb(err)
-      })
-    }
+  self.peerPool = zeronet.pool
+  self.peerInfo = swarm.peerInfo
 
-    self.stop = cb => {
-      series([
-        uiserver.stop,
-        swarm.stop,
-        self.save,
-        storage.stop
-      ], cb)
-    }
+  self.start = cb => { //loads all the stuff from disk and starts everything
+    series([
+      storage.start,
+      cb => storage.getJSON("peers", [], (err, res) => {
+        if (err) return cb(err)
+        zeronet.pool.fromJSON(res, cb)
+      }),
+      swarm.start,
+      uiserver.start
+    ], cb)
+  }
+
+  self.save = cb => { //save to disk
+    log("saving to disk")
+    const s = new Date().getTime()
+    series([
+      cb => storage.setJSON("peers", zeronet.pool.toJSON(), cb)
+    ], err => {
+      log("saved in %sms", new Date().getTime() - s)
+      if (err) log(err)
+      if (cb) cb(err)
+    })
+  }
+
+  self.stop = cb => {
+    series([
+      uiserver.stop,
+      swarm.stop,
+      self.save,
+      storage.stop
+    ], cb)
   }
 }
 
