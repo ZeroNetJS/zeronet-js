@@ -9,8 +9,7 @@ npm i
 goto :eof
 
 :install
- cd %1
- 
- npm i
- cd ..
- GOTO :eof
+cd %1
+npm i
+cd ..
+goto :eof
