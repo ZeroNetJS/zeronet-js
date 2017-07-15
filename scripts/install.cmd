@@ -8,3 +8,4 @@ npm i
  cd %1
  npm i
  cd ..
+ GOTO :eof
