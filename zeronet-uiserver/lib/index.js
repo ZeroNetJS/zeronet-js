@@ -112,6 +112,7 @@ module.exports = function UiServer(config, zeronet) {
   })
 
   self.start = cb => {
+    log.debug(config.listen, "starting")
     app.listen(config.listen, err => {
       if (err) log.error(err, "Failed to listen")
       else log(config.listen, "Listening on %s:%s", config.listen.host, config.listen.port)

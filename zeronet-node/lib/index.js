@@ -54,8 +54,6 @@ function ZeroNetNode(options) {
 
   if (!options) options = {}
 
-  console.log(clone(module.exports.defaults))
-
   options = Object.assign(clone(defaults), options)
 
   if (!Array.isArray(options.trackers))
@@ -76,17 +74,20 @@ function ZeroNetNode(options) {
   self.peerPool = zeronet.pool
   self.peerInfo = swarm.peerInfo
 
-  self.start = cb => { //loads all the stuff from disk and starts everything
-    series([
-      storage.start,
-      cb => storage.getJSON("peers", [], (err, res) => {
-        if (err) return cb(err)
-        zeronet.pool.fromJSON(res, cb)
-      }),
-      swarm.start,
-      uiserver.start
-    ], cb)
-  }
+  self.start = cb => series([ //loads all the stuff from disk and starts everything
+    storage.start,
+    self.boot,
+    cb => cb(console.log("starting post")),
+    swarm.start,
+    uiserver.start
+  ], cb)
+
+  self.boot = cb => series([
+    cb => storage.getJSON("peers", [], (err, res) => {
+      if (err) return cb(err)
+      zeronet.pool.fromJSON(res, cb)
+    })
+  ], cb)
 
   self.save = cb => { //save to disk
     log("saving to disk")

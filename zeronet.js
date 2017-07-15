@@ -134,13 +134,14 @@ const defaults = {
       //"http://localhost:25534/announce"
     ],
     debug_file: path.resolve(process.cwd(""), "debug.log"),
-    debug_shift_file: path.resolve(process.cwd(""), "debug-last.log")
+    debug_shift_file: path.resolve(process.cwd(""), "debug-last.log"),
+    debug: !!process.env.DEBUG
   },
   storage: new FS(path.join(process.cwd(), "data"))
 }
 
 const errCB = err => {
-  if (!err) return
+  if (!err) return node.zeronet.logger("node")("Started successfully")
   console.error("The node failed to start")
   console.error(err)
   process.exit(2)
@@ -170,8 +171,7 @@ function exit(code) {
 require("zeronet-crypto/node_modules/peer-id").create((err, id) => {
   config.id = id
   node = new ZeroNet(config)
-  console.log(node.start)
   dwait.map(d => d())
   dwait = null
-  node.start(err => err ? errCB(err) : node.bootstrap(errCB))
+  node.start(errCB)
 })

@@ -70,11 +70,8 @@ class Node extends libp2p {
     }
 
     self.start = (callback) => { //modified from libp2p/src/index.js to allow dialing without listener
-      setInterval(self.save, 10 * 1000) //TODO: more competent approach
-
-      if (!self.modules.transport) {
+      if (!self.modules.transport)
         return callback(new Error('no transports were present'))
-      }
 
       let transports = self.modules.transport
 
