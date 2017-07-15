@@ -32,6 +32,7 @@
   "scripts": {
     "test": "nyc mocha",
     "test:watch": "nodemon -x \"DEBUG=zeronet*,libp2p* npm run test || echo\"",
+    "test:debug": "nodemon -x \"DEBUG=zeronet*,libp2p* mocha || echo\"",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "pkg": "bash scripts/pkg.sh",
     "start": "node zeronet.js"

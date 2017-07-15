@@ -168,7 +168,7 @@ function exit(code) {
 
 ["SIGTERM", "SIGINT", "SIGUSR2"].forEach(sig => process.on(sig, exit))
 
-require("zeronet-crypto/node_modules/peer-id").create((err, id) => {
+require("peer-id").create((err, id) => {
   config.id = id
   node = new ZeroNet(config)
   dwait.map(d => d())
