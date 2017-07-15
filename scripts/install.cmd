@@ -10,6 +10,7 @@ goto :eof
 
 :install
  cd %1
+ 
  npm i
  cd ..
  GOTO :eof
