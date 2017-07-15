@@ -115,5 +115,6 @@ module.exports.fromJSON = (data, cb) => {
   module.exports.fromAddr(multiaddr(data.addr), (err, peer) => {
     if (err) return cb(err)
     data.zites.forEach(zite => peer.setZite(zite))
+    cb(null, peer)
   })
 }

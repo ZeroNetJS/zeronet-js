@@ -80,7 +80,6 @@ module.exports = function PeerPool() {
 
   function fromJSON(data, cb) {
     map(data, Peer.fromJSON, (err, res) => {
-      console.log("from j ok")
       if (err) return cb(err)
       peers = res
       update()
