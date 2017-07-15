@@ -69,6 +69,7 @@ function UI(zeronet) {
   //this.gen = generateUI
   this.handleGet = handleGet
   this.handler = express.static(path.join(uipath, "media")) //TODO: add translation, etc
+  this.roothandler = express.static(path.join(uipath, "root"))
 }
 
 module.exports = function UiServer(config, zeronet) {
@@ -77,6 +78,7 @@ module.exports = function UiServer(config, zeronet) {
 
   const ui = new UI(zeronet)
 
+  app.use("/", ui.roothandler)
   app.use("/uimedia", ui.handler)
 
   app.use((req, res, next) => {
