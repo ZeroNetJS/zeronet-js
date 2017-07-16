@@ -20,10 +20,15 @@ module.exports = function Defaults(protocol, zeronet) {
 
   protocol.handle("pex", {
     site: "string",
-    peers: "string",
+    peers: Array.isArray,
+    peers_onion: () => true,
+    //peers_onion: Array.isArray,
     need: "number"
   }, {
-    peers: "string" //FIXME: wrong type
+    peers: Array.isArray
+  }, (data) => {
+    //TODO: parse peers
+    //TODO: parse onion peers
   })
 
   protocol.handle("update", {
