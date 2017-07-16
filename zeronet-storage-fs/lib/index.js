@@ -65,9 +65,14 @@ module.exports = function ZeroNetStorageFS(folder) {
     write: (key, data, cb) => {
       jsonfile.writeFile(getPath("json", key + ".bak"), data, err => {
         if (err) return cb(err)
-        fs.unlink(getPath("json", key), err => {
+        self.json.exists(getPath("json", key), (err, res) => {
           if (err) return cb(err)
-          fs.rename(getPath("json", key + ".bak"), getPath("json", key), cb)
+          if (res) {
+            fs.unlink(getPath("json", key), err => {
+              if (err) return cb(err)
+              fs.rename(getPath("json", key + ".bak"), getPath("json", key), cb)
+            })
+          } else fs.rename(getPath("json", key + ".bak"), getPath("json", key), cb)
         })
       })
     },

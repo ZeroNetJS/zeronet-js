@@ -33,7 +33,7 @@ it("should recover broken json", cb => {
 
 it("should write and read", cb => {
   fs({})
-  s = new store()
+  s = new store("/")
   s.start(err => {
     if (err) return cb(err)
     s.json.write("test", testdata, err => {
