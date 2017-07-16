@@ -1,6 +1,7 @@
 const Client = require("zeronet-protocol/lib/client")
 
-const PeerRequest = require("zeronet-protocol/lib/request/peer-request")
+const PeerRequest = require("peer-request")
+const validate = require("zeronet-common/lib/verify").verifyProtocol
 const PeerRequestHandler = require("zeronet-protocol/lib/request/peer-request-handler.js")
 
 const Defaults = require("zeronet-protocol/lib/proto/defaults")
@@ -31,7 +32,7 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
   self.handle = (name, def, defret, cb) => {
     if (commands[name]) throw new Error(name + " is already handled")
     log("Handling", name)
-    commands[name] = new PeerRequest(name, def, defret)
+    commands[name] = new PeerRequest(name, def, defret, validate)
     handlers[name] = cb
   }
 

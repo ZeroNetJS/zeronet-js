@@ -105,12 +105,16 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
 
   m.on("msg", data => {
     //log("got  data", addrs, "\n", data)
-    if (data.cmd == "response") {
-      plog("got  response", addrs, data.to, objectInspect(data, "resp"))
-      handleResponse(data)
-    } else {
-      plog("got   request", addrs, data.cmd, objectInspect(data, "req"))
-      handleIn(data)
+    try {
+      if (data.cmd == "response") {
+        plog("got  response", addrs, data.to, objectInspect(data, "resp"))
+        handleResponse(data)
+      } else {
+        plog("got   request", addrs, data.cmd, objectInspect(data, "req"))
+        handleIn(data)
+      }
+    } catch(e) {
+      log(e)
     }
   })
 

@@ -1,6 +1,7 @@
 "use strict"
 
-const PeerRequest = require("zeronet-protocol/lib/request/peer-request")
+const PeerRequest = require("peer-request")
+const validate = require("zeronet-common/lib/verify").verifyProtocol
 const PeerRequestHandler = require("zeronet-protocol/lib/request/peer-request-handler")
 
 function genHandshakeData(protocol, client, zeronet) {
@@ -125,7 +126,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
     }
   }
 
-  client.handlers.handshake = new PeerRequestHandler("handshake", module.exports.req, client, handshakeGet)
+  client.handlers.handshake = new PeerRequestHandler("handshake", module.exports.req, client, handshakeGet, validate)
   log("use handshake", opt)
 
   client.handshake = handshakeInit
