@@ -157,11 +157,14 @@ if (fs.existsSync(confpath)) {
 } else config = defaults
 
 function exit(code) {
+  node.zeronet.logger("node")("Stopping...")
   node.stop(err => {
     if (err) {
+      node.zeronet.logger("node").error(err)
       console.error("FAILED TO QUIT GRACEFULLY")
       throw err
     }
+    node.zeronet.logger("node")("Stopped")
     process.exit(code || 0)
   })
 }

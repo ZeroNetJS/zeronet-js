@@ -27,8 +27,51 @@ module.exports = function ZeroNetStorageFS(folder) {
 
   self.json = {
     exists: (key, cb) => fs.exists(getPath("json", key), res => cb(null, res)),
-    read: (key, cb) => jsonfile.readFile(getPath("json", key), cb),
-    write: (key, data, cb) => jsonfile.writeFile(getPath("json", key), data, cb),
+    read: (key, cb, ig) => {
+      jsonfile.readFile(getPath("json", key), (Err, data) => {
+        if (Err && ig) return cb(Err)
+        if (Err) {
+          self.json.exists(key + ".bak", (err, res) => { //backup exists. something happend.
+            if (err) return cb(err)
+            if (res) {
+              self.json.exists(key, (err, res2) => {
+                if (err) return cb(err)
+                if (res2) { //orig file exists too - corrupt
+                  console.warn("STORAGE WARNGING: JSON FILE %s POTENTIALLY GOT CORRUPTED! CREATING BACKUP %s!", getPath("json", key), getPath("json", key + ".corrupt"))
+                  fs.rename(getPath("json", key), getPath("json", key + ".corrupt"), err => {
+                    if (err) return cb(err)
+                    self.json.read(key + ".bak", (err, data) => {
+                      if (err) {
+                        console.warn("UNRECOVEREABLE!")
+                        return cb(err)
+                      } else {
+                        console.warn("READING BACKUP %s SUCCEDED!", getPath("json", key + ".bak"))
+                        return cb(null, data)
+                      }
+                    }, true)
+                  })
+                } else { //just didn't rename
+                  fs.rename(getPath("json", key + ".bak"), getPath("json", key), err => {
+                    if (err) return cb(err)
+                    self.json.read(key, cb)
+                  })
+                }
+              })
+            } else return cb(Err) //just ENOTFOUND or permissions
+          })
+        }
+        return cb(null, data)
+      })
+    },
+    write: (key, data, cb) => {
+      jsonfile.writeFile(getPath("json", key + ".bak"), data, err => {
+        if (err) return cb(err)
+        fs.unlink(getPath("json", key), err => {
+          if (err) return cb(err)
+          fs.rename(getPath("json", key + ".bak"), getPath("json", key), cb)
+        })
+      })
+    },
     remove: (key, cb) => fs.unlink(getPath("json", key), cb)
   }
 

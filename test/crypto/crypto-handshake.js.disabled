@@ -36,7 +36,6 @@ cryptos.forEach(crypto => {
     })
     node.start(err => {
       if (err) return cb(err)
-      return cb() //skip for now
 
       node.swarm.dial(multiaddr("/ip4/127.0.0.1/tcp/25335"), (e, c) => {
         if (e) return cb(e)
