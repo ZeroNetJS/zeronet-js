@@ -46,7 +46,10 @@ module.exports = function ZeroNetStorageFS(folder) {
                         return cb(err)
                       } else {
                         console.warn("READING BACKUP %s SUCCEDED!", getPath("json", key + ".bak"))
-                        return cb(null, data)
+                        self.json.write(key, data, err => {
+                          if (err) return cb(err)
+                          cb(null, data)
+                        })
                       }
                     }, true)
                   })
