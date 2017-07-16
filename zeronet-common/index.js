@@ -5,6 +5,7 @@ const logger = require("zeronet-common/lib/logger")
 const fs = require("fs")
 const PeerPool = require("zeronet-common/lib/peer/pool")
 const TrackerManager = require("zeronet-common/lib/tracker/manager")
+const ZiteManager = require("zeronet-zite/lib/manager")
 
 module.exports = function ZeroNet(config) {
   //shared module that contains database access, file functions, util functions, etc
@@ -49,15 +50,11 @@ module.exports = function ZeroNet(config) {
 
   log("ZeroNet v[alpha] with peer_id %s", self.peer_id)
 
-  self.zites = {} //zites we seed
-
-  self.addZite = (address, zite) => {
-    if (self.zites[address]) throw new Error("Tried duplicate adding " + address)
-    log({
-      address
-    }, "Seeding %s", address)
-    self.zites[address] = zite
-  }
+  //Zites
+  const zitem = new ZiteManager(self)
+  self.zites = zitem.zites
+  self.zitem = zitem
+  self.addZite = zitem.add
 
   //Globals
   self.pool = new PeerPool()

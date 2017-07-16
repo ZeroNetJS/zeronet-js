@@ -92,6 +92,10 @@ function ZeroNetNode(options) {
     cb => storage.getJSON("peers", [], (err, res) => {
       if (err) return cb(err)
       zeronet.pool.fromJSON(res, cb)
+    }),
+    cb => storage.getJSON("zites", [], (err, res) => {
+      if (err) return cb(err)
+      zeronet.zitem.fromJSON(res, cb)
     })
   ], cb)
 
@@ -99,7 +103,8 @@ function ZeroNetNode(options) {
     log("saving to disk")
     const s = new Date().getTime()
     series([
-      cb => storage.setJSON("peers", zeronet.pool.toJSON(), cb)
+      cb => storage.setJSON("peers", zeronet.pool.toJSON(), cb),
+      cb => storage.setJSON("zites", zeronet.zitem.toJSON(), cb)
     ], err => {
       log("saved in %sms", new Date().getTime() - s)
       if (err) log(err)
