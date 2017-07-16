@@ -47,8 +47,6 @@ module.exports = function ZeroNet(config) {
   //-ZNXXXX- 8 chars + 12 chars random
   self.peer_id = "-ZN" + ("0" + self.version.replace(/\./g, "")) + "-" + uuid().replace(/-/g, "").substr(0, 12)
 
-  if (!config.protocol || !config.protocol.crypto || !config.protocol.crypto.length) log.warn("CRYPTO DISABLED! ALL COMMUNICATION IS IN PLAINTEXT!")
-
   log("ZeroNet v[alpha] with peer_id %s", self.peer_id)
 
   self.zites = {} //zites we seed

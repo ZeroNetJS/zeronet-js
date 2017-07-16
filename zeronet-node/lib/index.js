@@ -71,14 +71,21 @@ function ZeroNetNode(options) {
   const swarm = self.swarm = new Swarm(options.swarm, zeronet)
   const uiserver = self.uiserver = options.uiserver ? new UiServer(options.uiserver, zeronet) : false
 
+  const logger = zeronet.logger("node")
+
+  if (!options.swarm.protocol || !options.swarm.protocol.crypto || !options.swarm.protocol.crypto.length) logger.warn("CRYPTO DISABLED! ALL COMMUNICATION IS IN PLAINTEXT!")
+
   self.peerPool = zeronet.pool
   self.peerInfo = swarm.peerInfo
+
+  let sintv
 
   self.start = cb => series([ //loads all the stuff from disk and starts everything
     storage.start,
     self.boot,
-    swarm.start,
-    uiserver.start
+    cb => sintv = setInterval(self.save, 10 * 1000, cb()), //TODO: "make this great again"
+    cb => swarm.start(cb),
+    uiserver ? uiserver.start : cb => cb()
   ], cb)
 
   self.boot = cb => series([
@@ -100,13 +107,12 @@ function ZeroNetNode(options) {
     })
   }
 
-  setInterval(self.save, 10 * 1000) //TODO: "make this great again"
-
   self.stop = cb => {
     series([
-      uiserver.stop,
-      swarm.stop,
+      uiserver ? uiserver.stop : cb => cb(),
       self.save,
+      cb => sintv = clearInterval(sintv, cb()), //TODO: "make this great again"
+      cb => swarm.stop(cb),
       storage.stop
     ], cb)
   }
