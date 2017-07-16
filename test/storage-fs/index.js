@@ -24,7 +24,6 @@ it("should recover broken json", cb => {
 
     s.json.read("peers", (err, res) => {
       if (err) return cb(err)
-      console.log(res)
       assert(res, "no result")
       assert(JSON.stringify(res) == JSON.stringify(testdata), "not matching")
       return cb()

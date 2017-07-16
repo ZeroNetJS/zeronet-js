@@ -59,8 +59,7 @@ module.exports = function ZeroNetStorageFS(folder) {
               })
             } else return cb(Err) //just ENOTFOUND or permissions
           })
-        }
-        return cb(null, data)
+        } else return cb(null, data)
       })
     },
     write: (key, data, cb) => {
