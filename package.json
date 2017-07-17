@@ -51,9 +51,6 @@
     "zeronet": "zeronet.js"
   },
   "pkg": {
-    "scripts": [
-      "node_modules/.bin/bunyan"
-    ],
     "assets": [
       "node_modules/zeronet-uiserver/ui/**"
     ]
