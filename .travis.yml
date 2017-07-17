@@ -18,3 +18,4 @@ deploy:
   file: ".pkg/zeronet-*"
   on:
     repo: ZeroNetJS/zeronet-js
+  skip_cleanup: true
