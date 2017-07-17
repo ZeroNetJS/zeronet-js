@@ -4,6 +4,7 @@ const fs = require("fs")
 const path = require("path")
 const mkdirp = require("mkdirp")
 const jsonfile = require("jsonfile")
+const series = require("async/series")
 
 module.exports = function ZeroNetStorageFS(folder) {
   //simple storage provider using the bare filesystem
@@ -66,18 +67,24 @@ module.exports = function ZeroNetStorageFS(folder) {
       })
     },
     write: (key, data, cb) => {
-      jsonfile.writeFile(getPath("json", key + ".bak"), data, err => {
-        if (err) return cb(err)
-        self.json.exists(getPath("json", key), (err, res) => {
+      series([
+        cb => self.json.exists(getPath("json", key + ".bak"), (err, res) => {
           if (err) return cb(err)
-          if (res) {
-            fs.unlink(getPath("json", key), err => {
-              if (err) return cb(err)
-              fs.rename(getPath("json", key + ".bak"), getPath("json", key), cb)
-            })
-          } else fs.rename(getPath("json", key + ".bak"), getPath("json", key), cb)
+          if (res) fs.unlink(getPath("json", key + ".bak"), cb)
+          else cb()
+        }),
+        cb => self.json.exists(getPath("json", key), (err, res) => {
+          if (err) return cb(err)
+          if (res) fs.rename(getPath("json", key), getPath("json", key + ".bak"), cb)
+          else cb()
+        }),
+        cb => jsonfile.writeFile(getPath("json", key), data, cb),
+        cb => self.json.exists(getPath("json", key + ".bak"), (err, res) => {
+          if (err) return cb(err)
+          if (res) fs.unlink(getPath("json", key + ".bak"), cb)
+          else cb()
         })
-      })
+      ], cb)
     },
     remove: (key, cb) => fs.unlink(getPath("json", key), cb)
   }
