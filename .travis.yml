@@ -1,20 +1,20 @@
-language:       node_js
+language: node_js
 node_js:
-  - "8"
-  - "6"
-dist:           trusty
+- '8'
+- '6'
+dist: trusty
 before_install:
-  - bash scripts/tarball.sh
-  - pip install --user codecov    #Install codecov
+- bash scripts/tarball.sh
+- pip install --user codecov
 install:
-  - bash scripts/install.sh
+- bash scripts/install.sh
 after_success:
-  - bash scripts/pkg.sh
-  - npm run report-coverage       #Run codecov
+- bash scripts/pkg.sh
+- npm run report-coverage
 deploy:
   provider: releases
   api_key:
-    secure:     DvHYEbD0wJWlg12gHHyqYIss5HcijjXel0fas3PX8p1+DjWFAGcn7M6/N7Lo177FF284kbOHzsy+tI2mCeK0CsNvtYpGhebeivVuWqKhAXpqv4PXUp+HbRYxHy9IsHUUbxgwmlQDx0+txytflvvuHbOVGA/pRFdLVv9VJi2cgNf6xGZIihZ8hAKRRjVAaa1czmTQBjhcG+W97T06CaTo+VBUWa98jldD3UAfZq0q52iU16Oq+bL8avC0gh5eYZ4NOBSvXC1VGuSP9VJ5aOOrDc1GYagQvjPg1bI6FR1n4zeL5gsKXhU3JUxorMxpB8ARvw17kW1gfavOjcvbB0FtfnDcs67KAIyzAEDuw7pC/0Bn8vEP2gTOnYt8uqs9s1lUYpDZpxgvTNQ0PzjbuzolQA03Kr0fheUxZBB8mFwacc1UTXw9fmOhbVXjlikQge+eTejRalgn+RZrKVj3NL8428Lmeb5vQOm07DglF5Ej7siNwGIEySAqYYUHAyYyTXIrWfjuXqmeaTFyNCKbyo06vS02lVwz6GVypsJOztOHsBpKjyxLm8zM0gpWeTcJXokKnbs3Q9wqCzprIPT/PT6gPvxeARi4z7Iv7TAAOGmdi9IoEjQ4Wy9S3W3/pdIAAGrBKTl+atkTSykIIju+ei3ZmB7BG7aMb4QHOcxa6YGoMnA=
-  file:         zeronet-*
+    secure: Th9XqkYVqVjDfa6sOlwSIRYvt0dtZ5Byx5SYFnSxLvLAQMjcXsZUQMceEjlfwGfSa11IudNIiPkKOeKK6dAgNGVuYDqCj2yG3dJMbxFmnRBiOnRTCE8FIAvmFqiW6px/XSkLwlhaXyoQ1ZF0/lLwcnm9k9iDxtm1AMv4ZBeZbAT+B6XofeQY8GDm85inCJz8ObbVw2wQwck5HxS3A8i4ip/IC5dMgBjQh+iuhYmZ7dFIihfOevXrQQ9Ts8+UqS1GvTUyvRYe45RJ1ESsGKQqP829UiRdKCx3RdxM7KT6069E83Akub3wGgMqp69ltYy6qALF0AElz/olMz50mujavik8DYFQVw03LUONtKFKRuG1JqvddDERxck1LyovAbSizl7C6erXJsCiP9Ii3a5SAUiQiOUNcGFtcGZP0kFXv59Upi6HEAx0240d/7sEt+aYmRevBdRbyuFXCDah1LmeEpa0Ri0AjVDLJR8K+lQs7q2a8xcz1h2/JO3Pk/JTnt9d7tuniw/ds9xRBww+0k3WkpX0vgQ04m9TU0wrJ06L0aaBFojFNuC8TBVMjAgi92kzXxegqTmrcpiXae35tNvIex+iVEi9OIBhDZvE1vDp3gWl+RKhGRR+xrhbnJpcE5VAkBtnmgqdEqs9DkEY9Z3DWiKf10b8r+LB7aVv8FVP8eM=
+  file: ".pkg/zeronet-*"
   on:
-    repo:       mkg20001/zeronet-js
+    repo: ZeroNetJS/zeronet-js
