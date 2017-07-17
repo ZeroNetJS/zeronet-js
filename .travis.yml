@@ -1,7 +1,9 @@
 language:       node_js
-node_js:
-- '8'
-- '6'
+matrix:
+  include:
+    - node_js:  "8"
+      env:      COV=true PKG=true
+    - node_js:  "6"
 dist:           trusty
 before_install:
 - bash scripts/tarball.sh
@@ -9,8 +11,8 @@ before_install:
 install:
 - bash scripts/install.sh
 after_success:
-- bash scripts/pkg.sh
-- npm run report-coverage
+- '[ -z "$COV" ] || npm run report-coverage'
+- '[ -z "$PKG" ] || bash scripts/pkg.sh'
 deploy:
   provider:     releases
   api_key:
