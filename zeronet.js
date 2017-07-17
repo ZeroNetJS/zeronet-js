@@ -88,16 +88,36 @@ Object.keys(console).forEach(key => {
 
 const fs = require("fs")
 const path = require("path")
-const cp = require("child_process")
 
 const MergeRecursive = require("merge-recursive")
 const ZeroNet = require("zeronet-node")
 
-const bunyan = cp.spawn(process.argv[0], [__dirname + "/node_modules/.bin/bunyan"], {
-  stdio: ["pipe", process.stderr, process.stderr]
+const bunyan = require("./bunyan") //we have patched that one
+
+const Transform = require("stream").Transform
+
+const through = new Transform({
+  transform(data, enc, cb) {
+    this.push(data)
+    cb()
+  }
 })
+
+const fakeProcess = { //the whole object is a lie
+  env: process.env,
+  versions: process.versions,
+  platform: process.platform,
+  stdin: through,
+  stdout: process.stderr,
+  stderr: process.stderr,
+  on: () => {},
+  //exit: code => exit(code)
+}
+
+bunyan(fakeProcess)
+
 delete process.stdout
-process.stdout = bunyan.stdin
+process.stdout = through
 
 const FS = require("zeronet-storage-fs")
 
