@@ -24,7 +24,7 @@ module.exports = function TrackerManager(zeronet) {
   const main = setInterval(() => {
     lastid = 0
     updateAll()
-  }, (3 + trackers.length) * 1000) //every 30secs + per tracker 1sec
+  }, (30 + trackers.length) * 1000) //every 30secs + per tracker 1sec
 
   function add(tracker, zite) {
     let plist
