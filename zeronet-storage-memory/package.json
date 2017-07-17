@@ -15,11 +15,11 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mkg20001/zeronet-js.git"
+    "url": "git+https://github.com/ZeroNetJS/zeronet-js.git"
   },
   "bugs": {
-    "url": "https://github.com/mkg20001/zeronet-js/issues"
+    "url": "https://github.com/ZeroNetJS/zeronet-js/issues"
   },
-  "homepage": "https://github.com/mkg20001/zeronet-js#readme",
+  "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
   "dependencies": {}
 }
