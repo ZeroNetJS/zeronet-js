@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "bunyan": "^1.8.10",
+    "jsdoc-to-markdown": "^3.0.0",
     "merge-recursive": "0.0.3",
     "mockery": "^2.1.0",
     "peer-id": "^0.8.7",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "app-module-path": "^2.2.0",
     "chai": "^4.1.0",
+    "extract-comments": "^0.10.1",
     "gene-rator": "0.0.1-pre",
     "mocha": "^3.4.2",
     "mock-fs": "^4.4.1",
