@@ -66,8 +66,16 @@ if (fs.existsSync(confpath)) {
   config = MergeRecursive(config_data, defaults)
 } else config = defaults
 
+let exiting
+
 function exit(code) {
+  if (exiting) {
+    node.zeronet.logger("node").warn("Force stop!")
+    return process.nextTick(() => process.exit(2))
+  }
+  exiting = true
   node.zeronet.logger("node")("Stopping...")
+  node.zeronet.logger("node")("Press ^C to force stop")
   node.stop(err => {
     if (err) {
       node.zeronet.logger("node").error(err)
