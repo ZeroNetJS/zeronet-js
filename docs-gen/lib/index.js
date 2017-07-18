@@ -75,7 +75,7 @@ function FilesCollection(list, name, docs) {
     function str(i) {
       if (!i) return i
       if (i.startsWith("module.exports")) {
-        log("mapping %s to %s in %s", i, i.replace(/^module\.exports/, map), name)
+        log("mapping %s to %s in %s", i, i.replace(/^module\.exports/, map), self.full)
         return i.replace(/^module\.exports/, map)
       } else return i
     }
@@ -91,9 +91,10 @@ function ModuleDocs(mod, basepath) {
   let _files = {}
   let files = self.files = []
   self.name = mod
+  log("module docs %s with base %s", mod, basepath)
   self.addFile = (file, data) => {
     file = path.relative(basepath, file)
-    log("adding file %s: lineno=%s, kind=%s, scope=%s, longname=%s", file, data.meta.lineno, data.kind, data.scope, data.longname)
+    log("adding file %s: lineno=%s, kind=%s, scope=%s, longname=%s", file || "index.js", data.meta.lineno, data.kind, data.scope, data.longname)
     if (!_files[file]) _files[file] = []
     _files[file].push(data)
   }
@@ -197,7 +198,17 @@ function prepare(jsdoc, mod) {
   log("prepare")
 
   const pkg = jsdoc.filter(f => f.kind == "package")[0]
-  const mainpath = path.dirname(pkg.files[0])
+  let mainpath = pkg.files.reduce((a, b) => {
+    let na="", nb=""
+    let sa = a.split("")
+    let sb = b.split("")
+    while (na == nb) {
+      na += sa.shift()
+      nb += sb.shift()
+    }
+    return na.substr(0, na.length-1)
+  }, pkg.files[0] + ".")
+  if (!mainpath.endsWith("/")) mainpath = path.dirname(mainpath)
 
   const res = new ModuleDocs(mod, mainpath)
 
@@ -225,7 +236,7 @@ function RenderDocs(mod, files, conf, cb) {
         file.forEach(doc => {
           if (doc.kind == "class" && doc.scope == "global") part.addClass(doc.name, doc)
           else if (doc.kind == "function" && doc.memberof && !doc.memberof.startsWith("module") && !doc.longname.startsWith("module")) part.addMember(doc.longname, doc)
-          else console.warn("Unknown", doc.kind, doc.scope, doc.longname)
+          else log("Unknown", doc.kind, doc.scope, doc.longname)
         })
       })
       log("rendering")
