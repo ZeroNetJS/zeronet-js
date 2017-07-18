@@ -6,10 +6,20 @@ const mkdirp = require("mkdirp")
 const jsonfile = require("jsonfile")
 const series = require("async/series")
 
+/**
+ * Bare filesystem storage for ZeroNetJS
+ * @param {string} folder - directory to store files
+ * @namespace StorageFS
+ * @constructor
+ */
 module.exports = function ZeroNetStorageFS(folder) {
   //simple storage provider using the bare filesystem
   //NOTE2SELF: new providers will have "folder" and optional file
 
+  /**
+   * @param {...string} arguments - List of strings to join with the root folder using path.json
+   * @private
+   */
   function getPath() {
     const a = [...arguments]
     a.unshift(folder)
@@ -20,10 +30,43 @@ module.exports = function ZeroNetStorageFS(folder) {
 
   self.file = {
     //NOTE2SELF: version will be some kind of thing used in updating zites
+    /**
+     * @param {string} zite - Address of the zite
+     * @param {integer} version - Version/Timestamp of the file
+     * @param {string} inner_path - Path of the file relative to the zite
+     * @param {callback} - `err`: the filesystem error, `exists`: if the file exists
+     */
     exists: (zite, version, inner_path, cb) => fs.exists(getPath(zite, inner_path), res => cb(null, res)),
+    /**
+     * @param {string} zite - Address of the zite
+     * @param {integer} version - Version/Timestamp of the file
+     * @param {string} inner_path - Path of the file relative to the zite
+     * @param {callback} - `err`: the filesystem error, `data`: the data of the file as buffer
+     */
     read: (zite, version, inner_path, cb) => fs.readFile(getPath(zite, inner_path), cb),
-    write: (zite, version, inner_path, cb) => fs.readFile(getPath(zite, inner_path), cb),
+    /**
+     * @param {string} zite - Address of the zite
+     * @param {integer} version - Version/Timestamp of the file
+     * @param {string} inner_path - Path of the file relative to the zite
+     * @param {data} data - The data to be written
+     * @param {callback} - `err`: the filesystem error
+     */
+    write: (zite, version, inner_path, data, cb) => fs.writeFile(getPath(zite, inner_path), data, cb),
+    /**
+     * @param {string} zite - Address of the zite
+     * @param {integer} version - Version/Timestamp of the file
+     * @param {string} inner_path - Path of the file relative to the zite
+     * @param {data} data - The data to be written
+     * @param {callback} - `err`: the filesystem error
+     */
     remove: (zite, version, inner_path, cb) => fs.unlink(getPath(zite, inner_path), cb)
+    /**
+     * NOTE: the function will return an error if the file does not exist
+     * @param {string} zite - Address of the zite
+     * @param {integer} version - Version/Timestamp of the file
+     * @param {string} inner_path - Path of the file relative to the zite
+     * @param {callback} - `err`: the filesystem error
+     */
   }
 
   self.json = {

@@ -50,6 +50,12 @@ const defaults = ZeroNetNode.defaults = { //The defaults
   //storage: new ZNStorage("path", "dbpath")
 }
 
+/**
+ * ZeroNet full-node
+ * @param {object} options
+ * @namespace ZeroNetNode
+ * @constructor
+ */
 function ZeroNetNode(options) {
 
   if (!options) options = {}
