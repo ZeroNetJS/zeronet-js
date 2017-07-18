@@ -8,8 +8,9 @@ module.exports = function Renderable() {
     if (content instanceof Renderable) content = content.getAll()
     if (typeof content != "string" && !Array.isArray(content)) return
     if (!Array.isArray(content)) content = [content]
-    if (!content.length && indent && all[all.length - 1]) self.add("") //add empty line in between
-    else if (content.length && indent) self.addMany("", content)
+    if (content.length && indent && all[all.length - 1]) self.addMany([""], content) //add empty line in between
+    else if (!content.length && indent && all[all.length - 1]) self.add([""]) //add empty line in between
+    else if (content.length && indent) self.add(content)
     else if (content.length) all = all.concat(content)
   }
   self.getAll = () => all
