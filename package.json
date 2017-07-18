@@ -8,6 +8,7 @@
     "test": "test"
   },
   "dependencies": {
+    "async": "^2.5.0",
     "bunyan": "^1.8.10",
     "jsdoc-to-markdown": "^3.0.0",
     "merge-recursive": "0.0.3",
