@@ -119,6 +119,7 @@ function ClassFunctionDocs(name, jsdoc, cl) {
   cl.addSub(self)
   self.render = () => {
     let r = new Renderable()
+    if (jsdoc.access == "private") return r
     r.add("#### " + renderFncArgs(cl.name + "." + self.name, jsdoc))
     if (jsdoc.undocumented) {
       console.warn("WARN: Undocumented function", cl.name + "." + self.name)
@@ -146,6 +147,7 @@ function ClassDocs(name, jsdoc, part) {
 
   self.render = () => {
     let r = new Renderable()
+    if (jsdoc.access == "private") return r
     r.add("### Class " + name, true)
     if (jsdoc.undocumented) {
       console.warn("WARN: Undocumented class", name)
