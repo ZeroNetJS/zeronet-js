@@ -7,7 +7,7 @@ module.exports = function TrackerManager(zeronet) {
 
   let trackers = []
 
-  let lastid
+  let lastid = -1
 
   function updateNext() {
     if (!trackers.length) return
@@ -16,15 +16,19 @@ module.exports = function TrackerManager(zeronet) {
     lastid++
   }
 
+  let main
+
   function updateAll() {
-    updateNext()
-    if (lastid) setTimeout(updateAll, 1000)
+    if (trackers[lastid]) {
+      updateNext()
+      main = setTimeout(updateAll, 1000)
+    } else {
+      lastid = 0
+      main = setTimeout(updateAll, 30 * 1000)
+    }
   }
 
-  const main = setInterval(() => {
-    lastid = 0
-    updateAll()
-  }, (30 + trackers.length) * 1000) //every 30secs + per tracker 1sec
+  updateAll()
 
   function add(tracker, zite) {
     let plist
