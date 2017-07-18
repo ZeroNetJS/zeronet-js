@@ -6,6 +6,12 @@ const Nonces = require("zeronet-common/lib/nonce")
 const Tracker = require("zeronet-common/lib/tracker")
 const Pool = require("./pool.js")
 
+/**
+ * ZeroNet Zite
+ * @param {object} config - configuration of the Zite
+ * @param {ZeroNet} zeronet
+ * @constructor
+ */
 function Zite(config, zeronet) { //describes a single zite
   const self = this
 
@@ -40,6 +46,11 @@ function Zite(config, zeronet) { //describes a single zite
 
   /* JSON */
 
+  /**
+   * Converts the site to json
+   * @returns {object}
+   * @category Zite
+   */
   self.toJSON = () => {
     return config
   }
