@@ -1,5 +1,12 @@
 "use strict"
 
+/**
+ * ZeroNet Zite peer pool
+ * @param {Zite} zite - The zite
+ * @param {ZeroNet} zeronet - Global zeronet object
+ * @namespace ZitePeerPool
+ * @constructor
+ */
 module.exports = function ZitePeerPool(zite, zeronet) { //peer pool for a specific zite
   const self = this
   const pool = zeronet.pool

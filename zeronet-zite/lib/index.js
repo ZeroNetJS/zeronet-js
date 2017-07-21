@@ -10,9 +10,10 @@ const Pool = require("./pool.js")
  * ZeroNet Zite
  * @param {object} config - configuration of the Zite
  * @param {ZeroNet} zeronet
+ * @namespace Zite
  * @constructor
  */
-function Zite(config, zeronet) { //describes a single zite
+module.exports = function Zite(config, zeronet) { //describes a single zite
   const self = this
 
   if (!verify.verifyAddress(config.address))
@@ -56,7 +57,5 @@ function Zite(config, zeronet) { //describes a single zite
   }
 }
 
-module.exports = Zite
-
 module.exports.fromJSON = zeronet =>
-  (data, cb) => cb(null, new Zite(data, zeronet))
+  (data, cb) => cb(null, new module.exports(data, zeronet))
