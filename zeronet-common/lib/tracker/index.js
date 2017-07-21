@@ -8,7 +8,7 @@ module.exports = function ZeroNetTracker(zite, zeronet) {
     infoHash: sha1(zite),
     peerId: new Buffer(zeronet.peer_id),
     announce: zeronet.config.trackers,
-    port: zeronet.server ? zeronet.server.port : "0" //FIXME: this code won't work as the server is now in the swarm
+    port: 15543 //XXX: tmp fix for announce, hard to dev otherwise TODO: Fix
   })
 
   return client

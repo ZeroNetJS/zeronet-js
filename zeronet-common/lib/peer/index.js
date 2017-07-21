@@ -77,10 +77,19 @@ module.exports = function ZeroNetPeer(peerInfo) {
     }
   }
 
+  function dial(cb, swarm) {
+    if (self.conn) cb(null, self.conn.client, self.conn)
+    else swarm.dial(peerInfo, (err, conn) => {
+      if (err) return cb(err)
+      self.conn = conn
+    })
+  }
+
   self.setZite = setZite
   self.hasZite = hasZite
 
   self.toJSON = toJSON
+  self.dial = dial
 }
 
 module.exports.piFromAddr = (pi, cb) => {
