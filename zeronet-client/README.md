@@ -1,8 +1,6 @@
 # Standalone ZeroNet peer client
 WIP
 
-# API
-
 -----
 
 [ZeroNetJS](github.com/ZeroNetJS) is developed independently from [ZeroNet](github.com/HelloZeroNet)

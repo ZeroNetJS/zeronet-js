@@ -1,7 +1,9 @@
 //Document all the things
 const fs = require("fs")
 const gen = require("../lib")
-const todo = []
+const todo = [
+  ["zeronet", "zeronet.js", "./README.md"]
+]
 const fix = {
   "zeronet-client": true,
   "zeronet-crypto": true,
@@ -33,7 +35,7 @@ function next() {
         let cut
         let r = read(i[2]).filter(l => {
           if (!cut)
-            if (l == "# API") cut = true
+            if (l == "# API" || l == "-----") cut = true
           return !cut
         })
         fs.writeFileSync(i[2], new Buffer(r.concat(res.split("\n")).join("\n")))
