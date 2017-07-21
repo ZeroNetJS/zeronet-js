@@ -4,7 +4,7 @@ ZeroNet full node
 
 # API
 
-## API for zeronet-node
+## API for index.js
 
 ### Class ZeroNetNode
 

@@ -4,6 +4,7 @@ const gen = require("../lib")
 const todo = [
   ["zeronet", "zeronet.js", "./README.md"]
 ]
+require("colors")
 const fix = {
   "zeronet-client": true,
   "zeronet-crypto": true,
@@ -22,16 +23,17 @@ add.map(s => todo.push([s, s + (fix[s] ? "/*.js" : "/lib/**/*.js"), s + "/README
 
 function next() {
   const i = todo.shift()
-  if (!i) process.exit(console.log("DONE"))
+  if (!i) process.exit(console.log("DONE".green.bold))
   try {
+    console.log(" => %s".blue.bold, i[0])
     gen(i[0], i[1], {
       footer: read(".github/FOOTER.md")
     }, (err, res) => {
       if (err) {
-        console.error("FAILED TO GENERATE DOCS FOR %s", i[0])
+        console.error("FAILED TO GENERATE DOCS FOR %s".red.bold, i[0])
         console.error(err)
       } else {
-        console.log("%s ok", i[0])
+        console.log("   => OK %s".green.bold, i[0])
         let cut
         let r = read(i[2]).filter(l => {
           if (!cut)

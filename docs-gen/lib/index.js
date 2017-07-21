@@ -1,5 +1,7 @@
 "use strict"
 
+require("colors")
+
 const jsdoc2md = require("jsdoc-to-markdown")
 
 const Renderable = require("./renderable")
@@ -9,6 +11,10 @@ const path = require("path")
 
 const debug = require("debug")
 const log = debug("zeronet:docs")
+
+function warn(a, b) {
+  console.warn("WARN:".yellow.bold + " " + a.white, b.yellow.bold)
+}
 
 function renderFncArgs(pre, d) { //TODO: fix
   if (!pre) pre = ""
@@ -135,7 +141,7 @@ function ClassFunctionDocs(name, jsdoc, cl) {
     if (jsdoc.access == "private") return r
     r.add("#### " + renderFncArgs(cl.name + "." + self.name, jsdoc))
     if (jsdoc.undocumented) {
-      console.warn("WARN: Undocumented function", cl.name + "." + self.name)
+      warn("Undocumented function", cl.name + "." + self.name)
     } else {
       r.add(renderDesc(jsdoc), true)
       r.add(renderParamDesc(jsdoc), true)
@@ -163,9 +169,9 @@ function ClassDocs(name, jsdoc, part) {
     if (jsdoc.access == "private") return r
     r.add("### Class " + name, true)
     if (jsdoc.undocumented) {
-      console.warn("WARN: Undocumented class", name)
+      warn("Undocumented class", name)
     } else {
-      r.add("#### Constructor - " + renderFncArgs("new " + part.codeName + "." + self.name, jsdoc), true)
+      r.add("#### Constructor - " + renderFncArgs("new " + part.codeFriendlyName + "." + self.name, jsdoc), true)
       r.add(renderDesc(jsdoc), true)
       r.add(renderParamDesc(jsdoc), true)
     }
@@ -181,7 +187,10 @@ function PartDocs(file, parent) {
 
   self.name = file.name
   self.display = file.displayName
-  self.codeName = self.display.split("/").pop().replace(/-/g, "_")
+  self.codeName = self.display.split("/")
+  self.codeName.pop()
+  self.codeName = self.codeName.join("/").replace(/-/g, "_")
+  self.codeFriendlyName = self.codeName.split(".")[0]
   self.friendlyName = self.name ? self.display.split("/").slice(1).join("/") : parent.name
 
   self.addClass = (name, jsdoc) => {
@@ -200,6 +209,7 @@ function PartDocs(file, parent) {
 
   self.render = () => {
     let r = new Renderable()
+    if (!classes.length) return r
     r.add("## API for " + self.friendlyName, true)
     classes.forEach(c => r.add(c.render(), true))
     return r
@@ -226,7 +236,7 @@ function prepare(jsdoc, mod) {
   const res = new ModuleDocs(mod, mainpath)
 
   jsdoc.filter(f => f.kind != "package" && f.meta)
-    .map(f => res.addFile(f.meta.path, f))
+    .map(f => res.addFile(path.join(f.meta.path, f.meta.filename), f))
 
   res.prepare()
 
