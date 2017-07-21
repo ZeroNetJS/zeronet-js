@@ -29,6 +29,6 @@
     "libp2p-mdns": "^0.7.1",
     "libp2p-tcp": "^0.10.1",
     "multiaddr": "^2.3.0",
-    "peer-info": "^0.9.3"
+    "peer-info": "^0.9.4"
   }
 }

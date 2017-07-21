@@ -23,8 +23,8 @@
   "dependencies": {
     "bitcoinjs-message": "^1.0.1",
     "libp2p-secio": "^0.6.8",
-    "peer-id": "^0.8.7",
-    "peer-info": "^0.9.3",
+    "peer-id": "^0.8.8",
+    "peer-info": "^0.9.4",
     "pull-stream-to-stream": "^1.3.4",
     "secp256k1": "^3.3.0",
     "stream-to-pull-stream": "^1.7.2"

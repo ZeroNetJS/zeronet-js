@@ -10,10 +10,11 @@
   "dependencies": {
     "async": "^2.5.0",
     "bunyan": "^1.8.10",
+    "colors": "^1.1.2",
     "jsdoc-to-markdown": "^3.0.0",
     "merge-recursive": "0.0.3",
     "mockery": "^2.1.0",
-    "peer-id": "^0.8.7",
+    "peer-id": "^0.8.8",
     "zeronet-client": "file:zeronet-client",
     "zeronet-common": "file:zeronet-common",
     "zeronet-crypto": "file:zeronet-crypto",
