@@ -187,9 +187,10 @@ function PartDocs(file, parent) {
 
   self.name = file.name
   self.display = file.displayName
-  self.codeName = self.display.split("/")
-  self.codeName.pop()
-  self.codeName = self.codeName.join("/").replace(/-/g, "_")
+  self.codeName = self.display.endsWith("index.js") ? path.dirname(self.display) : self.display
+  self.codeName = self.codeName.split("/").pop().split("-")
+  if (self.codeName.length > 1) self.codeName = self.codeName.slice(1)
+  self.codeName = self.codeName.join("-").replace(/-/g, "_")
   self.codeFriendlyName = self.codeName.split(".")[0]
   self.friendlyName = self.name ? self.display.split("/").slice(1).join("/") : parent.name
 

@@ -8,7 +8,7 @@ ZeroNet full node
 
 ### Class ZeroNetNode
 
-#### Constructor - `new zeronet_node.ZeroNetNode(options)`
+#### Constructor - `new node.ZeroNetNode(options)`
 
  > ZeroNet full-node
 

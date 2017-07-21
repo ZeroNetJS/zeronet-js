@@ -8,7 +8,7 @@ Various cryptography functions for ZeroNet
 
 ### Class OpenSSLGenerator
 
-#### Constructor - `new zeronet_crypto.OpenSSLGenerator()`
+#### Constructor - `new helper.OpenSSLGenerator()`
 
  > Generates keys and certificates using the openssl binary
 
