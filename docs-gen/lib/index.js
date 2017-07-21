@@ -13,7 +13,7 @@ const log = debug("zeronet:docs")
 function renderFncArgs(pre, d) { //TODO: fix
   if (!pre) pre = ""
   if (d.undocumented) return "`" + pre + "( /* seems like that's not documented yet */ )" + "`"
-  return "`" + pre + "(" + d.params.map(p => p.name || "unnamed").join(", ") + ")" + "`"
+  return "`" + pre + "(" + (d.params || []).map(p => p.name || "unnamed").join(", ") + ")" + "`"
 }
 
 function renderDesc(d) {
@@ -39,8 +39,8 @@ function renderParamStandaloneDesc(d, param) {
 
 function renderParamDesc(d) {
   let r = rend()
-  if (d.undocumented) return r
-  d.params.map(param => {
+  if (d.undocumented) return r;
+  (d.params || []).map(param => {
     if (param.type.names[0] == "callback") {
       r.add("`callback` is a function that will be called after the operation finishes with the following argument(s), if applicable: " + (param.description || "`err`: the resulting error"), true)
     } else {
