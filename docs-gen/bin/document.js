@@ -22,7 +22,9 @@ function next() {
   const i = todo.shift()
   if (!i) process.exit(console.log("DONE"))
   try {
-    gen(i[0], i[1], {}, (err, res) => {
+    gen(i[0], i[1], {
+      footer: read(".github/FOOTER.md")
+    }, (err, res) => {
       if (err) {
         console.error("FAILED TO GENERATE DOCS FOR %s", i[0])
         console.error(err)
