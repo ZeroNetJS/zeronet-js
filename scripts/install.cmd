@@ -1,5 +1,5 @@
 REM @echo off
 
-for /D %%i in (zeronet-*) do (cd "%%i"&& npm i&& cd ..)&& npm i
+npm i&& for /D %%i in (zeronet-*) do (cd "%%i"&& npm i&& cd ..)
 
 goto :eof
