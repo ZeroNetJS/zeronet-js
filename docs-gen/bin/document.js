@@ -8,6 +8,7 @@ const fix = {
   "zeronet-fileserver": true,
   "zeronet-swarm": true
 }
+const read = f => fs.readFileSync(f).toString().split("\n")
 let add
 if (process.env.ONLY)
   add = process.env.ONLY.split(",")
@@ -15,7 +16,7 @@ else
   add = fs.readdirSync(".")
   .filter(s => !!s.match(/^zeronet-[a-z]+$/))
 
-add.map(s => todo.push([s, s + (fix[s] ? "/*.js" : "/lib/**/*.js"), s + "/DOCS.md"]))
+add.map(s => todo.push([s, s + (fix[s] ? "/*.js" : "/lib/**/*.js"), s + "/README.md"]))
 
 function next() {
   const i = todo.shift()
@@ -27,7 +28,13 @@ function next() {
         console.error(err)
       } else {
         console.log("%s ok", i[0])
-        fs.writeFileSync(i[2], new Buffer(res))
+        let cut
+        let r = read(i[2]).filter(l => {
+          if (!cut)
+            if (l == "# API") cut = true
+          return !cut
+        })
+        fs.writeFileSync(i[2], new Buffer(r.concat(res.split("\n")).join("\n")))
       }
       next()
     })
