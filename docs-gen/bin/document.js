@@ -8,9 +8,14 @@ const fix = {
   "zeronet-fileserver": true,
   "zeronet-swarm": true
 }
-fs.readdirSync(".")
+let add
+if (process.env.ONLY)
+  add = process.env.ONLY.split(",")
+else
+  add = fs.readdirSync(".")
   .filter(s => !!s.match(/^zeronet-[a-z]+$/))
-  .map(s => todo.push([s, s + (fix[s] ? "/*.js" : "/lib/**/*.js"), s + "/DOCS.md"]))
+
+add.map(s => todo.push([s, s + (fix[s] ? "/*.js" : "/lib/**/*.js"), s + "/DOCS.md"]))
 
 function next() {
   const i = todo.shift()

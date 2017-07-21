@@ -53,6 +53,7 @@ function renderParamDesc(d) {
 function FilesCollection(list, name, docs) {
   const log = debug("zeronet:docs:file-collection")
   let map
+  let nomap = false
 
   const self = this
   self.name = name
@@ -66,10 +67,23 @@ function FilesCollection(list, name, docs) {
 
   log("processing", name)
 
+  list.forEach(c => { //this check needs to be done before, because module.exports is at the end
+    if (c.longname == "module.exports" && c.kind == "member" && c.scope == "static") { //module.exports is an object with sub-objects, not a class. requires a shadow class
+      nomap = true
+      map = "Shadow"
+    }
+  })
+
+  if (!nomap) map = null
+  self.hasShadow = nomap
+
   list.forEach(c => {
-    if (c.kind == "class" && c.scope == "global" && !map && !c.name.startsWith("module.exports"))
+    if (c.kind == "class" && c.scope == "global" && !map && !c.name.startsWith("module.exports") && !nomap)
       map = c.name
   })
+
+  if (nomap) log("mapping to shadow-root", map, self.full)
+  else log("selected root-map", map, self.full)
 
   function mapName(c) {
     function str(i) {
@@ -199,14 +213,15 @@ function prepare(jsdoc, mod) {
 
   const pkg = jsdoc.filter(f => f.kind == "package")[0]
   let mainpath = pkg.files.reduce((a, b) => {
-    let na="", nb=""
+    let na = "",
+      nb = ""
     let sa = a.split("")
     let sb = b.split("")
     while (na == nb) {
       na += sa.shift()
       nb += sb.shift()
     }
-    return na.substr(0, na.length-1)
+    return na.substr(0, na.length - 1)
   }, pkg.files[0] + ".")
   if (!mainpath.endsWith("/")) mainpath = path.dirname(mainpath)
 
