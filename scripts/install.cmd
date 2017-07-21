@@ -1,15 +1,9 @@
 REM @echo off
 
-for /D %%i in (zeronet-*) do (call :install "%%i")
+for /D %%i in (zeronet-*) do (cd "%%i"&& npm i&& cd "%%i")
 
 
 
 npm i
 
-goto :eof
-
-:install
-cd %1
-npm i
-cd ..
 goto :eof
