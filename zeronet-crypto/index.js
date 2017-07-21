@@ -2,10 +2,23 @@
 
 const btcMessage = require("bitcoinjs-message")
 
+/**
+  Verifies a bitcoin signature
+  * @param {string} address - Bitcoin address of the signer
+  * @param {string} data - Data that was signed
+  * @param {string} signature - Signature of the data
+  * @return {boolean} - Returns wether the signature was valid and signed with the key
+  */
 function VerifySig(address, data, sig) {
   return btcMessage.verify(data, "\x18Bitcoin Signed Message:\n", address, sig)
 }
 
+/**
+  Orders an object
+  Example: {z: true, a: 1, q: {1: true, 0: -1}} => {a: 1, q: {0: -1, 1: true}, z: true}
+  * @param {object} unordered - Object with unordered keys
+  * @return {object} - Object with ordered keys
+  */
 function OrderObject(unordered) {
   const ordered = {}
   Object.keys(unordered).sort().forEach(function (key) {
@@ -14,10 +27,25 @@ function OrderObject(unordered) {
   return ordered
 }
 
-function JSONBlock(data) { //python json dump style
+/**
+  Python style json dump with 1 space
+  Fixed as only this way the data is equal on all devices
+  (The historic reason why python style is used is simply that the first zeronet version was written in python)
+  * @param {object} data - Arbitrary object
+  * @return {string} - Stringified JSON
+  */
+function PythonJSONDump(data) {
   return JSON.stringify(OrderObject(data), null, 1).replace(/\n/g, "").replace(/  +/g, " ").replace(/([\{\[]) /g, "$1").replace(/ ([\}\]])/g, "$1")
 }
 
+/**
+  Gets the valid signers for a file based on it's path and address
+  To be deperacted
+  * @param {string} address - The address of the zie
+  * @param {string} inner_path - The path of the content.json file
+  * @param {object} data - The content.json contents as object
+  * @return {array} - Array of valid signers
+  */
 function GetValidSigners(address, inner_path, data) {
   let valid_signers = []
   if (inner_path == "content.json") {
@@ -29,6 +57,12 @@ function GetValidSigners(address, inner_path, data) {
   return valid_signers
 }
 
+/**
+  Returns the signers_sign based on the array of valid signers and singers_required
+  * @param {array} valid_signers - Valid signers array
+  * @param {number} signers_required - The signers required
+  * @return {string} - signers_sign data field
+  */
 function GetSigners(vs, sr) {
   return sr + ":" + vs.join(",")
 }
@@ -48,7 +82,7 @@ function VerifyContentJSON(address, inner_path, data) {
   delete data.sign
   delete data.signs
 
-  const real = JSONBlock(data) //the data that was actually signed
+  const real = PythonJSONDump(data) //the data that was actually signed
   const sigsig = signers_sign //signers_sign
   const vs = GetValidSigners(address, inner_path, data) //valid signers
   const sigsigdata = GetSigners(vs, signs_required) //signers_sign data
@@ -72,7 +106,7 @@ module.exports = {
   OrderObject,
   VerifyContentJSON,
   VerifySig,
-  JSONBlock,
+  PythonJSONDump,
   GetValidSigners,
   GetSigners
 }

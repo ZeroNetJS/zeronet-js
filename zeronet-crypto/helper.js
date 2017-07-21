@@ -11,53 +11,64 @@ const Writable = require("stream").Writable
 const begin_regex = /-----BEGIN ([A-Z ]+)-----/
 const end_regex = /-----END ([A-Z ]+)-----/
 
-function KeyStream(stream) {
-  function KeyStreamClass(stream) {
-    var w, r
-    if (!stream) {
-      w = new Writable({
-        write(chunk, encoding, callback) {
-          r.emit("data", chunk)
-          callback()
-        }
-      })
-      r = new Readable({
-        read() {}
-      })
-      stream = r
-    }
-
-    const rl = readline.createInterface({
-      input: stream
-    })
-    var files = []
-    var file
-    rl.on("line", line => {
-      switch (true) {
-      case !!line.match(begin_regex):
-        const m = line.match(begin_regex)
-        file = {
-          lines: [line],
-          type: m[1].replace(/ /g, "_").toLowerCase()
-        }
-        break;
-      case !!line.match(end_regex):
-        file.lines.push(line)
-        file.data = new Buffer(file.lines.join("\n"))
-        files.push(file)
-        file = null
-        break;
-      case !!file:
-        file.lines.push(line)
-        break;
+/**
+  Internal class for KeyStream
+  * @param {stream} stream - The stream to read from
+  * @private
+  */
+function KeyStreamClass(stream) {
+  var w, r
+  if (!stream) {
+    w = new Writable({
+      write(chunk, encoding, callback) {
+        r.emit("data", chunk)
+        callback()
       }
     })
-
-    this.rl = rl
-    this.w = w
-    this.get = () => files
+    r = new Readable({
+      read() {}
+    })
+    stream = r
   }
 
+  const rl = readline.createInterface({
+    input: stream
+  })
+  var files = []
+  var file
+  rl.on("line", line => {
+    switch (true) {
+    case !!line.match(begin_regex):
+      const m = line.match(begin_regex)
+      file = {
+        lines: [line],
+        type: m[1].replace(/ /g, "_").toLowerCase()
+      }
+      break;
+    case !!line.match(end_regex):
+      file.lines.push(line)
+      file.data = new Buffer(file.lines.join("\n"))
+      files.push(file)
+      file = null
+      break;
+    case !!file:
+      file.lines.push(line)
+      break;
+    }
+  })
+
+  this.rl = rl
+  this.w = w
+  this.get = () => files
+}
+
+/**
+ * Reads keys from a stream
+ * Returns a new stream if no stream was given
+ * @param {stream} stream - Optional stream to read from
+ * @return {stream} - Stream with a .keys() function to read the keys after the end event
+ */
+function KeyStream(stream) {
   const key = new KeyStreamClass(stream)
 
   if (key.w) {
@@ -69,7 +80,15 @@ function KeyStream(stream) {
   }
 }
 
+/**
+  Generates keys and certificates using the openssl binary
+  * @namespace OpenSSLGenerator
+  * @constructor
+  */
 function OpenSSLGenerator() {
+  /**
+  * @namespace OpenSSLGenerator
+  */
   function run(what, cb) {
     let args = ["openssl", what[0]].concat(what.slice(1)) //-keyout /dev/stdout -out /dev/stdout
     //console.log("+", args.join(" "))
