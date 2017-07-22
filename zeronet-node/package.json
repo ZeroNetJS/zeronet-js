@@ -1,6 +1,6 @@
 {
   "name": "zeronet-node",
-  "version": "0.0.1-alpha14pre",
+  "version": "0.0.1-alpha14",
   "description": "ZeroNet full node",
   "main": "lib/index.js",
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "zeronet-storage-memory",
-  "version": "0.0.1-alpha13",
+  "version": "0.0.1-alpha14",
   "description": "ZeroNet filesystem memory storage module",
   "main": "lib/index.js",
   "scripts": {
