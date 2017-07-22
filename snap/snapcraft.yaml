@@ -24,6 +24,9 @@ parts:
     plugin: nodejs
     node-engine: 8.2.1
     source: .empty
+    build-packages:
+      - python
+      - gcc
   source:
     plugin: nil
     after:
@@ -32,4 +35,4 @@ parts:
     build: |
       bash scripts/tarball.sh
     install: |
-      npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
+      npm_config_devdir="$PWD/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
