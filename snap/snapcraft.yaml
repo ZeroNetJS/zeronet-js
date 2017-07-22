@@ -35,4 +35,5 @@ parts:
     build: |
       bash scripts/tarball.sh
     install: |
+      mkdir -p $PWD/.npm/_cacache/tmp/ && chmod 777 $PWD/.npm/_cacache/tmp/
       npm_config_cache="$PWD/.npm" npm_config_devdir="$PWD/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
