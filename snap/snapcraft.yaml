@@ -33,6 +33,7 @@ parts:
       - node
     source: .
     build: |
+      cat /etc/passwd || grep "Just trying to debug ci"
       node scripts/no-git-deps.js package-lock.json
       bash scripts/tarball.sh
     install: |
