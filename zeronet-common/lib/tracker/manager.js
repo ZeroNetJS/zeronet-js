@@ -1,8 +1,9 @@
 "use strict"
 
 const each = require("async/each")
+const Tracker = require("zeronet-common/lib/tracker")
 
-module.exports = function TrackerManager(zeronet) {
+module.exports = function TrackerManager(tracker_server, zeronet) {
   const self = this
 
   let trackers = []
@@ -37,7 +38,7 @@ module.exports = function TrackerManager(zeronet) {
       if (!plist) { //add async as the tracker client yields many peers sync
         plist = []
         process.nextTick(() => {
-          zeronet.pool.addMany(plist, zite)
+          zeronet.peerPool.addMany(plist, zite)
           plist = null
         })
       }
@@ -62,6 +63,11 @@ module.exports = function TrackerManager(zeronet) {
     })
   }
 
+  function create(address) {
+    add(new Tracker(address, tracker_server, zeronet.peer_id), address)
+  }
+
+  self.create = create
   self.add = add
   self.stop = stop
 }

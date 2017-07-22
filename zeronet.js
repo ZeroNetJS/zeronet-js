@@ -11,6 +11,8 @@ const ZeroNet = require("zeronet-node")
 
 const FS = require("zeronet-storage-fs")
 
+const Common = require("zeronet-common")
+
 const defaults = {
   swarm: {
     server: {
@@ -43,15 +45,17 @@ const defaults = {
       "http://tracker1.wasabii.com.tw:6969/announce"
       //"http://localhost:25534/announce"
     ],
+  },
+  common: new Common({
     debug_file: path.resolve(process.cwd(""), "debug.log"),
     debug_shift_file: path.resolve(process.cwd(""), "debug-last.log"),
     debug: !!process.env.DEBUG
-  },
+  }),
   storage: new FS(path.join(process.cwd(), "data"))
 }
 
 const errCB = err => {
-  if (!err) return node.zeronet.logger("node")("Started successfully")
+  if (!err) return node.logger("node")("Started successfully")
   console.error("The node failed to start")
   console.error(err)
   process.exit(2)
@@ -70,19 +74,19 @@ let exiting
 
 function exit(code) {
   if (exiting) {
-    node.zeronet.logger("node").warn("Force stop!")
+    node.logger("node").warn("Force stop!")
     return process.nextTick(() => process.exit(2))
   }
   exiting = true
-  node.zeronet.logger("node")("Stopping...")
-  node.zeronet.logger("node")("Press ^C to force stop")
+  node.logger("node")("Stopping...")
+  node.logger("node")("Press ^C to force stop")
   node.stop(err => {
     if (err) {
-      node.zeronet.logger("node").error(err)
+      node.logger("node").error(err)
       console.error("FAILED TO QUIT GRACEFULLY")
       throw err
     }
-    node.zeronet.logger("node")("Stopped")
+    node.logger("node")("Stopped")
     process.exit(code || 0)
   })
 }

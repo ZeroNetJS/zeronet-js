@@ -7,8 +7,12 @@ const debug = require("debug")
 const log = debug("zeronet:node")
 const series = require('async/series')
 const clone = require("clone")
+const uuid = require("uuid")
 
-const ZeroNet = require("zeronet-common") //shared class, used for coordination
+const PeerPool = require("zeronet-common/lib/peer/pool")
+const TrackerManager = require("zeronet-common/lib/tracker/manager")
+const ZiteManager = require("zeronet-zite/lib/manager")
+
 const StorageWrapper = require("zeronet-common/lib/storage/wrapper") //wraps a storage into a more usable api
 const assert = require("assert")
 
@@ -44,8 +48,6 @@ const defaults = ZeroNetNode.defaults = { //The defaults
       "http://tracker1.wasabii.com.tw:6969/announce"
       //"http://localhost:25534/announce"
     ],
-    //debug_file: path.resolve(process.cwd(""), "debug.log"),
-    //debug_shift_file: path.resolve(process.cwd(""), "debug-last.log")
   },
   //storage: new ZNStorage("path", "dbpath")
 }
@@ -73,16 +75,47 @@ function ZeroNetNode(options) {
   const storage = new StorageWrapper(options.storage)
 
   const self = this
-  const zeronet = self.zeronet = new ZeroNet(options.node)
-  const swarm = self.swarm = new Swarm(options.swarm, zeronet)
-  const uiserver = self.uiserver = options.uiserver ? new UiServer(options.uiserver, zeronet) : false
+  const common = self.zeronet = options.common || false
 
-  const logger = zeronet.logger("node")
+  self.version = "0.5.6" //TODO: those are all fake. use real ones.
+  self.rev = 2109
+
+  if (common) {
+    self.logger = common.logger
+  } else {
+    self.logger = prefix => {
+      const d = debug("zeronet:" + prefix)
+      d.info = d
+      d.trace = d
+      d.debug = d
+      d.warn = debug("zeronet:" + prefix + ":warn")
+      d.error = debug("zeronet:" + prefix + ":error")
+      d.fatal = debug("zeronet:" + prefix + ":fatal")
+      return d
+    }
+  }
+
+  const swarm = self.swarm = new Swarm(options.swarm, self)
+  const uiserver = self.uiserver = options.uiserver ? new UiServer(options.uiserver, self) : false
+
+  const logger = self.logger("node")
+
+  //-ZNXXXX- 8 chars + 12 chars random
+  self.peer_id = "-ZN" + ("0" + self.version.replace(/\./g, "")) + "-" + uuid().replace(/-/g, "").substr(0, 12)
+
+  logger("ZeroNet v[alpha] with peer_id %s", self.peer_id)
 
   if (!options.swarm.protocol || !options.swarm.protocol.crypto || !options.swarm.protocol.crypto.length) logger.warn("CRYPTO DISABLED! ALL COMMUNICATION IS IN PLAINTEXT!")
 
-  self.peerPool = zeronet.pool
+  const pool = self.peerPool = new PeerPool()
+  /*const trackerManager = */
+  self.trackers = new TrackerManager(options.node.trackers, self)
+
+  const ziteManager = self.zitem = new ZiteManager(self)
   self.peerInfo = swarm.peerInfo
+
+  self.zites = ziteManager.zites
+  self.addZite = ziteManager.add
 
   let sintv
 
@@ -97,11 +130,11 @@ function ZeroNetNode(options) {
   self.boot = cb => series([
     cb => storage.getJSON("peers", [], (err, res) => {
       if (err) return cb(err)
-      zeronet.pool.fromJSON(res, cb)
+      pool.fromJSON(res, cb)
     }),
     cb => storage.getJSON("zites", [], (err, res) => {
       if (err) return cb(err)
-      zeronet.zitem.fromJSON(res, cb)
+      ziteManager.fromJSON(res, cb)
     })
   ], cb)
 
@@ -109,8 +142,8 @@ function ZeroNetNode(options) {
     log("saving to disk")
     const s = new Date().getTime()
     series([
-      cb => storage.setJSON("peers", zeronet.pool.toJSON(), cb),
-      cb => storage.setJSON("zites", zeronet.zitem.toJSON(), cb)
+      cb => storage.setJSON("peers", pool.toJSON(), cb),
+      cb => storage.setJSON("zites", ziteManager.toJSON(), cb)
     ], err => {
       log("saved in %sms", new Date().getTime() - s)
       if (err) log(err)

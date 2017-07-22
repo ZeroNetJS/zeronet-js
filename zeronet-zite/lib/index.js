@@ -3,17 +3,16 @@
 const verify = require("zeronet-common/lib/verify")
 const Nonces = require("zeronet-common/lib/nonce")
 
-const Tracker = require("zeronet-common/lib/tracker")
 const Pool = require("./pool.js")
 
 /**
  * ZeroNet Zite
  * @param {object} config - configuration of the Zite
- * @param {ZeroNet} zeronet
+ * @param {ZeroNetNode} zeronet - ZeroNet Node
  * @namespace Zite
  * @constructor
  */
-module.exports = function Zite(config, zeronet) { //describes a single zite
+module.exports = function Zite(config, node) { //describes a single zite
   const self = this
 
   if (!verify.verifyAddress(config.address))
@@ -24,7 +23,7 @@ module.exports = function Zite(config, zeronet) { //describes a single zite
   self.config = config
 
   const address = self.address = config.address
-  zeronet.addZite(address, self)
+  node.addZite(address, self)
 
   /* Nonce */
 
@@ -34,10 +33,8 @@ module.exports = function Zite(config, zeronet) { //describes a single zite
 
   /* Peers */
 
-  const tracker = self.tracker = Tracker(address, zeronet)
-  const pool = new Pool(address, zeronet)
-
-  zeronet.trackers.add(tracker, address)
+  const tracker = self.tracker = node.trackers.create(address)
+  const pool = new Pool(address, node)
 
   /* App */
 
