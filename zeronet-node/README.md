@@ -14,13 +14,35 @@ ZeroNet full node
 
  - options: Must be an object
 
-#### `ZeroNetNode.start( /* seems like that's not documented yet */ )`
+#### `ZeroNetNode.logger(prefix)`
 
-#### `ZeroNetNode.boot( /* seems like that's not documented yet */ )`
+ > Creates a logger
 
-#### `ZeroNetNode.save( /* seems like that's not documented yet */ )`
+ - prefix: Must be a string
 
-#### `ZeroNetNode.stop( /* seems like that's not documented yet */ )`
+#### `ZeroNetNode.start(callback)`
+
+ > Starts the node
+
+`callback` is a function that will be called after the operation finishes with the following argument(s), if applicable: `err`: the resulting error
+
+#### `ZeroNetNode.boot(callback)`
+
+ > Loads the config from disk (already done by start)
+
+`callback` is a function that will be called after the operation finishes with the following argument(s), if applicable: `err`: the resulting error
+
+#### `ZeroNetNode.save(callback)`
+
+ > Saves the config to disk
+
+`callback` is a function that will be called after the operation finishes with the following argument(s), if applicable: `err`: the resulting error
+
+#### `ZeroNetNode.stop(callback)`
+
+ > Stops the node
+
+`callback` is a function that will be called after the operation finishes with the following argument(s), if applicable: `err`: the resulting error
 
 -----
 

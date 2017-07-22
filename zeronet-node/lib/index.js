@@ -83,6 +83,11 @@ function ZeroNetNode(options) {
   if (common) {
     self.logger = common.logger
   } else {
+    /**
+      Creates a logger
+      @param {string} prefix
+      @return {Logger}
+      */
     self.logger = prefix => {
       const d = debug("zeronet:" + prefix)
       d.info = d
@@ -119,6 +124,10 @@ function ZeroNetNode(options) {
 
   let sintv
 
+  /**
+    Starts the node
+    @param {callback} callback
+    */
   self.start = cb => series([ //loads all the stuff from disk and starts everything
     storage.start,
     self.boot,
@@ -127,6 +136,10 @@ function ZeroNetNode(options) {
     uiserver ? uiserver.start : cb => cb()
   ], cb)
 
+  /**
+    Loads the config from disk (already done by start)
+    @param {callback} callback
+    */
   self.boot = cb => series([
     cb => storage.getJSON("peers", [], (err, res) => {
       if (err) return cb(err)
@@ -138,6 +151,10 @@ function ZeroNetNode(options) {
     })
   ], cb)
 
+  /**
+    Saves the config to disk
+    @param {callback} callback
+    */
   self.save = cb => { //save to disk
     log("saving to disk")
     const s = new Date().getTime()
@@ -151,6 +168,10 @@ function ZeroNetNode(options) {
     })
   }
 
+  /**
+    Stops the node
+    @param {callback} callback
+    */
   self.stop = cb => {
     series([
       uiserver ? uiserver.stop : cb => cb(),
