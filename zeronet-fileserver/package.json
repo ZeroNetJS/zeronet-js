@@ -1,6 +1,6 @@
 {
   "name": "zeronet-fileserver",
-  "version": "0.0.1-alpha14",
+  "version": "0.0.1-alpha15",
   "description": "ZeroNet fileserver",
   "main": "index.js",
   "scripts": {
