@@ -3,7 +3,7 @@
 "use strict"
 
 let node
-let dwait = require("./hacky-logs.js")
+let dwait = require("./lib/hacky-logs.js")
 
 const fs = require("fs")
 const path = require("path")
