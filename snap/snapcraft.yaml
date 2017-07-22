@@ -33,7 +33,7 @@ parts:
       - node
     source: .
     build: |
+      node scripts/no-git-deps.js package-lock.json
       bash scripts/tarball.sh
     install: |
-      node scripts/no-git-deps.js package-lock.json
       npm_config_cache="$PWD/.npm" npm_config_devdir="$PWD/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
