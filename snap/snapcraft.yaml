@@ -35,4 +35,4 @@ parts:
     build: |
       bash scripts/tarball.sh
     install: |
-      npm_config_devdir="$PWD/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
+      npm_config_cache="$PWD/.npm" npm_config_devdir="$PWD/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
