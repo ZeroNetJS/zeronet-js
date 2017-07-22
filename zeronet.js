@@ -41,7 +41,7 @@ function getStorageDir() {
     return path.join(process.env.APPDATA, "ZeroNet")
     break;
   case !!process.platform.match(/^darwin/): //mac
-    path.join(os.homedir(), "Library", "Preferences", "ZeroNet")
+    return path.join(os.homedir(), "Library", "Preferences", "ZeroNet")
     break;
   default:
     throw new Error("Unsupported platform " + process.platform + "! Please report this!")
