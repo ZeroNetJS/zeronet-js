@@ -15,6 +15,7 @@ coverage
 #zn
 *.log
 /data
+.zeronet
 
 #snap
 parts

@@ -7,6 +7,8 @@ let dwait = require("./lib/hacky-logs.js")
 
 const fs = require("fs")
 const path = require("path")
+const os = require("os")
+const mkdirp = require("mkdirp")
 
 const MergeRecursive = require("merge-recursive")
 const ZeroNet = require("zeronet-node")
@@ -14,6 +16,41 @@ const ZeroNet = require("zeronet-node")
 const FS = require("zeronet-storage-fs")
 
 const Common = require("zeronet-common")
+
+function getStorageDir() {
+  if (process.env.RUNINCWD) return path.join(process.cwd(), ".zeronet")
+  const isroot = !process.getuid()
+  switch (true) {
+  case !!process.platform.match(/^linux/):
+    switch (true) {
+    case !!process.env.SNAP: //snap aka ubuntu core
+      if (isroot)
+        return process.env.SNAP_COMMON
+      else
+        return process.env.SNAP_USER_COMMON
+      break;
+    default:
+      if (isroot)
+        return "/var/lib/zeronet"
+      else
+        return path.join(os.gethome(), ".zeronet")
+    }
+    break;
+  case !!process.platform.match(/^win/): //windows
+    return path.join(process.env.APPDATA, "ZeroNet")
+    break;
+  case !!process.platform.match(/^darwin/): //mac
+    path.join(os.gethome(), "Library", "Preferences", "ZeroNet")
+    break;
+  default:
+    throw new Error("Unsupported platform " + process.platform + "! Please report this!")
+  }
+}
+
+let dir = getStorageDir()
+
+mkdirp.sync(dir)
+mkdirp.sync(path.join(dir, "logs"))
 
 const defaults = {
   swarm: {
@@ -49,11 +86,11 @@ const defaults = {
     ],
   },
   common: new Common({
-    debug_file: path.resolve(process.cwd(""), "debug.log"),
-    debug_shift_file: path.resolve(process.cwd(""), "debug-last.log"),
+    debug_file: path.resolve(dir, path.join("logs", "debug.log")),
+    debug_shift_file: path.resolve(dir, path.join("logs", "debug-last.log")),
     debug: !!process.env.DEBUG
   }),
-  storage: new FS(path.join(process.cwd(), "data"))
+  storage: new FS(path.join(dir, "data"))
 }
 
 const errCB = err => {
@@ -63,7 +100,7 @@ const errCB = err => {
   process.exit(2)
 }
 
-const confpath = path.resolve(process.cwd(""), process.env.CONFIG_FILE || "config.json")
+const confpath = path.resolve(dir, process.env.CONFIG_FILE || "config.json")
 
 let config
 
