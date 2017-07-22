@@ -1,7 +1,7 @@
 const file = process.argv[2]
 const fs = require("fs")
 const load = file => JSON.parse(fs.readFileSync(file).toString())
-const save = (c, f) => fs.writeFileSync(f, JSON.stringify(c, null, 2)+"\n")
+const save = (c, f) => fs.writeFileSync(f, JSON.stringify(c, null, 2) + "\n")
 let c = load(file)
 
 function del(o) {
