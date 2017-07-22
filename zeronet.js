@@ -19,9 +19,10 @@ const Common = require("zeronet-common")
 
 function getStorageDir() {
   if (process.env.RUNINCWD) return path.join(process.cwd(), ".zeronet")
-  const isroot = !process.getuid()
+  let isroot
   switch (true) {
   case !!process.platform.match(/^linux/):
+    isroot = !process.getuid()
     switch (true) {
     case !!process.env.SNAP: //snap aka ubuntu core
       if (isroot)
@@ -33,14 +34,14 @@ function getStorageDir() {
       if (isroot)
         return "/var/lib/zeronet"
       else
-        return path.join(os.gethome(), ".zeronet")
+        return path.join(os.homedir(), ".zeronet")
     }
     break;
   case !!process.platform.match(/^win/): //windows
     return path.join(process.env.APPDATA, "ZeroNet")
     break;
   case !!process.platform.match(/^darwin/): //mac
-    path.join(os.gethome(), "Library", "Preferences", "ZeroNet")
+    path.join(os.homedir(), "Library", "Preferences", "ZeroNet")
     break;
   default:
     throw new Error("Unsupported platform " + process.platform + "! Please report this!")
@@ -94,6 +95,7 @@ const defaults = {
 }
 
 const errCB = err => {
+  if (!err && process.env.TESTOK) process.emit("SIGINT")
   if (!err) return node.logger("node")("Started successfully")
   console.error("The node failed to start")
   console.error(err)

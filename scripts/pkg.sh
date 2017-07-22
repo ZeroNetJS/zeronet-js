@@ -12,6 +12,7 @@ if node -v | grep "^v8" > /dev/null; then
   for f in package*; do sed -r 's|"([a-z-]+)": "file:(.*)"|"\1": "file:../\2.tar.gz"|g' -i $f; done
   npm i --production
   ../node_modules/.bin/pkg -t node8-linux-x64,node8-macos-x64,node8-win-x64 .
+  RUNINCWD=1 TESTOK=1 ./zeronet-linux
 
 else
   echo "Please use node v8+ to build"
