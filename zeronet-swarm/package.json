@@ -24,11 +24,11 @@
   "dependencies": {
     "async": "^2.5.0",
     "clone": "^2.1.1",
-    "libp2p": "^0.10.2",
-    "libp2p-kad-dht": "^0.3.0",
-    "libp2p-mdns": "^0.7.1",
-    "libp2p-tcp": "^0.10.1",
+    "libp2p": "^0.11.0",
+    "libp2p-kad-dht": "^0.4.1",
+    "libp2p-mdns": "^0.8.0",
+    "libp2p-tcp": "^0.10.2",
     "multiaddr": "^2.3.0",
-    "peer-info": "^0.9.4"
+    "peer-info": "^0.10.0"
   }
 }
