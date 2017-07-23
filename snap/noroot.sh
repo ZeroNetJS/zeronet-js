@@ -1,3 +1,5 @@
+#!/bin/bash
+
 noroot() {
   ID=$(id -u)
   if [ "x$ID" == "x0" ]; then
