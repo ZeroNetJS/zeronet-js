@@ -15,6 +15,6 @@ ver=$(echo $(cat package.json | grep "version" | sed "s|\"||g" | sed "s|  ||g" |
 cd .pkg
 for f in package* npm-shrinkwrap.json; do sed -r 's|"([a-z-]+)": "file:(.*)"|"\1": "file:\2.tar.gz"|g' -i $f; done
 mv ../*.tar.gz .
-tar cvfz ../znjs.tar.gz --mode="777" . | sed "s|^|zeronet-js: |g"
-mv ../znjs.tar.gz .
-npm i ./znjs.tar.gz --unsafe-perm --production -g
+#tar cvfz ../znjs.tar.gz --mode="777" . | sed "s|^|zeronet-js: |g"
+#mv ../znjs.tar.gz .
+npm i . --unsafe-perm --production -g
