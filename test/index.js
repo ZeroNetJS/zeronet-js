@@ -18,7 +18,7 @@ global.assert = assert
 //global.chai = chai
 
 before(function (cb) {
-  this.timeout(5000)
+  this.timeout(20000)
   PeerId.create((e, id) => {
     if (e) return cb(e)
     global.id = id
