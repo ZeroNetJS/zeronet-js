@@ -23,7 +23,7 @@ parts:
     source: .empty
     build-packages:
       - python
-      - gcc
+      - g++
       - make
   source:
     plugin: nil
