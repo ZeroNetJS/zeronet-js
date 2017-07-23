@@ -117,17 +117,60 @@ module.exports = function ZeroFileTree() {
   }
 }*/
 
-class FileTree {
-  constructor(address) {
-    this.address = address
+const RuleBook = require("zeronet-zite/lib/rulebook")
+
+class FileTreeObject {
+  exists(path) {
+    let s = Array.isArray(path) ? path : path.split("/")
+    while (!s[0]) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    if (!this.sub[s[0]]) return false
+    return this.sub[s[0]].exists(s.slice(1))
   }
-  setMainBranch(branch) {
-    //sets the main branch aka content.json
-    this.branch = branch
-  }
-  getRuleBook() {
-    //Returns rule book with 1Addr as only valid key
+  updateTree() {
+    this.sub = {}
+    this.children(c => this.sub[c.path] = c)
   }
 }
 
-module.exports = FileTree
+class FileTreeRoot extends FileTreeObject {
+  constructor(address) {
+    super()
+    this.address = address
+    this.children = []
+    this.updateTree()
+  }
+  setMainBranch(branch) {
+    //sets the main branch aka content.json
+    this.authority = branch.authority
+    this.children = branch.files
+    this.updateTree()
+  }
+  getRuleBook() {
+    //Returns rule book with 1Addr as only valid key
+    return new RuleBook({
+      valid_keys: this.address
+    })
+  }
+}
+
+class ContentJSONBranch extends FileTreeObject {
+  constructor(cj) {
+    super()
+    this.authority = cj
+    this.files = cj.data.files
+  }
+  verify(file, hash, size) {
+
+  }
+}
+
+class FileBranch extends FileTreeObject {
+  constructor(file, cjbranch) {
+    this.file = file
+    this.authority = cjbranch.authority
+  }
+}
+
+module.exports = FileTreeRoot
+module.exports.ContentJson = ContentJSONBranch
+module.exports.File = FileBranch

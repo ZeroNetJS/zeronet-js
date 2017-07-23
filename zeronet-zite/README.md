@@ -83,17 +83,35 @@ ZeroNet Zite class
 
 #### `RuleBook.getValidKeys( /* seems like that's not documented yet */ )`
 
+#### `RuleBook.verifySignature( /* seems like that's not documented yet */ )`
+
 #### `RuleBook.createSubBook( /* seems like that's not documented yet */ )`
 
 ## API for tree.js
 
-### Class FileTree
+### Class FileTreeObject
 
-### Class FileTree
+#### `FileTreeObject.exists( /* seems like that's not documented yet */ )`
 
-#### `FileTree.setMainBranch( /* seems like that's not documented yet */ )`
+#### `FileTreeObject.updateTree( /* seems like that's not documented yet */ )`
 
-#### `FileTree.getRuleBook( /* seems like that's not documented yet */ )`
+### Class FileTreeRoot
+
+### Class FileTreeRoot
+
+#### `FileTreeRoot.setMainBranch( /* seems like that's not documented yet */ )`
+
+#### `FileTreeRoot.getRuleBook( /* seems like that's not documented yet */ )`
+
+### Class ContentJSONBranch
+
+### Class ContentJSONBranch
+
+#### `ContentJSONBranch.verify( /* seems like that's not documented yet */ )`
+
+### Class FileBranch
+
+### Class FileBranch
 
 -----
 

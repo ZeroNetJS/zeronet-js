@@ -82,7 +82,7 @@ if (fs.existsSync(confpath)) {
 let exiting
 
 function exit(code) {
-  if (!node) {
+  if (!node && !exiting) {
     console.error("Stopping before started!")
     exiting = true
     exit(2)
