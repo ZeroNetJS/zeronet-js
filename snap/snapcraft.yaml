@@ -36,5 +36,7 @@ parts:
     install: |
       node scripts/no-git-deps.js package-lock.json
       mkdir -p /tmp/$$/.{npm,node_gyp}
+      npm_config_cache="/tmp/$$/.npm" npm_config_devdir="/tmp/$$/.node-gyp" npm shrinkwrap
+      node scripts/no-git-deps.js npm-shrinkwrap.json
       npm_config_loglevel="verbose" npm_config_git="$PWD/scripts/git.sh" npm_config_cache="/tmp/$$/.npm" npm_config_devdir="/tmp/$$/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
       rm -rf /tmp/$$
