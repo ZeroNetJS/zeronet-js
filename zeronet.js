@@ -114,6 +114,11 @@ if (fs.existsSync(confpath)) {
 let exiting
 
 function exit(code) {
+  if (!node) {
+    console.error("Stopping before started!")
+    exiting = true
+    exit(2)
+  }
   if (exiting) {
     node.logger("node").warn("Force stop!")
     return process.nextTick(() => process.exit(2))

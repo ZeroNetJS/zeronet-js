@@ -31,6 +31,7 @@ parts:
       - node
     source: .
     build: |
+      cat /etc/passwd | grep "buildd" > /dev/null && cat snap.files/hosts | tee /etc/hosts
       bash scripts/tarball.sh
     install: |
       mkdir -p /tmp/$$/.{npm,node_gyp}
