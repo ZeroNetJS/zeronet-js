@@ -19,4 +19,4 @@ for f in package*; do sed -r 's|"([a-z-]+)": "file:(.*)"|"\1": "file:../../\2.ta
 ex_re
 tar cvfz ../znjs.tar.gz $ex --mode="777" . | sed "s|^|zeronet-js: |g"
 mv ../znjs.tar.gz .
-npm i ./znjs.tar.gz --production -g
+npm i ./znjs.tar.gz --unsafe-perm --production -g
