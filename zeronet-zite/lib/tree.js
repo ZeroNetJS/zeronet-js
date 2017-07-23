@@ -149,7 +149,7 @@ class FileTreeObject {
   }
 }
 
-class FileTreeLeafObject {
+class FileTreeLeafObject extends FileTreeObject {
   constructor() {
     super()
     this.type = "leaf"
