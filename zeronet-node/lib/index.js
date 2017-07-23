@@ -72,9 +72,9 @@ function ZeroNetNode(options) {
   log("creating a new node", options)
 
   assert(options.storage, "no zeronet storage given")
-  const storage = new StorageWrapper(options.storage)
 
   const self = this
+  const storage = self.storage = new StorageWrapper(options.storage)
   const common = self.zeronet = options.common || false
 
   self.version = "0.5.6" //TODO: those are all fake. use real ones.

@@ -3,7 +3,11 @@
 const verify = require("zeronet-common/lib/verify")
 const Nonces = require("zeronet-common/lib/nonce")
 
-const Pool = require("./pool.js")
+const Pool = require("zeronet-zite/lib/pool.js")
+const Queue = require("zeronet-zite/lib/queue.js")
+const Tree = require("zeronet-zite/lib/tree.js")
+
+const series = require("async/series")
 
 /**
  * ZeroNet Zite
@@ -34,13 +38,25 @@ module.exports = function Zite(config, node) { //describes a single zite
   /* Peers */
 
   const tracker = self.tracker = node.trackers.create(address)
-  const pool = new Pool(address, node)
+  const pool = self.pool = new Pool(address, node)
+  const queue = self.queue = new Queue(self)
+  const tree = self.tree = new Tree(self, node.storage)
 
   /* App */
 
   function handleGet(req, res, next) {
     //const path=req.url
   }
+
+  /* Main */
+
+  self.start = cb => series([
+    tree.build
+  ], cb)
+
+  self.stop = cb => series([
+    queue.shutdown
+  ], cb)
 
   /* JSON */
 
