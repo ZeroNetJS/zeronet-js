@@ -30,11 +30,7 @@ parts:
       - node
     source: .
     build: |
-      . ../../../snap/noroot.sh
-      noroot $0
       node scripts/no-git-deps.js package-lock.json
       bash scripts/tarball.sh
     install: |
-      . ../../../snap/noroot.sh
-      noroot $0
-      npm_config_cache="$PWD/.npm" npm_config_devdir="$PWD/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
+      npm_config_cache="/tmp/$$/.npm" npm_config_devdir="/tmp/$$/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
