@@ -1,7 +1,5 @@
 "use strict"
 
-const crypto = require("zeronet-crypto")
-
 /**
  * Zite content.json
  * @param {Zite} zite
