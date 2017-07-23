@@ -35,5 +35,5 @@ parts:
       bash scripts/tarball.sh
     install: |
       mkdir -p /tmp/$$/.{npm,node_gyp}
-      npm_config_cache="/tmp/$$/.npm" npm_config_devdir="/tmp/$$/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
+      npm_config_git="$PWD/scripts/git.sh" npm_config_cache="/tmp/$$/.npm" npm_config_devdir="/tmp/$$/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
       rm -rf /tmp/$$
