@@ -126,7 +126,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
     }
   }
 
-  client.handlers.handshake = new PeerRequestHandler("handshake", module.exports.req, client, handshakeGet, validate)
+  client.handlers.handshake = new PeerRequestHandler("handshake", module.exports.req, client, handshakeGet)
   log("use handshake", opt)
 
   client.handshake = handshakeInit
@@ -150,4 +150,4 @@ module.exports.def = { //Definitions are symmetric
   version: "string",
 }
 
-module.exports.req = new PeerRequest("handshake", module.exports.def, module.exports.def)
+module.exports.req = new PeerRequest("handshake", module.exports.def, module.exports.def, validate)
