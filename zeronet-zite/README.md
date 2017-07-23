@@ -91,9 +91,21 @@ ZeroNet Zite class
 
 ### Class FileTreeObject
 
+#### `FileTreeObject.consturctor( /* seems like that's not documented yet */ )`
+
 #### `FileTreeObject.exists( /* seems like that's not documented yet */ )`
 
+#### `FileTreeObject.get( /* seems like that's not documented yet */ )`
+
 #### `FileTreeObject.updateTree( /* seems like that's not documented yet */ )`
+
+### Class FileTreeLeafObject
+
+### Class FileTreeLeafObject
+
+#### `FileTreeLeafObject.exists( /* seems like that's not documented yet */ )`
+
+#### `FileTreeLeafObject.get( /* seems like that's not documented yet */ )`
 
 ### Class FileTreeRoot
 

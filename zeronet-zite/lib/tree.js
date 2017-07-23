@@ -120,11 +120,21 @@ module.exports = function ZeroFileTree() {
 const RuleBook = require("zeronet-zite/lib/rulebook")
 
 class FileTreeObject {
+  consturctor() {
+    this.children = []
+    this.updateTree()
+  }
   exists(path) {
     let s = Array.isArray(path) ? path : path.split("/")
     while (!s[0]) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
     if (!this.sub[s[0]]) return false
     return this.sub[s[0]].exists(s.slice(1))
+  }
+  get(path) {
+    let s = Array.isArray(path) ? path : path.split("/")
+    while (!s[0]) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    if (!this.sub[s[0]]) return false
+    return this.sub[s[0]].get(s.slice(1))
   }
   updateTree() {
     this.sub = {}
@@ -132,12 +142,27 @@ class FileTreeObject {
   }
 }
 
+class FileTreeLeafObject {
+  constructor() {
+    super()
+  }
+  exists(path) {
+    let s = Array.isArray(path) ? path : path.split("/")
+    while (!s[0]) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    return !s.length //no files in here. we get an empty array if asked for our content
+  }
+  get(path) {
+    let s = Array.isArray(path) ? path : path.split("/")
+    while (!s[0]) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    if (s.length) return false //no files in here. we get an empty array if asked for our content
+    return this
+  }
+}
+
 class FileTreeRoot extends FileTreeObject {
   constructor(address) {
     super()
     this.address = address
-    this.children = []
-    this.updateTree()
   }
   setMainBranch(branch) {
     //sets the main branch aka content.json
@@ -153,7 +178,7 @@ class FileTreeRoot extends FileTreeObject {
   }
 }
 
-class ContentJSONBranch extends FileTreeObject {
+class ContentJSONBranch extends FileTreeLeafObject {
   constructor(cj) {
     super()
     this.authority = cj
@@ -164,7 +189,7 @@ class ContentJSONBranch extends FileTreeObject {
   }
 }
 
-class FileBranch extends FileTreeObject {
+class FileBranch extends FileTreeLeafObject {
   constructor(file, cjbranch) {
     this.file = file
     this.authority = cjbranch.authority
