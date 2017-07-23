@@ -122,6 +122,7 @@ const RuleBook = require("zeronet-zite/lib/rulebook")
 class FileTreeObject {
   consturctor() {
     this.children = []
+    this.type = "generic"
     this.updateTree()
   }
   exists(path) {
@@ -136,6 +137,12 @@ class FileTreeObject {
     if (!this.sub[s[0]]) return false
     return this.sub[s[0]].get(s.slice(1))
   }
+  loadContent(path) {
+    let obj = this.get(path)
+    if (!obj) throw new Error("ENOTFOUND: " + path.toString())
+    if (obj.type != "leaf") throw new Error("EINVALID: Cannot execute action loadContent on " + obj.type + " " + path.toString())
+    return obj.loadContent()
+  }
   updateTree() {
     this.sub = {}
     this.children(c => this.sub[c.path] = c)
@@ -145,6 +152,7 @@ class FileTreeObject {
 class FileTreeLeafObject {
   constructor() {
     super()
+    this.type = "leaf"
   }
   exists(path) {
     let s = Array.isArray(path) ? path : path.split("/")
@@ -163,6 +171,7 @@ class FileTreeRoot extends FileTreeObject {
   constructor(address) {
     super()
     this.address = address
+    this.type = "branch"
   }
   setMainBranch(branch) {
     //sets the main branch aka content.json
