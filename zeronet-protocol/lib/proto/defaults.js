@@ -10,7 +10,7 @@ module.exports = function Defaults(protocol, zeronet) {
     location: "number",
     size: "number"
   }, (data, cb) => {
-    if (!zeronet.zites[data.zite]) return cb(new Error("Unknown site"))
+    if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
     //TODO: finish
   })
 
@@ -44,6 +44,9 @@ module.exports = function Defaults(protocol, zeronet) {
     since: "number"
   }, {
     modified_files: "object"
+  }, (data, cb) => {
+    if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
+    //TODO: finish
   })
 
   protocol.handle("getHashfield", {

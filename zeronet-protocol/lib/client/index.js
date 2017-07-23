@@ -102,7 +102,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   r._read = () => {}
 
   r.on("error", e => {
-    console.error(e)
+    log(e)
   })
 
   const m = msgstream(r)
