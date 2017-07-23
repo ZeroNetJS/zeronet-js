@@ -76,7 +76,7 @@ let config
 
 if (fs.existsSync(confpath)) {
   const config_data = JSON.parse(fs.readFileSync(confpath).toString())
-  config = MergeRecursive(config_data, defaults)
+  config = MergeRecursive(defaults, config_data)
 } else config = defaults
 
 let exiting
