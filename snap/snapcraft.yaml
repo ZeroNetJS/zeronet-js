@@ -24,6 +24,7 @@ parts:
     build-packages:
       - python
       - gcc
+      - make
   source:
     plugin: nil
     after:
