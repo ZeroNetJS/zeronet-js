@@ -9,12 +9,12 @@ function del(o) {
   for (var p in o) {
     if (typeof o[p] == "object") {
       if (del(o[p])) {
-        console.log("del", o[p])
-        delete o[p]
+        console.log("rep", o[p], c.dependencies[p])
+        o[p] = c.dependencies[p]
       }
     } else if (typeof o[p] == "string" && o[p].startsWith("github")) {
-      console.log("del", o[p])
-      delete o[p]
+      console.log("rep", o[p], c.dependencies[p].version)
+      o[p] = c.dependencies[p].version
     }
   }
 }
