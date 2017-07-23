@@ -43,6 +43,7 @@
     "test:watch": "nodemon -x \"DEBUG=zeronet*,libp2p* npm run test || echo\"",
     "test:debug": "nodemon -x \"DEBUG=zeronet*,libp2p* mocha || echo\"",
     "debug": "bash debug/debug.sh",
+    "docs": "node docs-gen/bin/document",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "pkg": "bash scripts/pkg.sh",
     "start": "node zeronet.js"

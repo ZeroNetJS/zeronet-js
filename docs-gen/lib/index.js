@@ -133,7 +133,7 @@ function ModuleDocs(mod, basepath) {
 function ClassFunctionDocs(name, jsdoc, cl) {
   const self = this
   self.doc = jsdoc
-  self.name = name.split("~").pop()
+  self.name = name.split(/[~#]/).pop()
   if (self.name.startsWith("self.")) self.name = self.name.substr(5)
   cl.addSub(self)
   self.render = () => {
@@ -201,7 +201,7 @@ function PartDocs(file, parent) {
   }
 
   self.addMember = (name, jsdoc) => {
-    const s = name.split("~")
+    const s = name.split(/[~#]/)
     const c = s[0]
     if (!cbyid[c]) throw new Error("Class " + c + " for member " + name + " does not exist")
     const cl = cbyid[c]
