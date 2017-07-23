@@ -1,5 +1,9 @@
 <!-- Everything except "affected components" can be ignored for feature requests -->
 
+**OS:** <!-- Linux, Mac, Windows -->
+
+**Bundle:** <!-- Git, snap, binary -->
+
 **Steps to Reproduce:**
 
 <!--
@@ -14,10 +18,12 @@
 
 **Affected Component(s):** ... <!-- swarm, protocol, node, uiserver -->
 
+**Expected Results:**
+
+...
+
 **Actual Results:**
 
 ...
 
-**Expected Results:**
-
-...
+**Other information:** <!-- We would very appreciate if you would attach a logfile -->
