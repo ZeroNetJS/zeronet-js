@@ -4,8 +4,6 @@ set -e
 
 # tl;dr npm i -g with current src as tarball
 
-. scripts/tarball.sh
-
 #inst="$npm_config_prefix"
 #[ -z "$inst" ] && inst="/usr"
 #inst="$inst/lib/node_modules"
@@ -16,8 +14,6 @@ for f in package* zeronet.js lib npm-shrinkwrap.json .gitignore LICENSE; do cp -
 ver=$(echo $(cat package.json | grep "version" | sed "s|\"||g" | sed "s|  ||g" | grep " .*" -o) | sed "s|,||g")
 cd .pkg
 for f in package* npm-shrinkwrap.json; do sed -r 's|"([a-z-]+)": "file:(.*)"|"\1": "file:\2.tar.gz"|g' -i $f; done
-set -x
-ex_re empty
 mv ../*.tar.gz .
 tar cvfz ../znjs.tar.gz --mode="777" . | sed "s|^|zeronet-js: |g"
 mv ../znjs.tar.gz .
