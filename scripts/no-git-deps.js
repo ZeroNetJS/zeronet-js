@@ -9,12 +9,16 @@ function del(o) {
   for (var p in o) {
     if (typeof o[p] == "object") {
       if (del(o[p])) {
-        console.log("rep", o[p], c.dependencies[p])
-        o[p] = c.dependencies[p]
+        if (c.dependencies[p]) {
+          console.log("rep", o[p], c.dependencies[p])
+          o[p] = c.dependencies[p]
+        } else delete o[p]
       }
     } else if (typeof o[p] == "string" && o[p].startsWith("github")) {
-      console.log("rep", o[p], c.dependencies[p].version)
-      o[p] = c.dependencies[p].version
+      if (c.dependencies[p]) {
+        console.log("rep", o[p], c.dependencies[p].version)
+        o[p] = c.dependencies[p].version
+      } else delete o[p]
     }
   }
 }
