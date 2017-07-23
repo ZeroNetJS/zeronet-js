@@ -101,6 +101,10 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   const r = Readable()
   r._read = () => {}
 
+  r.on("error", e => {
+    console.error(e)
+  })
+
   const m = msgstream(r)
 
   m.on("msg", data => {

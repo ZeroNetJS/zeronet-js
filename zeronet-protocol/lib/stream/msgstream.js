@@ -18,39 +18,43 @@ function MsgPackStream(stream) {
     write(d, encoding, callback) {
       // Make sure that self.buf reflects the entirety of the unread stream
       // of bytes; it needs to be a single buffer
-      if (self.buf) {
-        var b = new buffer.Buffer(self.buf.length + d.length)
-        self.buf.copy(b, 0, 0, self.buf.length)
-        d.copy(b, self.buf.length, 0, d.length)
+      try {
+        if (self.buf) {
+          var b = new buffer.Buffer(self.buf.length + d.length)
+          self.buf.copy(b, 0, 0, self.buf.length)
+          d.copy(b, self.buf.length, 0, d.length)
 
-        self.buf = b
-      } else {
-        self.buf = d
-      }
-
-      // Consume messages from the stream, one by one
-      while (self.buf && self.buf.length > 0) {
-        var msg = unpack(self.buf)
-        if (!msg) {
-          break
-        }
-
-        self.emit('msg', msg)
-        if (unpack.bytes_remaining > 0) {
-          self.buf = self.buf.slice(
-            self.buf.length - unpack.bytes_remaining,
-            self.buf.length
-          )
+          self.buf = b
         } else {
-          self.buf = null
+          self.buf = d
         }
-      }
 
+        // Consume messages from the stream, one by one
+        while (self.buf && self.buf.length > 0) {
+          var msg = unpack(self.buf)
+          if (!msg) {
+            break
+          }
+
+          self.emit('msg', msg)
+          if (unpack.bytes_remaining > 0) {
+            self.buf = self.buf.slice(
+              self.buf.length - unpack.bytes_remaining,
+              self.buf.length
+            )
+          } else {
+            self.buf = null
+          }
+        }
+
+      } catch (e) {
+        stream.emit("error", e)
+      }
       return callback()
     },
-    writev(chunks, callback) {
+    /*writev(chunks, callback) {
       // ...
-    }
+    }*/
   })
 
   const self = w
