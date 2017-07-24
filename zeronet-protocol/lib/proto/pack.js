@@ -11,7 +11,7 @@ module.exports = function PeersPacker() {
     pack: (ip, port) => inet.aton(ip) + struct.pack("H", port),
     unpack: pack => {
       //assert(pack.length == 6, "Invalid ipv4 length")
-      return inet.ntoa(pack.split("").slice(0, 4), struct.unpack("H", pack, 4))
+      return inet.ntoa(pack.split("").slice(0, 4)) + ":" + struct.unpack("H", pack, 4)
     }
   }
 

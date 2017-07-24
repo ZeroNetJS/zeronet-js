@@ -23,7 +23,7 @@ module.exports = function TrackerManager(tracker_server, zeronet) {
   function updateAll() {
     if (trackers[lastid]) {
       updateNext()
-      main = setTimeout(updateAll, 1000)
+      main = setTimeout(updateAll, 10 * 1000)
     } else {
       lastid = 0
       main = setTimeout(updateAll, 30 * 1000)

@@ -31,7 +31,7 @@ module.exports = function Defaults(protocol, zeronet) {
     peers: Array.isArray
   }, (data) => {
     if (!data.peers) return
-    console.log("Got peers", data.peers.forEach(pack.v4.unpack))
+    console.log("Got peers", data.peers.map(pack.v4.unpack))
     //TODO: parse peers
     //TODO: parse onion peers
   })
@@ -39,7 +39,7 @@ module.exports = function Defaults(protocol, zeronet) {
   protocol.handle("update", {
     site: "string",
     inner_path: "string",
-    body: "object"
+    body: "string"
   }, {
     ok: "string"
   })
