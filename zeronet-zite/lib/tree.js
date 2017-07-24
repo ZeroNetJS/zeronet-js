@@ -145,7 +145,20 @@ class FileTreeObject {
   }
   updateTree() {
     this.sub = {}
-    this.children(c => this.sub[c.path] = c)
+    this.children.forEach(c => {
+      c.parent = this
+      c.recalculatePath()
+      this.sub[c.name] = c
+    })
+  }
+  recalculatePath() {
+    let path = [this.name]
+    let p = this
+    while (p.parent) {
+      path.unshift(p.parent.name)
+      p = p.parent
+    }
+    this.path = path.join("/")
   }
 }
 
@@ -172,6 +185,8 @@ class FileTreeRoot extends FileTreeObject {
     super()
     this.address = address
     this.type = "branch"
+    this.children = [new DummyObject("content.json")] //TODO: chicken-egg-problem: if the content.json does not exist we can't queue it
+    this.updateTree()
   }
   setMainBranch(branch) {
     //sets the main branch aka content.json
@@ -185,6 +200,21 @@ class FileTreeRoot extends FileTreeObject {
       valid_keys: this.address
     })
   }
+  recalculatePath() {
+    this.path = ""
+  }
+  attach(storage) {
+    this.storage = storage
+  }
+  build(cb) {
+
+  }
+}
+
+class DummyObject extends FileTreeLeafObject {
+  constructor(name) {
+    this.name = name
+  }
 }
 
 class ContentJSONBranch extends FileTreeLeafObject {
@@ -192,6 +222,7 @@ class ContentJSONBranch extends FileTreeLeafObject {
     super()
     this.authority = cj
     this.files = cj.data.files
+    this.name = "content.json"
   }
   verify(file, hash, size) {
 

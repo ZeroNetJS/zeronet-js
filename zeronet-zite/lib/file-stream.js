@@ -54,6 +54,7 @@ module.exports = function FileStream(gu, inner_path, site, info) {
             info = {
               size: res.size
             }
+            firstQuery = false
           }
           return tryGet()
         }

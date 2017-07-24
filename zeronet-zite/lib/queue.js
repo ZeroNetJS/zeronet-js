@@ -1,10 +1,12 @@
 "use strict"
 
 const FileStream = require("zeronet-zite/lib/file-stream")
+const debug = require("debug")
+const log = debug("zeronet:zite:queue")
 
 function ItemInQueue(queue, zite, item, initCB, cb) {
   const pool = zite.pool
-  if (typeof item == "string" && !item.endsWith("/content.json") && item != "content.json") throw new Error("SecurityError: File is not self-validating and no hash given")
+  if (typeof item == "string" && !item.endsWith("/content.json") && item != "content.json") initCB(new Error("SecurityError: File is not self-validating and no hash given"))
   if (typeof item == "string") item = {
     path: item,
     grab: true //will get size prop from first peer
@@ -20,7 +22,7 @@ function ItemInQueue(queue, zite, item, initCB, cb) {
   }, 10 * 1000)
   stream.registerEnd((err, hash, size) => {
     if (err) return cb(err)
-    if (item.hash != hash || (item.size && item.size != size)) return cb(new Error("Missmatch: " + zite + "/" + item.path + " " + " valid/got Size: " + item.size + "/" + size + " Hash: " + item.hash + "/" + hash))
+    if (item.hash != hash || (item.size && item.size != size)) return cb(new Error("Missmatch: " + zite.address + "/" + item.path + " " + " valid/got Size: " + item.size + "/" + size + " Hash: " + item.hash + "/" + hash), log("Missmatch: " + zite.address + "/" + item.path + " " + " valid/got Size: " + item.size + "/" + size + " Hash: " + item.hash + "/" + hash))
   })
 }
 
@@ -46,6 +48,6 @@ module.exports = function Queue(zite) {
       const item = new ItemInQueue(self, zite, info, initCB, cb)
       items.push(item)
       queue[url] = item
-    }
+    } else initCB(new Error("ENOTFOUND: " + url))
   }
 }
