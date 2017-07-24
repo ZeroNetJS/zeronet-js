@@ -3,7 +3,7 @@
 module.exports = function Tracker(zite, node) {
   const self = this
 
-  self.isAvailable = !!zite.trackers.servers.length
+  self.isAvailable = !!node.trackers.servers.length
   self.tracker = false
   self.start = cb => {
     if (self.tracker) return cb() //already on
