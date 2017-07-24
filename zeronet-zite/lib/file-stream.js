@@ -3,8 +3,9 @@
 const crypto = require("crypto")
 const debug = require("debug")
 const log = debug("zeronet:zite:file-stream")
+log.error = debug("zeronet:zite:file-stream:error")
 
-module.exports = function FileStream(inner_path, pool, site, info) {
+module.exports = function FileStream(gu, inner_path, site, info) {
   const stream = {}
   const hash = crypto.createHash('sha256')
   const self = this
@@ -28,11 +29,13 @@ module.exports = function FileStream(inner_path, pool, site, info) {
   }
   self.stream = stream
 
-  const gu = pool.getUntil()
   let cur = 0
   let firstQuery = !info
 
   function tryGet() {
+    if (self.dead) return
+    if (info && size == info.size) return stream.end(log("downloaded", site, inner_path))
+    log("downloading", site, inner_path, size)
     gu(peer => {
       const c = peer.client
       c.cmd.getFile({
@@ -40,15 +43,19 @@ module.exports = function FileStream(inner_path, pool, site, info) {
         inner_path,
         location: cur
       }, (err, res) => {
+        if (self.dead) return
         if (err) {
-          log.error(err)
+          log.error("downloading", site, inner_path, err)
           return tryGet()
         } else {
           stream.push(res.body)
           cur += res.body
           if (firstQuery) {
-
+            info = {
+              size: res.size
+            }
           }
+          return tryGet()
         }
       })
     })

@@ -42,20 +42,20 @@ module.exports = function Zite(config, node) { //describes a single zite
 
   /* Peers */
 
-  const pool = self.pool = new Pool(address, node)
-  const queue = self.queue = new Queue(self)
-  const tree = self.tree = new Tree(self, node.storage)
   const discovery = self.discovery = new Discovery(self, node, config.discovery || [
     Dtracker,
     Dpex,
     Ddht
   ])
+  self.pool = new Pool(address, node)
+  const queue = self.queue = new Queue(self)
+  const tree = self.tree = new Tree(self, node.storage)
 
   /* App */
 
-  function handleGet(req, res, next) {
+  /*function handleGet(req, res, next) {
     //const path=req.url
-  }
+  }*/
 
   /* Main */
 
