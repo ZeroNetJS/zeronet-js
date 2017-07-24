@@ -39,7 +39,7 @@ module.exports = function FileStream(gu, inner_path, site, info) {
 
   function tryGet() {
     if (self.dead) return
-    if (info && size == info.size) return stream.end(log("downloaded", site, inner_path))
+    if (info && size == info.size) return stream.push(log("downloaded", site, inner_path))
     log("downloading", site, inner_path, size)
     gu(peer => {
       const c = peer.client

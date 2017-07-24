@@ -82,6 +82,8 @@ module.exports = function ZeroNetPeer(peerInfo) {
     else swarm.dial(peerInfo, (err, conn) => {
       if (err) return cb(err)
       self.conn = conn
+      self.client = self.conn.client
+      return cb()
     })
   }
 

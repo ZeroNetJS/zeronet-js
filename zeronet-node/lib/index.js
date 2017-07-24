@@ -130,9 +130,9 @@ function ZeroNetNode(options) {
     */
   self.start = cb => series([ //loads all the stuff from disk and starts everything
     storage.start,
+    cb => swarm.start(cb),
     self.boot,
     cb => sintv = setInterval(self.save, 10 * 1000, cb()), //TODO: "make this great again"
-    cb => swarm.start(cb),
     uiserver ? uiserver.start : cb => cb()
   ], cb)
 
