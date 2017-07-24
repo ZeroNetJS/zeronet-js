@@ -3,9 +3,9 @@
 const verify = require("zeronet-common/lib/verify")
 const Nonces = require("zeronet-common/lib/nonce")
 
-const Pool = require("zeronet-zite/lib/pool.js")
-const Queue = require("zeronet-zite/lib/queue.js")
-const Tree = require("zeronet-zite/lib/tree.js")
+const Pool = require("zeronet-zite/lib/pool")
+const Queue = require("zeronet-zite/lib/queue")
+const Tree = require("zeronet-zite/lib/tree")
 
 const series = require("async/series")
 
@@ -83,4 +83,7 @@ module.exports = function Zite(config, node) { //describes a single zite
 }
 
 module.exports.fromJSON = zeronet =>
-  (data, cb) => cb(null, new module.exports(data, zeronet))
+  (data, cb) => {
+    const z = new module.exports(data, zeronet)
+    z.start(err => cb(err, z))
+  }
