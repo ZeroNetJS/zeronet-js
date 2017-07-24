@@ -52,6 +52,8 @@ module.exports = function TrackerManager(tracker_server, zeronet) {
     tracker.start()
 
     trackers.push(tracker)
+
+    return tracker
   }
 
   function rm(tracker) {
@@ -70,7 +72,7 @@ module.exports = function TrackerManager(tracker_server, zeronet) {
   }
 
   function create(address) {
-    add(new Tracker(address, tracker_server, zeronet.peer_id), address)
+    return add(new Tracker(address, tracker_server, zeronet.peer_id), address)
   }
 
   self.servers = tracker_server

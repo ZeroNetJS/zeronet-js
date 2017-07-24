@@ -14,7 +14,7 @@ function RuleBook(opt) {
   self.isKeyAllowed = key => self.validKeys.indexOf(key) != -1
   self.getSignersRequired = () => self.signers_required
   self.getValidKeys = () => self.validKeys
-  self.verifySignature=(data,sig) => {
+  self.verifySignature = (data, sig) => {
 
   }
   self.createSubBook = opt => {

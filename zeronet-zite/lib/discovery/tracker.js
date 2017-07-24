@@ -9,10 +9,12 @@ module.exports = function Tracker(zite, node, discovery) {
     if (self.tracker) return cb() //already on
     self.tracker = node.trackers.create(zite.address)
     self.tracker.on("peer", p => discovery.emit("peer", p))
+    cb()
   }
   self.stop = cb => {
     if (!self.tracker) return cb(new Error("Not running"))
     node.trackers.rm(self.tracker)
+    cb()
   }
   self.discover = cb => {
     if (!self.tracker) return cb(new Error("Not running"))

@@ -2,11 +2,16 @@
 
 const crypto = require("crypto")
 const debug = require("debug")
+const Readable = require("readable-stream")
 const log = debug("zeronet:zite:file-stream")
 log.error = debug("zeronet:zite:file-stream:error")
 
 module.exports = function FileStream(gu, inner_path, site, info) {
-  const stream = {}
+  const stream = new Readable({
+    read() {
+
+    }
+  })
   const hash = crypto.createHash('sha256')
   const self = this
   let hashsum

@@ -127,13 +127,15 @@ class FileTreeObject {
   }
   exists(path) {
     let s = Array.isArray(path) ? path : path.split("/")
-    while (!s[0]) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    while (!s[0] && s.length) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    if (!s.length) return true //self
     if (!this.sub[s[0]]) return false
     return this.sub[s[0]].exists(s.slice(1))
   }
   get(path) {
     let s = Array.isArray(path) ? path : path.split("/")
-    while (!s[0]) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    while (!s[0] && s.length) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    if (!s.length) return this //self
     if (!this.sub[s[0]]) return false
     return this.sub[s[0]].get(s.slice(1))
   }
@@ -148,6 +150,7 @@ class FileTreeObject {
     this.children.forEach(c => {
       c.parent = this
       c.recalculatePath()
+      c.updateTree()
       this.sub[c.name] = c
     })
   }
@@ -169,21 +172,25 @@ class FileTreeLeafObject extends FileTreeObject {
   }
   exists(path) {
     let s = Array.isArray(path) ? path : path.split("/")
-    while (!s[0]) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    while (!s[0] && s.length) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
     return !s.length //no files in here. we get an empty array if asked for our content
   }
   get(path) {
     let s = Array.isArray(path) ? path : path.split("/")
-    while (!s[0]) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    while (!s[0] && s.length) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
     if (s.length) return false //no files in here. we get an empty array if asked for our content
     return this
+  }
+  updateTree() {
+
   }
 }
 
 class FileTreeRoot extends FileTreeObject {
-  constructor(address) {
+  constructor(zite) {
     super()
-    this.address = address
+    this.zite = zite
+    this.address = zite.address
     this.type = "branch"
     this.children = [new DummyObject("content.json")] //TODO: chicken-egg-problem: if the content.json does not exist we can't queue it
     this.updateTree()
@@ -207,12 +214,13 @@ class FileTreeRoot extends FileTreeObject {
     this.storage = storage
   }
   build(cb) {
-
+    cb()
   }
 }
 
 class DummyObject extends FileTreeLeafObject {
   constructor(name) {
+    super()
     this.name = name
   }
 }
@@ -224,9 +232,9 @@ class ContentJSONBranch extends FileTreeLeafObject {
     this.files = cj.data.files
     this.name = "content.json"
   }
-  verify(file, hash, size) {
+  /*verify(file, hash, size) {
 
-  }
+  }*/
 }
 
 class FileBranch extends FileTreeLeafObject {

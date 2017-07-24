@@ -13,6 +13,7 @@ function ItemInQueue(queue, zite, item, initCB, cb) {
   }
   const nextPeer = pool.getUntil()
   let dead = false
+  log("new job", zite.address, item)
   const stream = new FileStream(nextPeer, item.path, zite.address, item.size)
   setTimeout(() => {
     //context deadline exceeded (aka nobody got this file)
@@ -22,8 +23,9 @@ function ItemInQueue(queue, zite, item, initCB, cb) {
   }, 10 * 1000)
   stream.registerEnd((err, hash, size) => {
     if (err) return cb(err)
-    if (item.hash != hash || (item.size && item.size != size)) return cb(new Error("Missmatch: " + zite.address + "/" + item.path + " " + " valid/got Size: " + item.size + "/" + size + " Hash: " + item.hash + "/" + hash), log("Missmatch: " + zite.address + "/" + item.path + " " + " valid/got Size: " + item.size + "/" + size + " Hash: " + item.hash + "/" + hash))
+    if ((item.hash && item.hash != hash) || (item.size && item.size != size)) return cb(new Error("Missmatch: " + zite.address + "/" + item.path + " " + " valid/got Size: " + item.size + "/" + size + " Hash: " + item.hash + "/" + hash), log("Missmatch: " + zite.address + "/" + item.path + " " + " valid/got Size: " + item.size + "/" + size + " Hash: " + item.hash + "/" + hash))
   })
+  initCB(null, stream)
 }
 
 module.exports = function Queue(zite) {
@@ -39,11 +41,14 @@ module.exports = function Queue(zite) {
 
   self.inQueue = url => !!get(url)
 
+  self.start = cb => cb() //TODO: add
+  self.stop = cb => cb() //TODO: add
+
   self.add = (info, initCB, cb) => {
     let url
     if (typeof info == "string") url = info
     else url = info.path
-    if (self.inQueue(url)) return get(url)
+    if (self.inQueue(url)) return initCB(get(url))
     if (tree.exists(url) || tree.maybeValid(url)) {
       const item = new ItemInQueue(self, zite, info, initCB, cb)
       items.push(item)

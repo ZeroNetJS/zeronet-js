@@ -12,7 +12,7 @@ const log = debug("zeronet:zite:peer-pool")
  */
 module.exports = function ZitePeerPool(zite, zeronet) { //peer pool for a specific zite
   const self = this
-  const pool = zeronet.pool
+  const pool = zeronet.peerPool
 
   function getAll() {
     return pool.getZite(zite)
@@ -56,7 +56,7 @@ module.exports = function ZitePeerPool(zite, zeronet) { //peer pool for a specif
       })
       else {
         log("seems drained. using discovery.")
-        zite.discover(err => {
+        zite.discovery.discover(err => {
           if (err) cb(log(err))
           setTimeout(() => {
             all = getAll().slice(aheight)

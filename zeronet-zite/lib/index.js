@@ -48,8 +48,9 @@ module.exports = function Zite(config, node) { //describes a single zite
     Ddht
   ])
   self.pool = new Pool(address, node)
+  const tree = self.tree = new Tree(self)
   const queue = self.queue = new Queue(self)
-  const tree = self.tree = new Tree(self, node.storage)
+  tree.attach(node.storage)
 
   /* App */
 
@@ -62,7 +63,17 @@ module.exports = function Zite(config, node) { //describes a single zite
   self.start = cb => series([
     discovery.start,
     tree.build,
-    queue.start
+    queue.start,
+    cb => {
+      queue.add("content.json", (err, stream) => {
+        if (err) console.error("init", err)
+        console.log("got stream", stream)
+      }, (err, hash, size) => {
+        console.error("res", err)
+        console.log("res", hash, size)
+      })
+      cb()
+    }
   ], cb)
 
   self.stop = cb => series([
