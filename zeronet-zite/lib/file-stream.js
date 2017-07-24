@@ -50,11 +50,13 @@ module.exports = function FileStream(inner_path, site, info) {
   let firstQuery = !info
 
   function tryGet_() {
-    return function tryGet(read) {
-      if (self.dead) return
-      if (info && size == info.size) return stream.push(log("downloaded", site, inner_path))
-      log("downloading", site, inner_path, size)
-      read((end, peer) => {
+    return function tryGet(read, peer) {
+      if (self.dead) return read(true)
+      if (info && size == info.size) return stream.push(log("downloaded", site, inner_path), read(true))
+      log("downloading", site, inner_path, size);
+      (peer ? cb => cb(null, peer) : read)((end, peer) => {
+        log("got peer", peer)
+        if (end) return
         const c = peer.client
         c.cmd.getFile({
           site,
@@ -64,7 +66,7 @@ module.exports = function FileStream(inner_path, site, info) {
           if (self.dead) return
           if (err) {
             log.error("downloading", site, inner_path, err)
-            return tryGet()
+            return tryGet(read)
           } else {
             stream.push(res.body)
             size += res.body
@@ -74,7 +76,7 @@ module.exports = function FileStream(inner_path, site, info) {
               }
               firstQuery = false
             }
-            return tryGet()
+            return tryGet(read, peer)
           }
         })
       })

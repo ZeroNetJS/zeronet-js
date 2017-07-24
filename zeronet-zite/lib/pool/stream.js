@@ -102,7 +102,12 @@ module.exports = function PeerStream(zite, zeronet, stream) {
       log("dialed ok", peers.length)
       ee.emit("got:peers", peer)
     })
-    for (var i = 0; i <= qa; i++)
+
+    ee.on("machine:free", () => {
+      log("machines free %s/%s", machines.filter(m => m.isFree).length, machines.length)
+    })
+
+    for (var i = 0; i < qa; i++)
       machines.push(new DialerMachine(ee, i))
     return {
       sink: function (read) {
@@ -128,9 +133,13 @@ module.exports = function PeerStream(zite, zeronet, stream) {
           ended = true
           return cb(end)
         }
-        log("send dialed peer", peers.length)
-        if (peers.length) return cb(null, peers.shift())
-        else ee.once("got:peers", () => cb(null, peers.shift()))
+
+        function doSend() {
+          log("send dialed peer", peers.length)
+          cb(null, peers.shift())
+        }
+        if (peers.length) return doSend()
+        else ee.once("got:peers", doSend)
         if (peers.length == (a - 1)) ee.emit("get:peers")
       }
     }
