@@ -2,6 +2,7 @@
 
 const each = require("async/each")
 const Tracker = require("zeronet-common/lib/tracker")
+const uuid = require("uuid")
 
 module.exports = function TrackerManager(tracker_server, zeronet) {
   const self = this
@@ -45,13 +46,18 @@ module.exports = function TrackerManager(tracker_server, zeronet) {
       plist.push(addr)
     })
 
-    //tracker.on("update", console.log)
+    tracker.id = uuid()
 
     tracker.complete()
     tracker.start()
-    tracker.update()
 
     trackers.push(tracker)
+  }
+
+  function rm(tracker) {
+    if (!tracker.id) throw new Error("Tracker has no id")
+    trackers = trackers.filter(t => t.id != tracker.id)
+    tracker.stop()
   }
 
   function stop() {
@@ -67,7 +73,9 @@ module.exports = function TrackerManager(tracker_server, zeronet) {
     add(new Tracker(address, tracker_server, zeronet.peer_id), address)
   }
 
+  self.servers = tracker_server
   self.create = create
   self.add = add
+  self.rm = rm
   self.stop = stop
 }

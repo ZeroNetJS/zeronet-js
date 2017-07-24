@@ -9,6 +9,11 @@ const Tree = require("zeronet-zite/lib/tree.js")
 
 const series = require("async/series")
 
+const Discovery = require("zeronet-zite/lib/discovery")
+const Dtracker = require("zeronet-zite/lib/discovery/tracker")
+const Dpex = require("zeronet-zite/lib/discovery/pex")
+const Ddht = require("zeronet-zite/lib/discovery/dht")
+
 /**
  * ZeroNet Zite
  * @param {object} config - configuration of the Zite
@@ -37,10 +42,14 @@ module.exports = function Zite(config, node) { //describes a single zite
 
   /* Peers */
 
-  const tracker = self.tracker = node.trackers.create(address)
   const pool = self.pool = new Pool(address, node)
   const queue = self.queue = new Queue(self)
   const tree = self.tree = new Tree(self, node.storage)
+  const discovery = self.discovery = new Discovery(self, node, config.discovery || [
+    Dtracker,
+    Dpex,
+    Ddht
+  ])
 
   /* App */
 
@@ -51,11 +60,14 @@ module.exports = function Zite(config, node) { //describes a single zite
   /* Main */
 
   self.start = cb => series([
-    tree.build
+    discovery.start,
+    tree.build,
+    queue.start
   ], cb)
 
   self.stop = cb => series([
-    queue.shutdown
+    queue.stop,
+    discovery.stop
   ], cb)
 
   /* JSON */
