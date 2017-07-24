@@ -57,6 +57,13 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
 
   let waiting = []
 
+  function warnNoCrypto() {
+    if (zeronet.common)
+      zeronet.logger("protocol:handshake").warn({
+        address: client.addrs
+      }, "No crypto used in connection to %s", client.addrs)
+  }
+
   function handshakeComplete(err) {
     //console.log(waiting,opt,new Error("."))
     if (!Array.isArray(waiting)) throw new Error("HandshakeError: Complete called multiple times")
@@ -93,6 +100,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
         })
       } else {
         log("Finished crypto-less handshake", opt)
+        warnNoCrypto()
         handshakeComplete(err)
         return cb(null, handshake)
       }
@@ -122,6 +130,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
       })
     } else {
       log("Finished crypto-less handshake", opt)
+      warnNoCrypto()
       handshakeComplete(null)
     }
   }

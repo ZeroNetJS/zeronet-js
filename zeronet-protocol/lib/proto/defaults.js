@@ -1,5 +1,8 @@
 "use strict"
 
+const _pack = require("zeronet-protocol/lib/proto/pack")
+const pack = new _pack()
+
 module.exports = function Defaults(protocol, zeronet) {
   protocol.handle("getFile", {
     site: "string",
@@ -27,6 +30,8 @@ module.exports = function Defaults(protocol, zeronet) {
   }, {
     peers: Array.isArray
   }, (data) => {
+    if (!data.peers) return
+    console.log("Got peers", data.peers.forEach(pack.v4.unpack))
     //TODO: parse peers
     //TODO: parse onion peers
   })

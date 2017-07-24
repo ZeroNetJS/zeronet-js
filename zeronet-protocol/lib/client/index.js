@@ -48,7 +48,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
 
   const handlers = self.handlers = protocol.getHandlers(self)
   let addrs
-  conn.getObservedAddrs((e, a) => addrs = (opt.isServer ? "=> " : "<= ") + a.map(a => a.toString()).join(", "))
+  conn.getObservedAddrs((e, a) => self.addrs = addrs = (opt.isServer ? "=> " : "<= ") + a.map(a => a.toString()).join(", "))
   log("initializing", addrs)
 
   function handleIn(data) {
@@ -117,7 +117,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
         plog("got   request", addrs, data.cmd, objectInspect(data, "req"))
         handleIn(data)
       }
-    } catch(e) {
+    } catch (e) {
       log(e)
     }
   })

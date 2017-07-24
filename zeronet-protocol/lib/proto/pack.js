@@ -1,3 +1,7 @@
+"use strict"
+
+const assert = require("assert")
+
 module.exports = function PeersPacker() {
   const self = this
   const struct = require("bufferpack")
@@ -6,8 +10,8 @@ module.exports = function PeersPacker() {
   self.v4 = {
     pack: (ip, port) => inet.aton(ip) + struct.pack("H", port),
     unpack: pack => {
-      assert(pack.length == 6, "Invalid ipv4 length")
-      return inet.ntoa(pack.slice(0, 4), struct.unpack("H", packed, 4))
+      //assert(pack.length == 6, "Invalid ipv4 length")
+      return inet.ntoa(pack.split("").slice(0, 4), struct.unpack("H", pack, 4))
     }
   }
 
