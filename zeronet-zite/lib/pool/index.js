@@ -15,7 +15,7 @@ module.exports = function ZitePeerPool(zite, zeronet) { //peer pool for a specif
   const pool = zeronet.peerPool
 
   function getAll() {
-    return pool.getZite(zite)
+    return pool.getZite(zite.address)
   }
 
   function getConnected() {
@@ -45,11 +45,12 @@ module.exports = function ZitePeerPool(zite, zeronet) { //peer pool for a specif
     let all = getAll()
     let aheight = all.length
     let ok, avail
+    log("initializing", aheight)
     const next = (cb, r) => {
       let p
       if (!ok) ok = all.filter(peer => !!peer.client)
       if (!avail) avail = all.filter(peer => !peer.client)
-      if (ok.length) cb(null, ok.shift())
+      if (ok.length) cb(ok.shift())
       else if (avail.length) p = avail.shift().dial(zeronet.swarm, err => {
         if (err) next(cb)
         else cb(p)
@@ -61,7 +62,7 @@ module.exports = function ZitePeerPool(zite, zeronet) { //peer pool for a specif
           setTimeout(() => {
             all = getAll().slice(aheight)
             log("discovered", all.length)
-            if (!all.length && r) return cb(log("DRAINED"))
+            if (!all.length && r) return log("DRAINED") //give up.
             ok = null
             avail = null
             next(cb, true)

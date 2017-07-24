@@ -47,7 +47,7 @@ module.exports = function Zite(config, node) { //describes a single zite
     Dpex,
     Ddht
   ])
-  self.pool = new Pool(address, node)
+  self.pool = new Pool(self, node)
   const tree = self.tree = new Tree(self)
   const queue = self.queue = new Queue(self)
   tree.attach(node.storage)

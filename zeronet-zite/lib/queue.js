@@ -3,8 +3,11 @@
 const FileStream = require("zeronet-zite/lib/file-stream")
 const debug = require("debug")
 const log = debug("zeronet:zite:queue")
+const uuid = require("uuid")
 
 function ItemInQueue(queue, zite, item, initCB, cb) {
+  const self = this
+  self.id = uuid()
   const pool = zite.pool
   if (typeof item == "string" && !item.endsWith("/content.json") && item != "content.json") initCB(new Error("SecurityError: File is not self-validating and no hash given"))
   if (typeof item == "string") item = {
@@ -14,7 +17,7 @@ function ItemInQueue(queue, zite, item, initCB, cb) {
   const nextPeer = pool.getUntil()
   let dead = false
   log("new job", zite.address, item)
-  const stream = new FileStream(nextPeer, item.path, zite.address, item.size)
+  const stream = self.stream = new FileStream(nextPeer, item.path, zite.address, item.size)
   setTimeout(() => {
     //context deadline exceeded (aka nobody got this file)
     stream.dead = true
@@ -48,9 +51,16 @@ module.exports = function Queue(zite) {
     let url
     if (typeof info == "string") url = info
     else url = info.path
-    if (self.inQueue(url)) return initCB(get(url))
+    if (self.inQueue(url)) {
+      const item = get(url)
+      item.stream.registerEnd(cb)
+      initCB(null, item.stream)
+    }
     if (tree.exists(url) || tree.maybeValid(url)) {
-      const item = new ItemInQueue(self, zite, info, initCB, cb)
+      const item = new ItemInQueue(self, zite, info, initCB, cb, err => {
+        if (err) log("job", zite.address, url, "failed", err)
+        items.filter(i => i.id != item.id)
+      })
       items.push(item)
       queue[url] = item
     } else initCB(new Error("ENOTFOUND: " + url))

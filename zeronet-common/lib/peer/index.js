@@ -53,7 +53,7 @@ module.exports = function ZeroNetPeer(peerInfo) {
 
   function updateZites() {
     zites_id = {}
-    zites = known_zites.map(z => {
+    zites = self.zites = known_zites.map(z => {
       zites_id[z.zite] = z
       return z.zite
     })
@@ -77,7 +77,7 @@ module.exports = function ZeroNetPeer(peerInfo) {
     }
   }
 
-  function dial(cb, swarm) {
+  function dial(swarm, cb) {
     if (self.conn) cb(null, self.conn.client, self.conn)
     else swarm.dial(peerInfo, (err, conn) => {
       if (err) return cb(err)
