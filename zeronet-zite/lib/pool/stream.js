@@ -46,6 +46,7 @@ module.exports = function PeerStream(zite, zeronet, stream) {
     let peers = []
     let ended = false
     let ee = new EE()
+    let pause
     return {
       sink: function (read) {
         read(null, function next(end, peer) {
@@ -55,6 +56,7 @@ module.exports = function PeerStream(zite, zeronet, stream) {
           ee.emit("got:peers", peer)
           if (ended) return read(ended)
           if (peers.length < a) return read(null, next)
+          pause = true
           ee.once("get:peers", () => read(null, next))
         })
       },
@@ -63,10 +65,13 @@ module.exports = function PeerStream(zite, zeronet, stream) {
           ended = true
           return cb(end)
         }
+        log("send peer", peers.length)
+        if (peers.length < a && pause) {
+          pause = false
+          ee.emit("get:peers")
+        }
         if (peers.length) return cb(null, peers.shift())
         else ee.once("got:peers", () => cb(null, peers.shift()))
-        log("send peer", peers.length)
-        if (peers.length == (a - 1)) ee.emit("get:peers")
       }
     }
   }
@@ -94,6 +99,7 @@ module.exports = function PeerStream(zite, zeronet, stream) {
 
     ee.on("dial:ok", peer => {
       peers.push(peer)
+      log("dialed ok", peers.length)
       ee.emit("got:peers", peer)
     })
     for (var i = 0; i <= qa; i++)

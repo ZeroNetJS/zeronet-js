@@ -9,7 +9,6 @@ const uuid = require("uuid")
 function ItemInQueue(queue, zite, zeronet, item, initCB, cb) {
   const self = this
   self.id = uuid()
-  const pool = zite.pool
   if (typeof item == "string" && !item.endsWith("/content.json") && item != "content.json") initCB(new Error("SecurityError: File is not self-validating and no hash given"))
   if (typeof item == "string") item = {
     path: item,
@@ -18,13 +17,13 @@ function ItemInQueue(queue, zite, zeronet, item, initCB, cb) {
   let dead = false
   log("new job", zite.address, item)
   const stream = self.stream = new FileStream(item.path, zite.address, item.size)
-  const pstream = self.pstream = PeerStream(zite, zeronet, stream.tryGet)
+  PeerStream(zite, zeronet, stream.tryGet)
   setTimeout(() => {
     //context deadline exceeded (aka nobody got this file)
     stream.dead = true
     dead = true
     cb(new Error("Context deadline exceeded"))
-  }, 10 * 1000)
+  }, 100 * 1000)
   stream.registerEnd((err, hash, size) => {
     if (err) return cb(err)
     if ((item.hash && item.hash != hash) || (item.size && item.size != size)) return cb(new Error("Missmatch: " + zite.address + "/" + item.path + " " + " valid/got Size: " + item.size + "/" + size + " Hash: " + item.hash + "/" + hash), log("Missmatch: " + zite.address + "/" + item.path + " " + " valid/got Size: " + item.size + "/" + size + " Hash: " + item.hash + "/" + hash))
