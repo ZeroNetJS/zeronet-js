@@ -1,11 +1,12 @@
 "use strict"
 
 const FileStream = require("zeronet-zite/lib/file-stream")
+const PeerStream = require("zeronet-zite/lib/pool/stream")
 const debug = require("debug")
 const log = debug("zeronet:zite:queue")
 const uuid = require("uuid")
 
-function ItemInQueue(queue, zite, item, initCB, cb) {
+function ItemInQueue(queue, zite, zeronet, item, initCB, cb) {
   const self = this
   self.id = uuid()
   const pool = zite.pool
@@ -14,10 +15,10 @@ function ItemInQueue(queue, zite, item, initCB, cb) {
     path: item,
     grab: true //will get size prop from first peer
   }
-  const nextPeer = pool.getUntil()
   let dead = false
   log("new job", zite.address, item)
-  const stream = self.stream = new FileStream(nextPeer, item.path, zite.address, item.size)
+  const stream = self.stream = new FileStream(item.path, zite.address, item.size)
+  const pstream = self.pstream = PeerStream(zite, zeronet, stream.tryGet)
   setTimeout(() => {
     //context deadline exceeded (aka nobody got this file)
     stream.dead = true
@@ -31,7 +32,7 @@ function ItemInQueue(queue, zite, item, initCB, cb) {
   initCB(null, stream)
 }
 
-module.exports = function Queue(zite) {
+module.exports = function Queue(zite, zeronet) {
   const self = this
   const tree = zite.tree
 
@@ -57,7 +58,7 @@ module.exports = function Queue(zite) {
       initCB(null, item.stream)
     }
     if (tree.exists(url) || tree.maybeValid(url)) {
-      const item = new ItemInQueue(self, zite, info, initCB, cb, err => {
+      const item = new ItemInQueue(self, zite, zeronet, info, initCB, cb, err => {
         if (err) log("job", zite.address, url, "failed", err)
         items.filter(i => i.id != item.id)
       })

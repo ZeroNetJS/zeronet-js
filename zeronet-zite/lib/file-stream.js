@@ -6,17 +6,25 @@ const Readable = require("readable-stream")
 const log = debug("zeronet:zite:file-stream")
 log.error = debug("zeronet:zite:file-stream:error")
 
-module.exports = function FileStream(gu, inner_path, site, info) {
+module.exports = function FileStream(inner_path, site, info) {
+  const self = this
+
+  let size = 0
+
+  /* Stream init */
+
   const stream = new Readable({
     read() {
 
     }
   })
-  const hash = crypto.createHash('sha256')
-  const self = this
+  self.stream = stream
+
+  /* Hash */
+
   let hashsum
-  let size = 0
-  let endReg = []
+
+  const hash = crypto.createHash('sha256')
   stream.on("data", data => {
     hash.write(data)
     size += data.length
@@ -29,43 +37,48 @@ module.exports = function FileStream(gu, inner_path, site, info) {
     })
     hash.end()
   })
+
+  /* End event */
+
+  let endReg = []
+
   self.registerEnd = cb => {
     endReg.push(cb)
   }
-  self.stream = stream
 
   let cur = 0
   let firstQuery = !info
 
-  function tryGet() {
-    if (self.dead) return
-    if (info && size == info.size) return stream.push(log("downloaded", site, inner_path))
-    log("downloading", site, inner_path, size)
-    gu(peer => {
-      const c = peer.client
-      c.cmd.getFile({
-        site,
-        inner_path,
-        location: cur
-      }, (err, res) => {
-        if (self.dead) return
-        if (err) {
-          log.error("downloading", site, inner_path, err)
-          return tryGet()
-        } else {
-          stream.push(res.body)
-          cur += res.body
-          if (firstQuery) {
-            info = {
-              size: res.size
+  function tryGet_() {
+    return function tryGet(read) {
+      if (self.dead) return
+      if (info && size == info.size) return stream.push(log("downloaded", site, inner_path))
+      log("downloading", site, inner_path, size)
+      read((end, peer) => {
+        const c = peer.client
+        c.cmd.getFile({
+          site,
+          inner_path,
+          location: cur
+        }, (err, res) => {
+          if (self.dead) return
+          if (err) {
+            log.error("downloading", site, inner_path, err)
+            return tryGet()
+          } else {
+            stream.push(res.body)
+            size += res.body
+            if (firstQuery) {
+              info = {
+                size: res.size
+              }
+              firstQuery = false
             }
-            firstQuery = false
+            return tryGet()
           }
-          return tryGet()
-        }
+        })
       })
-    })
+    }
   }
-
-  tryGet()
+  self.tryGet = tryGet_
 }

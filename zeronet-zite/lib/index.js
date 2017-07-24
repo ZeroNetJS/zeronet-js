@@ -49,7 +49,7 @@ module.exports = function Zite(config, node) { //describes a single zite
   ])
   self.pool = new Pool(self, node)
   const tree = self.tree = new Tree(self)
-  const queue = self.queue = new Queue(self)
+  const queue = self.queue = new Queue(self, node)
   tree.attach(node.storage)
 
   /* App */
