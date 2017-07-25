@@ -15,7 +15,7 @@ const assert = require("assert")
 const debug = require("debug")
 const log = debug("zeronet:peer")
 
-const ip2multi = require("zeronet-common/lib/util/ip2multi")
+const ip2multi = require("zeronet-common/lib/network/ip2multi")
 
 function multi2ip(multi) {
   const s = multi.split("/")
