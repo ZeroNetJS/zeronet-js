@@ -34,9 +34,9 @@ module.exports = function Defaults(protocol, zeronet) {
     need: "number"
   }, {
     peers: Array.isArray
-  }, (data) => {
-    if (!data.peers) return
-    console.log("Got peers", data.peers.map(pack.v4.unpack))
+  }, (data, cb) => {
+    if (data.peers) console.log("Got peers", data.peers.map(pack.v4.unpack))
+    cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
     //TODO: parse peers
     //TODO: parse onion peers
   })
