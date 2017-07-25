@@ -27,29 +27,30 @@ function inet_ntoa(num) {
   return a.join('.')
 }
 
+const struct = require("bufferpack")
+// const inet = require("inet")
+
+/*
+# ip, port to packed 6byte format
+def packAddress(ip, port):
+    return socket.inet_aton(ip) + struct.pack("H", port)
+
+# From 6byte format to ip, port
+def unpackAddress(packed):
+    assert len(packed) == 6, "Invalid length ip4 packed address: %s" % len(packed)
+    return socket.inet_ntoa(packed[0:4]), struct.unpack_from("H", packed, 4)[0]
+*/
+
+module.exports.v4 = {
+  pack: (ip, port) => inet_aton(ip) + struct.pack("H", port),
+  unpack: pack => {
+    //assert(pack.length == 6, "Invalid ipv4 length")
+    return inet_ntoa(pack.split("").slice(0, 4)) + ":" + struct.unpack("H", pack, 4)
+  }
+}
+
 module.exports = function PeersPacker() {
   const self = this
-  const struct = require("bufferpack")
-
-  // const inet = require("inet")
-
-  self.v4 = {
-    pack: (ip, port) => inet_aton(ip) + struct.pack("H", port),
-    unpack: pack => {
-      //assert(pack.length == 6, "Invalid ipv4 length")
-      return inet_ntoa(pack.split("").slice(0, 4)) + ":" + struct.unpack("H", pack, 4)
-    }
-  }
-
-  /*
-  # ip, port to packed 6byte format
-  def packAddress(ip, port):
-      return socket.inet_aton(ip) + struct.pack("H", port)
-
-  # From 6byte format to ip, port
-  def unpackAddress(packed):
-      assert len(packed) == 6, "Invalid length ip4 packed address: %s" % len(packed)
-      return socket.inet_ntoa(packed[0:4]), struct.unpack_from("H", packed, 4)[0]
-  */
-
+  console.warn("new Pack() is deperacted. Please use Pack directly instead")
+  self.v4 = module.exports.v4
 }
