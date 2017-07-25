@@ -1,7 +1,6 @@
 "use strict"
 
-const _pack = require("zeronet-protocol/lib/proto/pack")
-const pack = new _pack()
+const pack = require("zeronet-protocol/lib/proto/pack")
 
 module.exports = function Defaults(protocol, zeronet) {
   protocol.handle("getFile", {
