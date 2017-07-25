@@ -38,6 +38,8 @@ module.exports = function ZeroNetPeer(peerInfo) {
   const self = this
   assert(Peer.isPeerInfo(peerInfo), "not a peerInfo")
   const pi = self.info = peerInfo
+  self.score = 0
+  let lastDial = 0
 
   self.id = pi.id.toB58String()
   assert.equal(pi.multiaddrs._multiaddrs.length, 1, "peer must have exactly 1 address for now")
@@ -73,18 +75,27 @@ module.exports = function ZeroNetPeer(peerInfo) {
   function toJSON() {
     return {
       addr: self.multiaddr,
-      zites
+      zites,
+      score: self.score
     }
   }
 
   function dial(swarm, cb) {
     if (self.conn) cb(null, self.conn.client, self.conn)
-    else swarm.dial(peerInfo, (err, conn) => {
-      if (err) return cb(err)
-      self.conn = conn
-      self.client = self.conn.client
-      return cb()
-    })
+    else {
+      if (lastDial + 120 * 1000 > new Date().getTime()) return cb(new Error("This peer already was un-successfully dialed in the last 120s"))
+      lastDial = new Date().getTime()
+      swarm.dial(peerInfo, (err, conn) => {
+        if (err) {
+          self.score -= 10
+          return cb(err)
+        }
+        self.score += 10
+        self.conn = conn
+        self.client = self.conn.client
+        return cb()
+      })
+    }
   }
 
   self.setZite = setZite
@@ -126,6 +137,7 @@ module.exports.fromJSON = (data, cb) => {
   module.exports.fromAddr(multiaddr(data.addr), (err, peer) => {
     if (err) return cb(err)
     data.zites.forEach(zite => peer.setZite(zite))
+    if (data.score) peer.score = data.score
     cb(null, peer)
   })
 }
