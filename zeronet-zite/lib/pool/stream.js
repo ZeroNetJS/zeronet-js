@@ -17,28 +17,33 @@ module.exports = function PeerStream(zite, zeronet, stream) {
     - Why cache?
       - Because otherwise we either have slow response times or we add a cache
         Because this method would "short circuit" the streams and overload the dialer/tracker server,
-        we need to add a maximum amount
+        we needed to add a maximum amount
   */
 
   function PeerList() { //gets peers
     let height = 0
     return function (end, cb) {
       if (end) return cb(end)
-      log("read peerList")
-      let list = zite.pool.getAll().slice(height) //get all unused
-      if (list.length) {
-        log("got", list.length)
-        if (!list[5]) zite.discovery.discover(() => {}) //low peers
-        height++
-        return cb(null, list[0])
-      } else {
-        log("drained. discover")
-        zite.discovery.discover(() => {
-          zite.discovery.once("peer", p => {
-            return cb(null, p)
+      log("peer:list:out read")
+      let list
+
+      function getLoop() {
+        list = zite.pool.getAll().slice(height) //get all unused
+        if (list.length) {
+          log("peer:list:out got", list.length)
+          if (!list[5]) zite.discovery.discover(() => {}) //low peers
+          height++
+          return cb(null, list[0])
+        } else {
+          log("peer:list:out drained. discover")
+          zite.discovery.discover(() => {
+            zite.discovery.once("peer", () => {
+              process.nextTick(getLoop)
+            })
           })
-        })
+        }
       }
+      getLoop()
     }
   }
 
@@ -52,7 +57,7 @@ module.exports = function PeerStream(zite, zeronet, stream) {
         read(null, function next(end, peer) {
           if (end) return
           peers.push(peer)
-          log("cache peer", peers.length)
+          log("peer:getter:in cache peer", peers.length)
           ee.emit("got:peers", peer)
           if (ended) return read(ended)
           if (peers.length < a) return read(null, next)
@@ -65,7 +70,7 @@ module.exports = function PeerStream(zite, zeronet, stream) {
           ended = true
           return cb(end)
         }
-        log("send peer", peers.length)
+        log("peer:getter:out send peer", peers.length)
         if (peers.length < a && pause) {
           pause = false
           ee.emit("get:peers")
@@ -83,7 +88,7 @@ module.exports = function PeerStream(zite, zeronet, stream) {
     self.dial = peer => {
       self.isFree = false
       peer.dial(zeronet.swarm, err => {
-        log("dialed", id, !!err)
+        log("dialer:machine dialed", id, "sucess =", !err)
         if (!err) ee.emit("dial:ok", peer)
         self.isFree = true
         ee.emit("machine:free", self)
@@ -99,13 +104,12 @@ module.exports = function PeerStream(zite, zeronet, stream) {
 
     ee.on("dial:ok", peer => {
       peers.push(peer)
-      log("dialed ok", peers.length)
+      log("dialer:machine dialed ok", peers.length)
       ee.emit("got:peers", peer)
     })
 
-    ee.on("machine:free", () => {
-      log("machines free %s/%s", machines.filter(m => m.isFree).length, machines.length)
-    })
+    ee.on("machine:free", () =>
+      log("dialer:machine free %s/%s", machines.filter(m => m.isFree).length, machines.length))
 
     for (var i = 0; i < qa; i++)
       machines.push(new DialerMachine(ee, i))
@@ -129,21 +133,27 @@ module.exports = function PeerStream(zite, zeronet, stream) {
         })
       },
       source: function (end, cb) {
+        log("peer:dialer:out g", end)
         if (end) {
           ended = true
           return cb(end)
         }
 
+        log("peer:dialer:out get called")
+
         function doSend() {
-          log("send dialed peer", peers.length)
+          log("peer:dialer:out send dialed peer", peers.length)
           cb(null, peers.shift())
         }
+
+        if (peers.length == (a - 1)) ee.emit("get:peers")
         if (peers.length) return doSend()
         else ee.once("got:peers", doSend)
-        if (peers.length == (a - 1)) ee.emit("get:peers")
       }
     }
   }
+
+  log("build", stream)
 
   pull(
     PeerList(),
