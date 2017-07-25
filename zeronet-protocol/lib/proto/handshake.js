@@ -58,10 +58,13 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
   let waiting = []
 
   function warnNoCrypto() {
-    if (zeronet.common)
-      zeronet.logger("protocol:handshake").warn({
-        address: client.addrs
-      }, "No crypto used in connection to %s", client.addrs)
+    if (zeronet.zeronet) { //why did we call common "zeronet"???
+      let i = {
+        address: client.addrs.split(" ")[1],
+        direction: client.addrs.split(" ")[0] == "=>" ? "to" : "from"
+      }
+      zeronet.logger("protocol:handshake").warn(i, "No crypto used in connection %s %s", i.direction, i.address)
+    }
   }
 
   function handshakeComplete(err) {

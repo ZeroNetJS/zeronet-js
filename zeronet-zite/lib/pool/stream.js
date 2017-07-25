@@ -88,7 +88,7 @@ module.exports = function PeerStream(zite, zeronet, stream) {
     self.dial = peer => {
       self.isFree = false
       peer.dial(zeronet.swarm, err => {
-        log("dialer:machine dialed", id, "sucess =", !err)
+        log("dialer:machine dialed", id, "success =", !err)
         if (!err) ee.emit("dial:ok", peer)
         self.isFree = true
         ee.emit("machine:free", self)
