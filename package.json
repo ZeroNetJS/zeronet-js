@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "async": "^2.5.0",
-	"binary": "^0.3.0",
+    "binary": "^0.3.0",
     "bunyan": "^1.8.10",
     "colors": "^1.1.2",
     "merge-recursive": "0.0.3",

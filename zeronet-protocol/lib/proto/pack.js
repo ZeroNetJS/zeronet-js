@@ -1,9 +1,9 @@
 "use strict"
 
-// const assert = require("assert")
+const binary = require("binary")
 
 // ip4 example: 192.168.2.1
-function inet_aton(ip) {
+/*function inet_aton(ip) {
   // split into octets
   var a = ip.split('.')
   var buffer = new ArrayBuffer(4)
@@ -12,7 +12,7 @@ function inet_aton(ip) {
     dv.setUint8(i, a[i])
   }
   return (dv.getUint32(0))
-}
+}*/
 
 // num example: 3232236033
 function inet_ntoa(num) {
@@ -27,7 +27,7 @@ function inet_ntoa(num) {
   return a.join('.')
 }
 
-const struct = require("bufferpack")
+// const struct = require("bufferpack")
 // const inet = require("inet")
 
 /*
@@ -48,9 +48,9 @@ module.exports = function PeersPacker() {
 }
 
 module.exports.v4 = {
-  pack: (ip, port) => inet_aton(ip) + struct.pack("H", port),
+  //pack: (ip, port) => inet_aton(ip) + struct.pack("H", port),
   unpack: pack => {
-    //assert(pack.length == 6, "Invalid ipv4 length")
-    return inet_ntoa(pack.split("").slice(0, 4)) + ":" + struct.unpack("H", pack, 4)
+    let i = binary.parse(new Buffer(pack)).word32bu("peer.addr").word16bu("peer.port").vars
+    return inet_ntoa(i.peer.addr) + ":" + i.peer.port
   }
 }
