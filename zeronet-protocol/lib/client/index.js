@@ -1,7 +1,7 @@
 "use strict"
 
 const msgstream = require("zeronet-protocol/lib/stream/msgpack")
-const stable = require("zeronet-protocol/lib/stream/stable")
+//const stable = require("zeronet-protocol/lib/stream/stable")
 const handshake = require("zeronet-protocol/lib/proto/handshake")
 const EE = require("events").EventEmitter
 
