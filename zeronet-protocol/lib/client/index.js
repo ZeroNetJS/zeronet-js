@@ -41,7 +41,6 @@ function objectInspect(data, type) {
 module.exports = function Client(conn, protocol, zeronet, opt) {
   const self = this
   const ee = new EE()
-  let d
 
   /* Handling */
 
@@ -140,16 +139,12 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
 
   const s = conn //stable(conn)
 
-  d = clientDuplex()
+  let d = clientDuplex()
 
   pull(
     s,
     msgstream.unpack(),
-    d.sink
-  )
-
-  pull(
-    d.source,
+    d,
     msgstream.pack(),
     s
   )

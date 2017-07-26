@@ -111,7 +111,9 @@ function exit(code) {
 
 if (!process.env.IGNORE_SIG)["SIGTERM", "SIGINT", "SIGUSR2"].forEach(sig => process.on(sig, exit))
 
-require("peer-id").create((err, id) => {
+require("peer-id").create({ //HACK: fix this so we don't have to use an insecure key
+  bits: 100
+}, (err, id) => {
   config.id = id
   node = new ZeroNet(config)
   dwait.map(d => d())
