@@ -1,7 +1,7 @@
 "use strict"
 
 const msgstream = require("zeronet-protocol/lib/stream/msgpack")
-//const stable = require("zeronet-protocol/lib/stream/stable")
+const stable = require("zeronet-protocol/lib/stream/stable")
 const handshake = require("zeronet-protocol/lib/proto/handshake")
 const EE = require("events").EventEmitter
 
@@ -33,9 +33,8 @@ function objectInspect(data, type) {
     d = d.params
     break;
   }
-  for (var p in d) {
+  for (var p in d)
     r.push(p + "=" + thingInspect(d[p], p))
-  }
   return r.join(", ")
 }
 
@@ -126,7 +125,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
         if (end) return disconnect(end)
 
         function doSend() {
-          cb(null, q.unshift())
+          cb(null, q.shift())
         }
         if (q.length) return doSend()
         else ee.once("data", doSend)
@@ -149,6 +148,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
     msgstream.unpack(),
     d.sink
   )
+
   pull(
     d.source,
     msgstream.pack(),
