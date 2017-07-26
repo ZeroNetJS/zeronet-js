@@ -33,6 +33,7 @@ function FileStream(inner_path, site, info) {
     size += data.length
   })
   stream.on("end", () => {
+    log("downloaded", site, inner_path, size);
     hash.on("readable", () => {
       const d = hash.read()
       hashsum = d.toString("hex")
@@ -65,7 +66,7 @@ function FileStream(inner_path, site, info) {
             return tryGet(read)
           } else {
             stream.push(res.body)
-            size += res.body
+            size += res.body.length
             if (firstQuery) {
               info = {
                 size: res.size

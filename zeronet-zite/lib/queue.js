@@ -27,6 +27,7 @@ function ItemInQueue(queue, zite, zeronet, item, initCB) {
   const cb = function () {
     let a = [...arguments]
     a.unshift("done")
+    self.emit.apply(self, a)
   }
 
   PeerStream(zite, zeronet, stream.tryGet)
@@ -70,16 +71,17 @@ module.exports = function Queue(zite, zeronet) {
     else url = info.path
     if (self.inQueue(url)) {
       const item = get(url)
-      item.stream.registerEnd(cb)
+      item.once("done", cb)
       initCB(null, item.stream)
     }
     if (tree.exists(url) || tree.maybeValid(url)) {
-      const item = new ItemInQueue(self, zite, zeronet, info, initCB, cb, err => {
+      const item = new ItemInQueue(self, zite, zeronet, info, initCB, err => {
         if (err) log("job", zite.address, url, "failed", err)
         items.filter(i => i.id != item.id)
       })
       items.push(item)
       queue[url] = item
+      item.once("done", cb)
     } else initCB(new Error("ENOTFOUND: " + url))
   }
 }
