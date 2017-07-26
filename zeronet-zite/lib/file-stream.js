@@ -49,46 +49,41 @@ module.exports = function FileStream(inner_path, site, info) {
   let cur = 0
   let firstQuery = !info
 
-  function tryGet_() {
-    log("call")
-    return function tryGet__(read) {
-      log("init")
-      function tryGet(read, peer) { //TODO: refactor to be more competent
-        if (self.dead) return read(true)
-        if (info && size == info.size) return stream.push(log("downloaded", site, inner_path), read(true))
-        log("downloading", site, inner_path, size);
-        (peer ? (e, cb) => cb(null, peer) : read)(null, (end, peer) => {
-          log("got peer", peer)
-          if (end) return
-          const c = peer.client
-          c.cmd.getFile({
-            site,
-            inner_path,
-            location: cur
-          }, (err, res) => {
-            if (self.dead) return
-            if (err) {
-              log.error("downloading", site, inner_path, err)
-              return tryGet(read)
-            } else {
-              stream.push(res.body)
-              size += res.body
-              if (firstQuery) {
-                info = {
-                  size: res.size
-                }
-                firstQuery = false
+  function tryGet_(read) {
+    log("init")
+
+    function tryGet(read, peer) { //TODO: refactor to be more competent
+      if (self.dead) return read(true)
+      if (info && size == info.size) return stream.push(log("downloaded", site, inner_path), read(true))
+      log("downloading", site, inner_path, size);
+      (peer ? (e, cb) => cb(null, peer) : read)(null, (end, peer) => {
+        if (end) return
+        const c = peer.client
+        c.cmd.getFile({
+          site,
+          inner_path,
+          location: cur
+        }, (err, res) => {
+          if (self.dead) return
+          if (err) {
+            log.error("downloading", site, inner_path, err)
+            return tryGet(read)
+          } else {
+            stream.push(res.body)
+            size += res.body
+            if (firstQuery) {
+              info = {
+                size: res.size
               }
-              return tryGet(read, peer)
+              firstQuery = false
             }
-          })
+            return tryGet(read, peer)
+          }
         })
-      }
-      tryGet(read)
+      })
     }
+
+    tryGet(read)
   }
-  self.tryGet = {
-    sink: tryGet_,
-    source: () => {}
-  }
+  self.tryGet = tryGet_
 }
