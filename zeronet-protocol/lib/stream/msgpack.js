@@ -3,7 +3,7 @@
 "use strict"
 
 const msgpack = require('msgpack')
-const through = require("pull-through")
+const queue = require("pull-queue")
 
 module.exports.pack = function () {
   var ended = false
@@ -37,8 +37,7 @@ module.exports.unpack = function () {
   //var ended = null
   let buffer = null
 
-  return through(function (chunk) {
-    const self = this
+  return queue(function (end, chunk, cb) {
     try {
 
       if (Buffer.isBuffer(buffer)) {
@@ -50,12 +49,14 @@ module.exports.unpack = function () {
         buffer = chunk
       }
 
+      let send = []
+
       while (Buffer.isBuffer(buffer) && buffer.length > 0) {
         var msg = msgpack.unpack(buffer)
 
         if (!msg) break
 
-        self.queue(msg)
+        send.push(msg)
 
         if (msgpack.unpack.bytes_remaining > 0) {
           buffer = buffer.slice(
@@ -66,8 +67,11 @@ module.exports.unpack = function () {
           buffer = null
         }
       }
+      cb(null, send)
     } catch (err) {
-      throw err
+      cb(err)
     }
+  }, {
+    sendMany: true
   })
 }

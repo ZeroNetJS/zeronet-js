@@ -105,8 +105,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
     return {
       sink: function (read) {
         read(null, function next(end, data) {
-          if (!data) return setTimeout(read, 100, null, next) //FIXME: there is somthing wrong with the stream. that's why it throws empty data at us instead of listening for it
-          //if (typeof data != "object" || !data.cmd) return setTimeout(read, 1000, null, next) //cool down for bad behaviour
+          if (!data || typeof data != "object" || !data.cmd) return setTimeout(read, 250, null, next) //cool down for bad behaviour
           try {
             if (data.cmd == "response") {
               plog("got  response", addrs, data.to, objectInspect(data, "resp"))
