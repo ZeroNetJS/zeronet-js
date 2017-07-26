@@ -30,8 +30,7 @@ module.exports = function Defaults(protocol, zeronet) {
   protocol.handle("pex", {
     site: "string",
     peers: Array.isArray,
-    peers_onion: () => true,
-    //peers_onion: Array.isArray,
+    peers_onion: d => !d || Array.isArray(d),
     need: "number"
   }, {
     peers: Array.isArray
@@ -39,7 +38,7 @@ module.exports = function Defaults(protocol, zeronet) {
     if (data.peers) {
       let unpack = data.peers.map(pack.v4.unpack)
       log("got peers", data.site, unpack)
-      zeronet.pool.addMany(unpack, data.site)
+      zeronet.peerPool.addMany(unpack, data.site)
     }
     cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
     //TODO: parse peers
