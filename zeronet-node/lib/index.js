@@ -175,6 +175,7 @@ function ZeroNetNode(options) {
   self.stop = cb => {
     series([
       uiserver ? uiserver.stop : cb => cb(),
+      ziteManager.shutdown,
       self.save,
       cb => sintv = clearInterval(sintv, cb()), //TODO: "make this great again"
       cb => swarm.stop(cb),

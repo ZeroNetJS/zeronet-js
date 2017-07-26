@@ -8,7 +8,7 @@ function genHandshakeData(protocol, client, zeronet) {
   let d = {
     crypt: null,
     crypt_supported: protocol.crypto ? protocol.crypto.supported() : [],
-    fileserver_port: zeronet.server ? zeronet.server.port : 0,
+    fileserver_port: zeronet.server ? zeronet.server.port : 0, //TODO: fix this. this does not work anymore with swarm
     protocol: "v2",
     port_opened: false, //TODO: implent
     rev: zeronet.rev,

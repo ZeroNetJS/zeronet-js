@@ -18,9 +18,11 @@ module.exports = function ZiteManager(zeronet) {
     self.zites[address] = zite
   }
 
-  self.fromJSON = (data, cb) => {
+  self.shutdown = cb =>
+    each(Object.keys(self.zites), (z, n) => self.zites[z].stop(n), cb)
+
+  self.fromJSON = (data, cb) =>
     each(data, Zite.fromJSON(zeronet), cb)
-  }
 
   self.toJSON = () => {
     let res = []

@@ -109,7 +109,7 @@ function exit(code) {
   })
 }
 
-["SIGTERM", "SIGINT", "SIGUSR2"].forEach(sig => process.on(sig, exit))
+if (!process.env.IGNORE_SIG)["SIGTERM", "SIGINT", "SIGUSR2"].forEach(sig => process.on(sig, exit))
 
 require("peer-id").create((err, id) => {
   config.id = id
