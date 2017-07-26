@@ -3,6 +3,7 @@
 "use strict"
 
 const msgpack = require('msgpack')
+const through = require("pull-through")
 
 module.exports.pack = function () {
   var ended = false
@@ -33,11 +34,45 @@ module.exports.pack = function () {
 }
 
 module.exports.unpack = function () {
-  var ended = null
-  var buffer = null
+  //var ended = null
+  let buffer = null
 
-  return function (read) {
-    console.log("do")
+  return through(function (chunk) {
+    console.log(chunk)
+    const self = this
+    try {
+
+      if (Buffer.isBuffer(buffer)) {
+        var b = new Buffer(buffer.length + chunk.length)
+        buffer.copy(b, 0, 0, buffer.length)
+        chunk.copy(b, buffer.length, 0, chunk.length)
+        buffer = b
+      } else if (chunk) {
+        buffer = chunk
+      }
+
+      while (Buffer.isBuffer(buffer) && buffer.length > 0) {
+        var msg = msgpack.unpack(buffer)
+
+        if (!msg) break
+
+        self.queue(msg)
+
+        if (msgpack.unpack.bytes_remaining > 0) {
+          buffer = buffer.slice(
+            buffer.length - msgpack.unpack.bytes_remaining,
+            buffer.length
+          )
+        } else {
+          buffer = null
+        }
+      }
+    } catch (err) {
+      throw err
+    }
+  })
+
+  /*return function (read) {
     return function (abort, callback) {
       if (abort) return read(abort, callback)
 
@@ -45,7 +80,7 @@ module.exports.unpack = function () {
         return callback(ended)
 
       read(abort, function next(end, chunk) {
-        console.log("ch",chunk)
+        console.log("ch", chunk)
         if (end) {
           if (ended) return
           ended = end
@@ -87,5 +122,5 @@ module.exports.unpack = function () {
         }
       })
     }
-  }
+  }*/
 }

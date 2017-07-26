@@ -6,7 +6,10 @@ const Readable = require("readable-stream")
 const log = debug("zeronet:zite:file-stream")
 log.error = debug("zeronet:zite:file-stream:error")
 
-module.exports = function FileStream(inner_path, site, info) {
+const EE = require("events").EventEmitter
+const util = require("util")
+
+function FileStream(inner_path, site, info) {
   const self = this
 
   let size = 0
@@ -33,18 +36,10 @@ module.exports = function FileStream(inner_path, site, info) {
     hash.on("readable", () => {
       const d = hash.read()
       hashsum = d.toString("hex")
-      endReg.forEach(cb => cb(null, hashsum, size))
+      self.emit("end", null, hashsum, size)
     })
     hash.end()
   })
-
-  /* End event */
-
-  let endReg = []
-
-  self.registerEnd = cb => {
-    endReg.push(cb)
-  }
 
   let cur = 0
   let firstQuery = !info
@@ -87,3 +82,7 @@ module.exports = function FileStream(inner_path, site, info) {
   }
   self.tryGet = tryGet_
 }
+
+util.inherits(FileStream, EE)
+
+module.exports = FileStream

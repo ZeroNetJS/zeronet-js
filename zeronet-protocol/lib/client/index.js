@@ -1,13 +1,11 @@
 "use strict"
 
-//const msg = require(__dirname + "/stream")
-const msgstream = require("zeronet-protocol/lib/stream/msgstream")
+const msgstream = require("zeronet-protocol/lib/stream/msgpack")
+//const stable = require("zeronet-protocol/lib/stream/stable")
 const handshake = require("zeronet-protocol/lib/proto/handshake")
-const msgpack = require("msgpack")
+const EE = require("events").EventEmitter
 
 const pull = require('pull-stream')
-const Pushable = require('pull-pushable')
-const Readable = require("stream").Readable
 
 const clone = require("clone")
 
@@ -43,6 +41,8 @@ function objectInspect(data, type) {
 
 module.exports = function Client(conn, protocol, zeronet, opt) {
   const self = this
+  const ee = new EE()
+  let d
 
   /* Handling */
 
@@ -75,13 +75,12 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   self.addCallback = addCallback
 
   self.write = data => {
-    //log("sent data", addrs, "\n", d)
     if (data.cmd == "response") {
       plog("sent response", addrs, data.to, objectInspect(data, "resp"))
     } else {
       plog("sent  request", addrs, data.cmd, objectInspect(data, "req"))
     }
-    p.json(data)
+    d.write(data)
   }
 
   /* Handshake */
@@ -95,55 +94,72 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   for (var name in handlers)
     cmd[name] = handlers[name].send.bind(handlers[name])
 
-  /* how this works? just don't ask */
+  function disconnect() {
+    //TODO: add
+  }
 
-  const p = Pushable()
-  const r = Readable()
-  r._read = () => {}
+  /* new stream. it works without magic */
 
-  r.on("error", e => {
-    log(e)
-  })
+  function clientDuplex() {
+    let q = []
 
-  const m = msgstream(r)
+    return {
+      sink: function (read) {
+        read(null, function next(end, data) {
+          if (!data) return setTimeout(read, 100, null, next) //FIXME: there is somthing wrong with the stream. that's why it throws empty data at us instead of listening for it
+          //if (typeof data != "object" || !data.cmd) return setTimeout(read, 1000, null, next) //cool down for bad behaviour
+          try {
+            if (data.cmd == "response") {
+              plog("got  response", addrs, data.to, objectInspect(data, "resp"))
+              handleResponse(data)
+            } else {
+              plog("got   request", addrs, data.cmd, objectInspect(data, "req"))
+              handleIn(data)
+            }
+          } catch (e) {
+            log(e)
+          }
+          read(null, next)
+        })
+      },
+      source: function (end, cb) {
+        if (end) return disconnect(end)
 
-  m.on("msg", data => {
-    //log("got  data", addrs, "\n", data)
-    try {
-      if (data.cmd == "response") {
-        plog("got  response", addrs, data.to, objectInspect(data, "resp"))
-        handleResponse(data)
-      } else {
-        plog("got   request", addrs, data.cmd, objectInspect(data, "req"))
-        handleIn(data)
+        function doSend() {
+          cb(null, q.unshift())
+        }
+        if (q.length) return doSend()
+        else ee.once("data", doSend)
+      },
+      write: data => {
+        q.push(data)
+        ee.emit("data")
       }
-    } catch (e) {
-      log(e)
     }
-  })
-
-  p.json = (o) => {
-    p.push(msgpack.pack(o))
   }
 
   /* logic */
 
+  const s = conn //stable(conn)
+
+  d = clientDuplex()
+
   pull(
-    p,
-    conn,
-    pull.map((data) => {
-      r.push(data)
-      return null
-    }),
-    pull.drain(() => {})
+    s,
+    msgstream.unpack(),
+    d.sink
+  )
+  pull(
+    d.source,
+    msgstream.pack(),
+    s
   )
 
   /* getRaw */
 
   self.getRaw = cb => {
     try {
-      //p.destroy()
-      r.destroy()
+      //
     } catch (e) {
       cb(e)
     }

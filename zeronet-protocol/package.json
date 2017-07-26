@@ -28,7 +28,8 @@
     "msgpack": "^1.0.2",
     "peer-request": "0.0.1",
     "pull-pushable": "^2.1.1",
-    "pull-stream": "^3.6.0"
+    "pull-stream": "^3.6.0",
+    "pull-through": "^1.0.18"
   },
   "directories": {
     "lib": "lib"
