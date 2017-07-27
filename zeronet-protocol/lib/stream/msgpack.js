@@ -38,6 +38,8 @@ module.exports.unpack = function () {
   let buffer = null
 
   return queue(function (end, chunk, cb) {
+    if (end) return cb(end)
+    
     try {
 
       if (Buffer.isBuffer(buffer)) {
