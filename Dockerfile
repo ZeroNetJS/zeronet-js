@@ -1,5 +1,7 @@
 FROM node:8
 ADD . /app
 WORKDIR /app
-RUN npm i
-ENTRYPOINT node zeronet.js
+RUN bash scripts/global.sh
+WORKDIR /
+RUN rm -rf /app
+ENTRYPOINT zeronet
