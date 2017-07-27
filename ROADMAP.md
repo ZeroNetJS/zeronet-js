@@ -21,7 +21,7 @@
  - [ ] Connection encryption
 
 ### Big bugs:
- - [ ] Streams are buggy
+ - [x] Streams are buggy
 
 # Stage 2
 
