@@ -1,7 +1,7 @@
 "use strict"
 
 const Swarm = require("zeronet-swarm")
-const UiServer = require("zeronet-uiserver")
+const UiServer = require("zeronet-uiserver/lib/index.js")
 
 const debug = require("debug")
 const log = debug("zeronet:node")

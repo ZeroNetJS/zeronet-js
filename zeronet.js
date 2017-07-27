@@ -2,6 +2,8 @@
 
 "use strict"
 
+require("colors")
+
 let node
 let dwait = require("./lib/hacky-logs.js")
 
@@ -14,7 +16,7 @@ const ZeroNet = require("zeronet-node")
 
 const FS = require("zeronet-storage-fs")
 
-const Common = require("zeronet-common")
+const Common = require("zeronet-common/index.js")
 
 let dir = require("./lib/storage-dir")()
 

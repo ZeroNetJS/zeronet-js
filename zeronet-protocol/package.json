@@ -22,13 +22,12 @@
   "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
   "dependencies": {
     "binary": "^0.3.0",
-    "bufferpack": "0.0.6",
     "clone": "^2.1.1",
     "hypercache": "^0.2.0",
     "ip": "^1.1.5",
     "msgpack": "^1.0.2",
     "peer-request": "0.0.1",
-    "pull-queue": "^0.1.0",
+    "pull-queue": "^0.1.1",
     "pull-stream": "^3.6.0"
   },
   "directories": {

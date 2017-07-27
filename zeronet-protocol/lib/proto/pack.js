@@ -27,9 +27,6 @@ function inet_ntoa(num) {
   return a.join('.')
 }
 
-// const struct = require("bufferpack")
-// const inet = require("inet")
-
 /*
 # ip, port to packed 6byte format
 def packAddress(ip, port):
