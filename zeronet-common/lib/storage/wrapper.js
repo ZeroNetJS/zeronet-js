@@ -26,7 +26,7 @@ module.exports = function StorageWrapper(storage) {
 
   self.exists = storage.file.exists
   self.readStream = (zite, v, path) => {
-    pull(
+    return pull(
       pull.values(Array.isArray(path) ? path : [path]),
       queue(function (end, file, cb) {
         if (end) return cb(end)
