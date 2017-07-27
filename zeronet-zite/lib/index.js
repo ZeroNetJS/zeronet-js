@@ -72,6 +72,7 @@ module.exports = function Zite(config, node) { //describes a single zite
         if (err) console.error(err)
         else pull(
           stream,
+          require("zeronet-zite/lib/file/jsonstream")(),
           pull.drain(console.log)
         )
       })
