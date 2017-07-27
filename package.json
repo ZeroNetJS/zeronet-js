@@ -8,11 +8,11 @@
     "test": "test"
   },
   "dependencies": {
-    "async": "^2.5.0",
-    "bunyan": "^1.8.10",
     "colors": "^1.1.2",
     "merge-recursive": "0.0.3",
+    "mkdirp": "^0.5.1",
     "mockery": "^2.1.0",
+    "moment": "^2.18.1",
     "peer-id": "^0.9.0",
     "zeronet-client": "file:zeronet-client",
     "zeronet-common": "file:zeronet-common",
