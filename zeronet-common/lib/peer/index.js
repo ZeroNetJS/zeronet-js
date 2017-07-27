@@ -98,11 +98,33 @@ module.exports = function ZeroNetPeer(peerInfo) {
     }
   }
 
+  function cmd(cmdName, data, opt, _cb) {
+    if (typeof opt == "function") {
+      _cb = opt
+      opt = null
+    }
+    let cbf = false
+
+    function cb(err, res) {
+      if (cbf) return
+      cbf = true
+      _cb(err, res)
+    }
+    setTimeout(cb, 1000, new Error("Timeout"))
+    if (!self.client && !opt.dial) return cb(new Error("Offline"))
+    dial(opt.dial, function (err, conn) {
+      if (err) return cb(err)
+      if (!conn.client.cmd[cmdName]) return cb(new Error("Command Unsupported: " + cmdName))
+      conn.client.cmd[cmdName](data, cb)
+    })
+  }
+
   self.setZite = setZite
   self.hasZite = hasZite
 
   self.toJSON = toJSON
   self.dial = dial
+  self.cmd = cmd
 }
 
 module.exports.piFromAddr = (pi, cb) => {

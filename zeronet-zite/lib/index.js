@@ -1,5 +1,7 @@
 "use strict"
 
+const pull = require("pull-stream")
+
 const verify = require("zeronet-common/lib/verify")
 const Nonces = require("zeronet-common/lib/nonce")
 
@@ -51,6 +53,7 @@ module.exports = function Zite(config, node) { //describes a single zite
   const tree = self.tree = new Tree(self)
   const queue = self.queue = new Queue(self, node)
   tree.attach(node.storage)
+  const fs = self.fs = tree.fs
 
   /* App */
 
@@ -65,12 +68,12 @@ module.exports = function Zite(config, node) { //describes a single zite
     tree.build,
     queue.start,
     cb => {
-      queue.add("content.json", (err, stream) => {
-        if (err) console.error("init", err)
-        console.log("got stream", stream)
-      }, (err, hash, size) => {
-        console.error("res", err)
-        console.log("res", hash, size)
+      fs.getFile("content.json", (err, stream) => {
+        if (err) console.error(err)
+        else pull(
+          stream,
+          pull.drain(console.log)
+        )
       })
       cb()
     }

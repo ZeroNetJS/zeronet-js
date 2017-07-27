@@ -6,7 +6,7 @@ const pull = require("pull-stream")
 
 const debug = require("debug")
 
-module.exports = function PeerStream(zite, zeronet, stream) {
+module.exports = function PeerStream(zite, zeronet) {
 
   const log = debug("zeronet:zite:peer-stream:zite:" + zite.address)
 
@@ -153,12 +153,10 @@ module.exports = function PeerStream(zite, zeronet, stream) {
     }
   }
 
-  log("build", stream)
-
   pull(
     PeerList(),
     PeerGetter(5),
-    PeerDialer(3, 10),
-    stream
+    PeerDialer(3, 10)
   )
+  return PeerDialer.source
 }

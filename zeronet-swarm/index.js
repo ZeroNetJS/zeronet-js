@@ -17,7 +17,7 @@ const series = require('async/series')
 
 const mafmt = require('mafmt')
 
-class Node extends libp2p {
+class ZeroNetSwarm extends libp2p {
   constructor(options, zeronet) {
     options = options || {}
 
@@ -123,4 +123,4 @@ class Node extends libp2p {
   }
 }
 
-module.exports = Node
+module.exports = ZeroNetSwarm
