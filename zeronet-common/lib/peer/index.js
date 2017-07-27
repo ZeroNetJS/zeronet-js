@@ -101,8 +101,9 @@ module.exports = function ZeroNetPeer(peerInfo) {
   function cmd(cmdName, data, opt, _cb) {
     if (typeof opt == "function") {
       _cb = opt
-      opt = null
+      opt = {}
     }
+    if (!opt) opt = {}
     let cbf = false
 
     function cb(err, res) {
@@ -112,10 +113,10 @@ module.exports = function ZeroNetPeer(peerInfo) {
     }
     setTimeout(cb, 1000, new Error("Timeout"))
     if (!self.client && !opt.dial) return cb(new Error("Offline"))
-    dial(opt.dial, function (err, conn) {
+    dial(opt.dial, function (err) {
       if (err) return cb(err)
-      if (!conn.client.cmd[cmdName]) return cb(new Error("Command Unsupported: " + cmdName))
-      conn.client.cmd[cmdName](data, cb)
+      if (!self.client.cmd[cmdName]) return cb(new Error("Command Unsupported: " + cmdName))
+      self.client.cmd[cmdName](data, cb)
     })
   }
 

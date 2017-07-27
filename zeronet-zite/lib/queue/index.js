@@ -10,8 +10,8 @@ function QueueItem(zite, zeronet, info) {
   info.site = zite.address
   return pull(
     PeerStream(zite, zeronet),
-    FileStream(info), //TODO: build a "try again" wrapper arround the filestream
-    cache
+    FileStream(info) //TODO: build a "try again" wrapper arround the filestream
+    //cache TODO: fix caching
   )
 }
 

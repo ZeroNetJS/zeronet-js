@@ -24,7 +24,11 @@ module.exports = function FileStream(data) {
   let sendErr = false
 
   let getStream = queue(function (end, peer, cb) {
-    if (!end) return cb(end)
+    if (end) return cb(end)
+
+    if (sendErr) return cb(sendErr)
+
+    log("try peer", dlpath, peer.multiaddr)
 
     let chunks = []
 
@@ -34,12 +38,12 @@ module.exports = function FileStream(data) {
       return cb(err)
     }
 
-    if (sendErr) return cb(sendErr)
-
     function loop() {
+      if (cur >= info.size) return finishLoop(!log("finished", dlpath, cur))
       if (!peer.client) return finishLoop() //peer disconnected
       let args = {
         site: data.site,
+        location: cur,
         inner_path: data.path,
       }
       if (info.size) args.file_size = info.size
@@ -47,11 +51,14 @@ module.exports = function FileStream(data) {
         if (err) return finishLoop() //goto: next
         if (!info.size) info.size = res.size
         cur += res.body.length
+        log("downloaded", dlpath, cur, info.size)
         chunks.push(res.body)
         return loop()
       })
     }
     loop()
+  }, {
+    sendMany: true
   })
 
   let verifyStream
@@ -81,6 +88,8 @@ module.exports = function FileStream(data) {
           return cb(null, vchunks)
         }
       } else return cb()
+    }, {
+      sendMany: true
     })
 
     pull(

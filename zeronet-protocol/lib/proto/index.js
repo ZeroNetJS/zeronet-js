@@ -50,9 +50,6 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
       })
     }
 
-  console.log("zn",zeronet)
-  console.log("node",node)
-
   self.applyDefaults = () =>
     Defaults(self, zeronet, node)
 

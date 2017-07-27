@@ -133,7 +133,6 @@ module.exports = function PeerStream(zite, zeronet) {
         })
       },
       source: function (end, cb) {
-        log("peer:dialer:out g", end)
         if (end) {
           ended = true
           return cb(end)
@@ -153,10 +152,10 @@ module.exports = function PeerStream(zite, zeronet) {
     }
   }
 
-  pull(
+  return pull(
     PeerList(),
     PeerGetter(5),
     PeerDialer(3, 10)
   )
-  return PeerDialer.source
+
 }
