@@ -51,7 +51,10 @@ module.exports = function ZeroNetStorageFS(folder) {
      * @param {data} data - The data to be written
      * @param {callback} - `err`: the filesystem error
      */
-    write: (zite, version, inner_path, data, cb) => fs.writeFile(getPath(zite, inner_path), data, cb),
+    write: (zite, version, inner_path, data, cb) => series([
+      cb => mkdirp(path.dirname(getPath(zite, inner_path)), cb),
+      cb => fs.writeFile(getPath(zite, inner_path), data, cb)
+    ], cb),
     /**
      * @param {string} zite - Address of the zite
      * @param {integer} version - Version/Timestamp of the file

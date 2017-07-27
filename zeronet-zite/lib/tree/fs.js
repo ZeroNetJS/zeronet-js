@@ -1,5 +1,7 @@
 "use strict"
 
+const pull = require("pull-stream")
+
 module.exports = function ZiteFS(zite, storage, tree) {
   const self = this
   self.getFile = (path, cb) => {
@@ -12,7 +14,13 @@ module.exports = function ZiteFS(zite, storage, tree) {
         } else {
           zite.queue.add({ //TODO: fix for hash, etc
             path
-          }, cb)
+          }, (err, stream) => {
+            if (err) return cb(err)
+            cb(null, pull(
+              stream,
+              storage.writeStream(zite.address, 0, path)
+            ))
+          })
         }
       })
     } else return cb(new Error("ENOTFOUND: " + path))

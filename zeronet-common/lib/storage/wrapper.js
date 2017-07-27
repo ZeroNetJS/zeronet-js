@@ -34,4 +34,18 @@ module.exports = function StorageWrapper(storage) {
       })
     )
   }
+  self.writeStream = (zite, v, path) => {
+    let d = []
+    return queue(function (end, data, cb) {
+      if (end) {
+        if (typeof end == "boolean")
+          storage.file.write(zite, v, path, Buffer.concat(d), err => cb(err || end))
+        else
+          cb(end)
+      } else {
+        d.push(data)
+        return cb(null, data)
+      }
+    })
+  }
 }
