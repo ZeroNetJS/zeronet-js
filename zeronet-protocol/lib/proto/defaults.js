@@ -37,7 +37,7 @@ module.exports = function Defaults(protocol, zeronet) {
   }, (data, cb) => {
     if (data.peers) {
       let unpack = data.peers.map(pack.v4.unpack)
-      log("got peers", data.site, unpack)
+      log("got peers for", data.site, unpack.join(", ") || "<none>")
       zeronet.peerPool.addMany(unpack, data.site)
     }
     cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
