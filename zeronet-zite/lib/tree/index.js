@@ -125,6 +125,7 @@ class ContentJSONBranch extends FileTreeLeafObject {
 class FileBranch extends FileTreeLeafObject {
   constructor(file, cjbranch) {
     this.file = file
+    this.name = file.name
     this.authority = cjbranch.authority
   }
 }

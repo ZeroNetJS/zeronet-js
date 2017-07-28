@@ -54,7 +54,6 @@ function IPupnp(client) {
 function PORTportcheckerco() {
   const self = this
   self.getPortOpen = (port, cb) => {
-    return
     request({
       url: "https://portchecker.co/check",
       method: "POST",
