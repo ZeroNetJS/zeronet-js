@@ -10,10 +10,12 @@ const PeerInfo = require('peer-info')
 const multiaddr = require('multiaddr')
 
 const debug = require("debug")
+const log = debug("zeronet:swarm")
 const Protocol = require("zeronet-protocol")
 const zdial = require("zeronet-swarm/dial")
 const each = require('async/each')
 const series = require('async/series')
+const NAT = require("zeronet-swarm/nat")
 
 const mafmt = require('mafmt')
 
@@ -22,8 +24,6 @@ class ZeroNetSwarm extends libp2p {
     options = options || {}
 
     const peerInfo = new PeerInfo(options.id)
-
-    const log = debug("zeronet:swarm")
 
     if (options.server)
       peerInfo.multiaddrs.add(multiaddr("/ip4/" + options.server.host + "/tcp/" + options.server.port))
@@ -48,6 +48,7 @@ class ZeroNetSwarm extends libp2p {
     super(modules, peerInfo, /*peerBook*/ null)
 
     const self = this
+    self.nat = new NAT(self, options)
     self.zeronet = zeronet
     self.peerInfo = peerInfo
 
@@ -59,6 +60,12 @@ class ZeroNetSwarm extends libp2p {
     self.dial = self.swarm.dial
 
     self.protocol.applyDefaults()
+
+    self.advertise = {
+      ip: null,
+      port: null,
+      port_open: null
+    }
 
     self.swarm.listen = cb => {
       each(self.swarm.availableTransports(peerInfo), (ts, cb) => {

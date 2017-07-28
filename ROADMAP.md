@@ -16,6 +16,7 @@
  - [ ] Loading Zites
  - [ ] UiServer
  - [ ] Ui
+ - [ ] UPNP
  - [ ] ZeroFrame
  - [ ] Plugin API
  - [ ] Connection encryption

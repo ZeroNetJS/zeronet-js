@@ -28,6 +28,8 @@
     "libp2p-mdns": "^0.8.0",
     "libp2p-tcp": "^0.10.2",
     "multiaddr": "^2.3.0",
-    "peer-info": "^0.10.0"
+    "nat-upnp": "^1.1.0",
+    "peer-info": "^0.10.0",
+    "request": "^2.81.0"
   }
 }

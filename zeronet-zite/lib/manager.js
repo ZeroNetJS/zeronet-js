@@ -18,7 +18,10 @@ module.exports = function ZiteManager(zeronet) {
     self.zites[address] = zite
   }
 
-  self.shutdown = cb =>
+  self.start = cb =>
+    each(Object.keys(self.zites), (z, n) => self.zites[z].start(n), cb)
+
+  self.stop = cb =>
     each(Object.keys(self.zites), (z, n) => self.zites[z].stop(n), cb)
 
   self.fromJSON = (data, cb) =>

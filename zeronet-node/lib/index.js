@@ -130,10 +130,12 @@ function ZeroNetNode(options) {
     */
   self.start = cb => series([ //loads all the stuff from disk and starts everything
     storage.start,
-    cb => swarm.start(cb),
     self.boot,
+    cb => swarm.start(cb),
+    ziteManager.start,
     cb => sintv = setInterval(self.save, 10 * 1000, cb()), //TODO: "make this great again"
-    uiserver ? uiserver.start : cb => cb()
+    uiserver ? uiserver.start : cb => cb(),
+    swarm.nat.doDefault
   ], cb)
 
   /**
@@ -175,7 +177,7 @@ function ZeroNetNode(options) {
   self.stop = cb => {
     series([
       uiserver ? uiserver.stop : cb => cb(),
-      ziteManager.shutdown,
+      ziteManager.stop,
       self.save,
       cb => sintv = clearInterval(sintv, cb()), //TODO: "make this great again"
       cb => swarm.stop(cb),

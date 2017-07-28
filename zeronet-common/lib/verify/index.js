@@ -6,7 +6,7 @@ function debugDef(d_) {
   let def = {}
   for (var key in d_) {
     def[key] = Array.isArray(d_[key]) ? d_[key] : [d_[key]]
-    def[key] = def[key].forEach(e => typeof e == "function" ? "function: " + e.toString().split("\n")[0] : e)
+    def[key] = def[key].map(e => typeof e == "function" ? "function: " + e.toString().split("\n")[0] : e)
     def[key] = def[key].join(", ")
   }
   return def

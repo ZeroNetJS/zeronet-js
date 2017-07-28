@@ -98,7 +98,5 @@ module.exports = function Zite(config, node) { //describes a single zite
 }
 
 module.exports.fromJSON = zeronet =>
-  (data, cb) => {
-    const z = new module.exports(data, zeronet)
-    z.start(err => cb(err, z))
-  }
+  (data, cb) =>
+  cb(null, new module.exports(data, zeronet))
