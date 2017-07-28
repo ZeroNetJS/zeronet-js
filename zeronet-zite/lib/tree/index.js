@@ -85,11 +85,21 @@ class FileTreeRoot extends FileTreeObject {
     this.children = branch.files
     this.updateTree()
   }
-  getRuleBook() {
-    //Returns rule book with 1Addr as only valid key
-    return new RuleBook({
-      valid_keys: this.address
-    })
+  getRuleBook(data) {
+    let valid_signers = []
+    if (data.signers) valid_signers = Object.keys(data.signers)
+    if (valid_signers.indexOf(this.address) == -1) valid_signers.push(this.address) //Address is always a valid signer
+
+    return {
+      signers_sign: new RuleBook({ //Returns rule book with 1Addr as only valid key
+        valid_keys: this.address,
+        signs_required: 1
+      }),
+      sign: new RuleBook({
+        valid_keys: valid_signers,
+        signs_required: data.signs_required || 1
+      })
+    }
   }
   recalculatePath() {
     this.path = ""

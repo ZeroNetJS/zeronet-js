@@ -72,6 +72,60 @@ def getRules(self, inner_path, content=None):
           raise VerifyError("Certificate verify error: %s" % err)
       return result
 
+  # Get rules for a user file
+  # Return: The rules of the file or False if not allowed
+  def getUserContentRules(self, parent_content, inner_path, content):
+      user_contents = parent_content["user_contents"]
+      user_address = re.match(".* /([A-Za-z0-9]*?)/.*?$", inner_path).group(1)  # Delivered for directory
+
+      try:
+          if not content:
+              content = self.site.storage.loadJson(inner_path)  # Read the file if no content specified
+          user_urn = "%s/%s" % (content["cert_auth_type"], content["cert_user_id"])  # web/nofish@zeroid.bit
+          cert_user_id = content["cert_user_id"]
+      except Exception:  # Content.json not exist
+          user_urn = "n-a/n-a"
+          cert_user_id = "n-a"
+
+      rules = copy.copy(user_contents["permissions"].get(cert_user_id, {}))  # Default rules by username
+      if rules is False:
+          banned = True
+          rules = {}
+      else:
+          banned = False
+      if "signers" in rules:
+          rules["signers"] = rules["signers"][:]  # Make copy of the signers
+      for permission_pattern, permission_rules in user_contents["permission_rules"].items():  # Regexp rules
+          if not SafeRe.match(permission_pattern, user_urn):
+              continue  # Rule is not valid for user
+          # Update rules if its better than current recorded ones
+          for key, val in permission_rules.iteritems():
+              if key not in rules:
+                  if type(val) is list:
+                      rules[key] = val[:]  # Make copy
+                  else:
+                      rules[key] = val
+              elif type(val) is int:  # Int, update if larger
+                  if val > rules[key]:
+                      rules[key] = val
+              elif hasattr(val, "startswith"):  # String, update if longer
+                  if len(val) > len(rules[key]):
+                      rules[key] = val
+              elif type(val) is list:  # List, append
+                  rules[key] += val
+
+      rules["cert_signers"] = user_contents["cert_signers"]  # Add valid cert signers
+      if "signers" not in rules:
+          rules["signers"] = []
+
+      if not banned:
+          rules["signers"].append(user_address)  # Add user as valid signer
+      rules["user_address"] = user_address
+      rules["includes_allowed"] = False
+
+      return rules
+
+
 */
 
 
