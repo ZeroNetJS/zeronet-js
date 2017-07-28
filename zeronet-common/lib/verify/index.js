@@ -6,8 +6,8 @@ function debugDef(d_) {
   let def = {}
   for (var key in d_) {
     def[key] = Array.isArray(d_[key]) ? d_[key] : [d_[key]]
-    def[key] = def[key].map(e => typeof e == "function" ? "function: " + e.toString().split("\n")[0] : e)
-    def[key] = def[key].join(", ")
+    def[key] = def[key].map(e => typeof e == "function" ? "[function] " + e.toString().split("\n")[0] : e)
+    if (def[key].length == 1) def[key] = def[key][0]
   }
   return def
 }
@@ -19,13 +19,17 @@ function verifyProtocol(def, param) {
       let dd
       if (!Array.isArray(def[p])) dd = [def[p]]
       else dd = def[p]
-      dd.map(d => {
+      let v = false
+      dd.forEach(d => {
+        if (v) return
         switch (typeof d) {
         case "function":
           if (!d(param[p])) throw new Error("Invalid value for key " + p + " (validation function)")
+          v = true
           break
         case "string":
           if (typeof param[p] != d) throw new Error("Invalid value for key " + p + " (type missmatch expected=" + d + ", got=" + param[p] + ")")
+          v = true
           break
         }
       })

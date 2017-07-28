@@ -13,13 +13,13 @@ function genHandshakeData(protocol, client, zeronet) {
     port_opened: zeronet.swarm.advertise.port_open || false,
     rev: zeronet.rev,
     version: zeronet.version,
-    target_ip: zeronet.swarm.advertise.ip || "0.0.0.0",
     own: true //this is later removed
   }
   if (client.isTor) {
     d.onion = 0 //TODO: add tor
   } else {
     d.peer_id = zeronet.peer_id
+    d.target_ip = zeronet.swarm.advertise.ip || "0.0.0.0"
   }
   return d
 }
@@ -151,7 +151,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
 }
 
 module.exports.def = { //Definitions are symmetric
-  crypt: a => a === null || typeof a == "string",
+  crypt: [a => a === null, "string"],
   crypt_supported: Array.isArray,
   fileserver_port: "number",
   peer_id: "string",
