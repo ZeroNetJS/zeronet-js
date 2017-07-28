@@ -8,12 +8,12 @@ function genHandshakeData(protocol, client, zeronet) {
   let d = {
     crypt: null,
     crypt_supported: protocol.crypto ? protocol.crypto.supported() : [],
-    fileserver_port: zeronet.server ? zeronet.server.port : 0, //TODO: fix this. this does not work anymore with swarm
+    fileserver_port: zeronet.swarm.advertise.port || 0,
     protocol: "v2",
-    port_opened: false, //TODO: implent
+    port_opened: zeronet.swarm.advertise.port_open || false,
     rev: zeronet.rev,
     version: zeronet.version,
-    target_ip: "127.0.0.1", //TODO: add
+    target_ip: zeronet.swarm.advertise.ip || "0.0.0.0",
     own: true //this is later removed
   }
   if (client.isTor) {
