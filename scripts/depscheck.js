@@ -150,7 +150,22 @@ function checkDeps(file, modname, from) {
   deps.filter(d => d.zero).forEach(d => checkDeps(d.fullpath, d.mod, file))
 }
 
-checkDeps(fs.realpathSync("zeronet.js"), "zeronet", "__ENTRY")
+checkDeps(fs.realpathSync("zeronet.js"), "zeronet", "__ENTRY");
+
+[reqbymod, missing_mod].forEach(d => {
+  for (var k in d)
+    if (!Object.keys(d[k]).length) delete d[k]
+})
 
 console.log("unused deps\n", reqbymod)
-console.log("missing deps\n", missing_mod)
+console.log("missing deps\n", missing_mod);
+
+[
+  [reqbymod, "r"],
+  [missing_mod, "i"]
+].forEach(p => {
+  for (var pkg in p[0]) {
+    let d = p[0][pkg]
+    console.error("cd " + pkg + " && npm " + p[1] + " --save " + Object.keys(d).join(" ") + " && cd ..")
+  }
+})

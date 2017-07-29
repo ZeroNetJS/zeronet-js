@@ -23,10 +23,12 @@
   "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
   "dependencies": {
     "async": "^2.5.0",
+    "interface-connection": "^0.3.2",
     "libp2p": "^0.11.0",
     "libp2p-kad-dht": "^0.4.1",
     "libp2p-mdns": "^0.8.0",
     "libp2p-tcp": "^0.10.2",
+    "mafmt": "^2.1.8",
     "multiaddr": "^2.3.0",
     "nat-upnp": "^1.1.0",
     "peer-info": "^0.10.0",
