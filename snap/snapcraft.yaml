@@ -44,3 +44,4 @@ parts:
       rm -rf $TMP
       #HACK: reset the timestamp of every file
       find $SNAPCRAFT_PART_INSTALL -print0 | xargs -0i touch -a -m -t 200001010000.00 {}
+      find $SNAPCRAFT_STAGE -print0 | xargs -0i touch -a -m -t 200001010000.00 {}
