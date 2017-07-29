@@ -68,14 +68,16 @@ module.exports = function Zite(config, node) { //describes a single zite
     tree.build,
     queue.start,
     cb => {
-      fs.getFile("content.json", (err, stream) => {
-        if (err) console.error(err)
-        else pull(
-          stream,
-          require("zeronet-zite/lib/file/jsonstream")(),
-          pull.drain(console.log)
-        )
-      })
+      setTimeout(() => {
+        fs.getFile("content.json", (err, stream) => {
+          if (err) console.error(err)
+          else pull(
+            stream,
+            require("zeronet-zite/lib/file/jsonstream")(),
+            pull.drain(console.log)
+          )
+        })
+      }, 1000)
       cb()
     }
   ], cb)

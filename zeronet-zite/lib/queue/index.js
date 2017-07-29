@@ -1,6 +1,6 @@
 "use strict"
 
-const cache = require("pull-cache")
+//const cache = require("pull-cache")
 const pull = require("pull-stream")
 
 const FileStream = require("zeronet-zite/lib/file/stream")

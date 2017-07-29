@@ -80,6 +80,13 @@ module.exports = function ZeroNetPeer(peerInfo) {
     }
   }
 
+  function disconnect() {
+    self.score--
+    self.connected = false
+    self.conn = null
+    self.clinet = null
+  }
+
   function dial(swarm, cb) {
     if (self.conn) cb(null, self.conn.client, self.conn)
     else {
@@ -91,9 +98,11 @@ module.exports = function ZeroNetPeer(peerInfo) {
           self.score -= 10
           return cb(err)
         }
+        self.connected = true
         self.score += 10
         self.conn = conn
         self.client = self.conn.client
+        self.client.once("end", disconnect)
         return cb()
       })
     }

@@ -4,6 +4,7 @@ const msgstream = require("zeronet-protocol/lib/stream/msgpack")
 //const stable = require(zeronet-protocol/lib/stream/stable)
 const handshake = require("zeronet-protocol/lib/proto/handshake")
 const EE = require("events").EventEmitter
+const util = require("util")
 
 const pull = require('pull-stream')
 
@@ -38,7 +39,7 @@ function objectInspect(data, type) {
   return r.join(", ")
 }
 
-module.exports = function Client(conn, protocol, zeronet, opt) {
+function Client(conn, protocol, zeronet, opt) {
   const self = this
   const ee = new EE()
 
@@ -92,8 +93,12 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   for (var name in handlers)
     cmd[name] = handlers[name].send.bind(handlers[name])
 
-  function disconnect() {
-    //TODO: add
+  function disconnect(e) {
+    self.emit("end", e)
+    self.write = () => {
+      throw new Error("Offline")
+    }
+    self.cmd = {}
   }
 
   /* new stream. it works without magic */
@@ -161,3 +166,7 @@ module.exports = function Client(conn, protocol, zeronet, opt) {
   }
 
 }
+
+util.inherits(Client, EE)
+
+module.exports = Client
