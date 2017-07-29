@@ -42,3 +42,5 @@ parts:
       node scripts/no-git-deps.js npm-shrinkwrap.json
       npm_config_cache="$TMP/.npm" npm_config_devdir="$TMP/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
       rm -rf $TMP
+      #HACK: reset the timestamp of every file
+      find $SNAPCRAFT_PART_INSTALL -print0 | xargs -0i touch -a -m -t 200001010000.00 {}
