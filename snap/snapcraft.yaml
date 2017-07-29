@@ -34,8 +34,10 @@ parts:
       #cat /etc/passwd | grep "buildd" > /dev/null && cat snap.files/hosts | tee /etc/hosts
       bash scripts/tarball.sh
     install: |
-      mkdir -p /tmp/$$/.{npm,node_gyp}
-      npm_config_cache="/tmp/$$/.npm" npm_config_devdir="/tmp/$$/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" npm shrinkwrap
+      TMP=/tmp/zeronet-js-build
+      rm -rf $TMP
+      mkdir -p $TMP/.{npm,node_gyp}
+      npm_config_cache="$TMP/.npm" npm_config_devdir="$TMP/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" npm shrinkwrap
       node scripts/no-git-deps.js npm-shrinkwrap.json
-      npm_config_cache="/tmp/$$/.npm" npm_config_devdir="/tmp/$$/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
-      rm -rf /tmp/$$
+      npm_config_cache="$TMP/.npm" npm_config_devdir="$TMP/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
+      rm -rf $TMP
