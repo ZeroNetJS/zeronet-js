@@ -31,9 +31,10 @@ parts:
       - node
     source: .
     build: |
-      #cat /etc/passwd | grep "buildd" > /dev/null && cat snap.files/hosts | tee /etc/hosts
+      set -e
       bash scripts/tarball.sh
     install: |
+      set -e
       TMP=/tmp/zeronet-js-build
       rm -rf $TMP
       mkdir -p $TMP/.{npm,node_gyp}
