@@ -78,8 +78,8 @@ module.exports = function Zite(config, node) { //describes a single zite
             require("zeronet-zite/lib/file/json").parse(),
             pull.drain(data => {
               console.log(data)
-              console.log(tree.getRuleBook("content.json", data))
-              const cj = new ContentJSON(self, "content.json", data, tree.getRuleBook("content.json", data))
+              const cj = new ContentJSON(self, "content.json", data)
+              console.log(cj)
               console.log(cj.verifySelf())
             })
           )

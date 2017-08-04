@@ -11,11 +11,10 @@ const crypto = require("zeronet-crypto")
  * @namespace ContentJSON
  * @constructor
  */
-module.exports = function ContentJSON(zite, inner_path, data, rules) {
+module.exports = function ContentJSON(zite, inner_path, data) {
   const self = this
-  //const address = zite.address
 
-  self.rules = rules
+  const rules = self.rules = zite.tree.getRuleBook(inner_path, data)
 
   self.verifySelf = () => {
     /*
@@ -25,7 +24,6 @@ module.exports = function ContentJSON(zite, inner_path, data, rules) {
     */
     const {
       signs,
-      //signs_required,
       signers_sign
     } = data
 
@@ -33,13 +31,12 @@ module.exports = function ContentJSON(zite, inner_path, data, rules) {
     delete data.signs
 
     const real = crypto.PythonJSONDump(data) //the data that was actually signed
-    const sigsig = signers_sign //signers_sign
     const vs = rules.signs.getValidKeys() //GetValidSigners(address, inner_path, data) //valid signers
     const signs_required = rules.signs.getSignsRequired()
-    console.log("vs",vs)
-    const sigsigdata = crypto.GetSigners(vs, signs_required) //construct signers_sign data from what we were given
+    const signers_sign_data = crypto.GetSigners(vs, signs_required) //construct signers_sign data from what we were given
 
-    rules.signers_sign.verifyManyToOne(sigsigdata, sigsig)
+    //these 2 functions throw on failure. no need for if checks
+    rules.signers_sign.verifyManyToOne(signers_sign_data, signers_sign)
     rules.signs.verifyManyToMany(real, signs)
 
     return true
