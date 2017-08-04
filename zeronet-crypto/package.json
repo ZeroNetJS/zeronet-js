@@ -11,7 +11,7 @@
     "crypto"
   ],
   "author": "Maciej Krüger <mkg20001@gmail.com>",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ZeroNetJS/zeronet-js.git"
