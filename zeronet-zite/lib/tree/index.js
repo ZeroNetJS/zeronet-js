@@ -9,6 +9,9 @@ class FileTreeObject {
     this.type = "generic"
     this.updateTree()
   }
+  toJSON() {
+    return this.children.map(c => c.toJSON())
+  }
   exists(path) {
     let s = Array.isArray(path) ? path : path.split("/")
     while (!s[0] && s.length) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
@@ -31,6 +34,7 @@ class FileTreeObject {
   }
   updateTree() {
     this.sub = {}
+    this.recalculatePath()
     this.children.forEach(c => {
       c.parent = this
       c.recalculatePath()
@@ -53,6 +57,13 @@ class FileTreeLeafObject extends FileTreeObject {
   constructor() {
     super()
     this.type = "leaf"
+  }
+  toJSON() {
+    return {
+      name: this.name,
+      type: this.type,
+      path: this.path
+    }
   }
   exists(path) {
     let s = Array.isArray(path) ? path : path.split("/")
@@ -123,16 +134,16 @@ class DummyObject extends FileTreeLeafObject {
 }
 
 class ContentJSONBranch extends FileTreeLeafObject {
-  constructor(cj, rules) {
+  constructor(cj) {
     super()
     this.authority = cj
-    this.files = cj.data.files
+    this.files = cj.files
     this.name = "content.json"
-    this.rules = rules
+    this.rules = cj.rules
   }
-  /*verify(file, hash, size) {
-
-  }*/
+  verify(file, hash, size) {
+    return this.authority.verify(file, hash, size)
+  }
 }
 
 class FileBranch extends FileTreeLeafObject {

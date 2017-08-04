@@ -81,6 +81,7 @@ module.exports = function Zite(config, node) { //describes a single zite
               const cj = new ContentJSON(self, "content.json", data)
               console.log(cj)
               console.log(cj.verifySelf())
+              console.log(tree.toJSON())
             })
           )
         })
