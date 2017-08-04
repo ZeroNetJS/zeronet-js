@@ -2,6 +2,8 @@
 
 const RuleBook = require("zeronet-zite/lib/tree/rulebook")
 const FS = require("zeronet-zite/lib/tree/fs")
+const ContentJSON = require("zeronet-zite/lib/tree/content-json")
+const path = require("path")
 
 class FileTreeObject {
   consturctor() {
@@ -65,7 +67,8 @@ class FileTreeLeafObject extends FileTreeObject {
     return {
       name: this.name,
       type: this.type,
-      path: this.path
+      path: this.path,
+      dummy: this.dummy
     }
   }
   exists(path) {
@@ -84,20 +87,26 @@ class FileTreeLeafObject extends FileTreeObject {
   }
 }
 
-class FileTreeRoot extends FileTreeObject {
-  constructor(zite, json) {
+class FileTreeBranchObject extends FileTreeObject {
+  constructor() {
     super()
-    this.zite = zite
-    this.address = zite.address
     this.type = "branch"
-    this.children = [new DummyObject("content.json")] //TODO: chicken-egg-problem: if the content.json does not exist we can't queue it
-    if (json) this.fromJSON(json)
-    this.updateTree()
   }
   setMainBranch(branch) {
     //sets the main branch aka content.json
     this.authority = branch.authority
     this.children = branch.files
+    this.updateTree()
+  }
+}
+
+class FileTreeRoot extends FileTreeBranchObject {
+  constructor(zite, json) {
+    super()
+    this.zite = zite
+    this.address = zite.address
+    this.children = [new DummyObject("content.json")] //TODO: chicken-egg-problem: if the content.json does not exist we can't queue it
+    this.json = json
     this.updateTree()
   }
   getRuleBook(path, data) {
@@ -126,7 +135,21 @@ class FileTreeRoot extends FileTreeObject {
     this.fs = new FS(this.zite, this.storage, this)
   }
   build(cb) {
+    if (this.json) this.fromJSON(this.json)
+    delete this.json
     cb()
+  }
+  handleContentJSON(path, data) {
+    let rule
+    if (!(rule = this.getRuleBook(path))) return false //it's invalid
+    const cj = new ContentJSON(this.zite, path, data)
+    if (!cj.verifySelf()) return false //cryptography says no
+    const dir = path.dirname(path)
+    const branch = new ContentJSONBranch(cj)
+    if (!this.get(dir)) {
+      //TODO: not needed for now as no multi-user and multi-content is done
+    }
+    this.get(dir).setMainBranch(branch)
   }
 }
 
@@ -134,6 +157,7 @@ class DummyObject extends FileTreeLeafObject {
   constructor(name) {
     super()
     this.name = name
+    this.dummy = true
   }
 }
 
@@ -141,9 +165,9 @@ class ContentJSONBranch extends FileTreeLeafObject {
   constructor(cj) {
     super()
     this.authority = cj
-    this.files = cj.files
     this.name = "content.json"
     this.rules = cj.rules
+    this.files = cj.files.map(file => new FileBranch(file, this))
   }
   verify(file, hash, size) {
     return this.authority.verify(file, hash, size)
@@ -154,6 +178,7 @@ class FileBranch extends FileTreeLeafObject {
   constructor(file, cjbranch) {
     this.file = file
     this.name = file.name
+    this.relpath = file.relpath //TODO: use relpath to create empty nodes in the way
     this.authority = cjbranch.authority
   }
 }

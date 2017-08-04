@@ -63,13 +63,22 @@ module.exports = function Zite(config, node) { //describes a single zite
     //const path=req.url
   }*/
 
+  function liftOff(cb) { //...and the zite is downloading
+    if (tree.get("content.json").dummy) {
+      fs.getFile("content.json", (err, stream) => { //load the content json first time
+        if (err) return cb(err)
+      })
+    }
+  }
+
   /* Main */
 
   self.start = cb => series([
     discovery.start,
     tree.build,
     queue.start,
-    cb => {
+    config.manual ? cb => cb() : liftOff
+    /*cb => {
       setTimeout(() => {
         fs.getFile("content.json", (err, stream) => {
           if (err) console.error(err)
@@ -87,7 +96,7 @@ module.exports = function Zite(config, node) { //describes a single zite
         })
       }, 1000)
       cb()
-    }
+    }*/
   ], cb)
 
   self.stop = cb => series([

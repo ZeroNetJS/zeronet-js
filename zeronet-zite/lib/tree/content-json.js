@@ -2,13 +2,14 @@
 
 const crypto = require("zeronet-crypto")
 const fallaby = require("zeronet-fallaby")
+const File = require("zeronet-zite/lib/tree/file")
+const path = require("path")
 
 /**
  * Zite content.json
  * @param {Zite} zite
  * @param {string} inner_path - Path of the content.json
  * @param {object} data - JSON parsed data of the content.json
- * @param {RuleBook} rules - RuleBook containing the rules for the zite
  * @namespace ContentJSON
  * @constructor
  */
@@ -17,7 +18,6 @@ module.exports = function ContentJSON(zite, inner_path, data) {
 
   const rules = self.rules = zite.tree.getRuleBook(inner_path, data)
   const newfmt = fallaby.contentJson.process(data)
-  self.files = newfmt.files
 
   self.verifySelf = () => {
     /*
@@ -60,4 +60,7 @@ module.exports = function ContentJSON(zite, inner_path, data) {
     if (valid_signers.indexOf(address) == -1) valid_signers.push(address) //Address is always a valid signer
     return valid_signers
   }*/
+
+  self.files = newfmt.files.map(d => new File(zite, path.join(path.dirname(inner_path), d.path), self, d))
+
 }
