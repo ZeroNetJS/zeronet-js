@@ -3,7 +3,11 @@
 const RuleBook = require("zeronet-zite/lib/tree/rulebook")
 const FS = require("zeronet-zite/lib/tree/fs")
 const ContentJSON = require("zeronet-zite/lib/tree/content-json")
-const path = require("path")
+const _path = require("path")
+
+function normalize(s) { //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+  while ((!s[0] || s[0] == ".") && s.length) s.shift()
+}
 
 class FileTreeObject {
   consturctor() {
@@ -12,21 +16,29 @@ class FileTreeObject {
     this.updateTree()
   }
   toJSON() {
-    return this.children.map(c => c.toJSON())
+    let sub = {}
+    Object.keys(this.sub).forEach(k => sub[k] = this.sub[k].toJSON())
+    return {
+      name: "",
+      type: this.type,
+      path: this.path,
+      dummy: this.dummy,
+      sub
+    }
   }
   fromJSON() {
     //TODO: add
   }
   exists(path) {
     let s = Array.isArray(path) ? path : path.split("/")
-    while (!s[0] && s.length) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    normalize(s)
     if (!s.length) return true //self
     if (!this.sub[s[0]]) return false
     return this.sub[s[0]].exists(s.slice(1))
   }
   get(path) {
     let s = Array.isArray(path) ? path : path.split("/")
-    while (!s[0] && s.length) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    normalize(s)
     if (!s.length) return this //self
     if (!this.sub[s[0]]) return false
     return this.sub[s[0]].get(s.slice(1))
@@ -73,12 +85,12 @@ class FileTreeLeafObject extends FileTreeObject {
   }
   exists(path) {
     let s = Array.isArray(path) ? path : path.split("/")
-    while (!s[0] && s.length) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    normalize(s)
     return !s.length //no files in here. we get an empty array if asked for our content
   }
   get(path) {
     let s = Array.isArray(path) ? path : path.split("/")
-    while (!s[0] && s.length) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
+    normalize(s)
     if (s.length) return false //no files in here. we get an empty array if asked for our content
     return this
   }
@@ -87,7 +99,19 @@ class FileTreeLeafObject extends FileTreeObject {
   }
 }
 
-class FileTreeBranchObject extends FileTreeObject {
+class FileTreeFolderObject extends FileTreeObject {
+  constructor() {
+    super()
+    this.type = "branch"
+    this.children = []
+    this.updateTree()
+  }
+  add(file) {
+    this.children.push(file)
+  }
+}
+
+class FileTreeBranchObject extends FileTreeFolderObject {
   constructor() {
     super()
     this.type = "branch"
@@ -95,7 +119,24 @@ class FileTreeBranchObject extends FileTreeObject {
   setMainBranch(branch) {
     //sets the main branch aka content.json
     this.authority = branch.authority
-    this.children = branch.files
+    this.children = []
+    this.add(branch)
+    branch.files.forEach(f => {
+      let s = f.relpath.split("/")
+      normalize(s)
+      let p = this
+      while (s.length) {
+        const f = s.shift()
+        if (!p.get(f)) {
+          const fb = new FileTreeFolderObject()
+          fb.name = f
+          p.add(fb)
+          p.sub[f] = fb
+        }
+        p = p.get(f)
+      }
+      p.add(f)
+    })
     this.updateTree()
   }
 }
@@ -141,15 +182,16 @@ class FileTreeRoot extends FileTreeBranchObject {
   }
   handleContentJSON(path, data) {
     let rule
-    if (!(rule = this.getRuleBook(path))) return false //it's invalid
+    if (!(rule = this.getRuleBook(path, data))) return false //it's invalid
     const cj = new ContentJSON(this.zite, path, data)
     if (!cj.verifySelf()) return false //cryptography says no
-    const dir = path.dirname(path)
+    const dir = _path.dirname(path)
     const branch = new ContentJSONBranch(cj)
     if (!this.get(dir)) {
       //TODO: not needed for now as no multi-user and multi-content is done
     }
     this.get(dir).setMainBranch(branch)
+    return true
   }
 }
 
@@ -176,6 +218,7 @@ class ContentJSONBranch extends FileTreeLeafObject {
 
 class FileBranch extends FileTreeLeafObject {
   constructor(file, cjbranch) {
+    super()
     this.file = file
     this.name = file.name
     this.relpath = file.relpath //TODO: use relpath to create empty nodes in the way

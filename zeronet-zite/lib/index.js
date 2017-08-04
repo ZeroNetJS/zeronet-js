@@ -16,7 +16,7 @@ const Dtracker = require("zeronet-zite/lib/discovery/tracker")
 const Dpex = require("zeronet-zite/lib/discovery/pex")
 const Ddht = require("zeronet-zite/lib/discovery/dht")
 
-const ContentJSON = require("zeronet-zite/lib/tree/content-json")
+const JSONStream = require("zeronet-zite/lib/file/json")
 
 /**
  * ZeroNet Zite
@@ -67,15 +67,20 @@ module.exports = function Zite(config, node) { //describes a single zite
     if (tree.get("content.json").dummy) {
       fs.getFile("content.json", (err, stream) => { //load the content json first time
         if (err) return cb(err)
+        pull(
+          stream,
+          JSONStream.parse(),
+          pull.drain(data => tree.handleContentJSON("content.json", data) && cb())
+        )
       })
-    }
+    } else cb()
   }
 
   /* Main */
 
   self.start = cb => series([
     discovery.start,
-    tree.build,
+    cb => tree.build(cb),
     queue.start,
     config.manual ? cb => cb() : liftOff
     /*cb => {
