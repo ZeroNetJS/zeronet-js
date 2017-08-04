@@ -1,5 +1,3 @@
-const crypto = require("zeronet-crypto")
-
 /*
 # The valid signers of content.json file
 # Return: ["1KRxE1s3oDyNDawuYWpzbLUwNm8oDbeEp6", "13ReyhCsjhpuCVahn1DHdf6eMqqEVev162"]
@@ -128,7 +126,9 @@ def getRules(self, inner_path, content=None):
 
 */
 
+"use strict"
 
+const crypto = require("zeronet-crypto")
 
 /**
  * A rule book defines which and how many keys can/have to sign
@@ -138,17 +138,30 @@ def getRules(self, inner_path, content=None):
 function RuleBook(opt) {
   const self = this
 
-  self.valid_keys = opt.valid_keys
-  self.signers_required = opt.signers_required
+  if (!Array.isArray(opt.valid_keys)) opt.valid_keys = [opt.valid_keys]
+
+  self.validKeys = opt.valid_keys
+  self.signsRequired = opt.signs_required || 1
 
   self.isKeyAllowed = key => self.validKeys.indexOf(key) != -1
-  self.getSignersRequired = () => self.signers_required
+  self.getSignsRequired = () => self.signsRequired
   self.getValidKeys = () => self.validKeys
-  self.verifySignature = (data, sig) => {
 
+  self.verifyManyToOne = (data, sig) => { //many keys can sign, only one signed
+    return !!self.getValidKeys().filter(adr => crypto.VerifySig(adr, data, sig)).length
   }
-  self.createSubBook = opt => {
-    //let book = new RuleBook()
+
+  self.verifyManyToMany = (data, signs) => { //many keys can sign, one/many need to sign. signs is a adr=>sign object
+    const sigs = self.getValidKeys().filter(adr => signs[adr]).map(adr => {
+      return {
+        adr,
+        sign: signs[adr]
+      }
+    })
+    if (sigs.length < self.getSignsRequired()) throw new Error(sigs.length + " signatures found but " + self.getSignsRequired() + " is/are needed")
+    const vsigs = sigs.filter(sig => crypto.VerifySig(sig.adr, data, sig.sign))
+    if (vsigs.length < self.getSignsRequired()) throw new Error(vsigs.length + " valid signatures out of " + sigs.length + " found but " + self.getSignsRequired() + " is/are needed")
+    return true
   }
 }
 

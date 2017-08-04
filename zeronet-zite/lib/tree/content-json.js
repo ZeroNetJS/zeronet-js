@@ -13,11 +13,11 @@ const crypto = require("zeronet-crypto")
  */
 module.exports = function ContentJSON(zite, inner_path, data, rules) {
   const self = this
-  const address = zite.address
+  //const address = zite.address
 
   self.rules = rules
 
-  self.verifySelf = cb => {
+  self.verifySelf = () => {
     /*
     data is an object.
     we need to get the signing data from the object and remove the signs
@@ -25,7 +25,7 @@ module.exports = function ContentJSON(zite, inner_path, data, rules) {
     */
     const {
       signs,
-      signs_required,
+      //signs_required,
       signers_sign
     } = data
 
@@ -35,27 +35,21 @@ module.exports = function ContentJSON(zite, inner_path, data, rules) {
     const real = crypto.PythonJSONDump(data) //the data that was actually signed
     const sigsig = signers_sign //signers_sign
     const vs = rules.signs.getValidKeys() //GetValidSigners(address, inner_path, data) //valid signers
-    const sigsigdata = self.GetSigners(vs, signs_required) //signers_sign data
+    const signs_required = rules.signs.getSignsRequired()
+    console.log("vs",vs)
+    const sigsigdata = crypto.GetSigners(vs, signs_required) //construct signers_sign data from what we were given
 
-    if (!crypto.VerifySig(address, sigsigdata, sigsig)) throw new Error("Invalid signers_sign or signers")
-
-    let vss = 0 //valid signs found
-
-    vs.forEach(addr => {
-      if (vss < signs_required)
-        if (crypto.VerifySig(addr, real, signs[addr])) vss++
-    })
-
-    if (vss < signs_required) throw new Error("Found " + vss + " vaild sign(s) but " + signs_required + " is/are needed")
+    rules.signers_sign.verifyManyToOne(sigsigdata, sigsig)
+    rules.signs.verifyManyToMany(real, signs)
 
     return true
   }
 
-  self.verifyFile = (path, hash, size) => {
+  /*self.verifyFile = (path, hash, size) => {
 
-  }
+  }*/
 
-  self.getValidSigners = () => {
+  /*self.getValidSigners = () => {
     let valid_signers = []
     if (inner_path == "content.json") {
       if (data.signers) valid_signers = Object.keys(data.signers)
@@ -64,9 +58,5 @@ module.exports = function ContentJSON(zite, inner_path, data, rules) {
     }
     if (valid_signers.indexOf(address) == -1) valid_signers.push(address) //Address is always a valid signer
     return valid_signers
-  }
-
-  self.createRuleBook = path => {
-
-  }
+  }*/
 }
