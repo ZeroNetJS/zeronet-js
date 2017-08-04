@@ -12,6 +12,9 @@ class FileTreeObject {
   toJSON() {
     return this.children.map(c => c.toJSON())
   }
+  fromJSON() {
+    //TODO: add
+  }
   exists(path) {
     let s = Array.isArray(path) ? path : path.split("/")
     while (!s[0] && s.length) s.shift() //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
@@ -82,12 +85,13 @@ class FileTreeLeafObject extends FileTreeObject {
 }
 
 class FileTreeRoot extends FileTreeObject {
-  constructor(zite) {
+  constructor(zite, json) {
     super()
     this.zite = zite
     this.address = zite.address
     this.type = "branch"
     this.children = [new DummyObject("content.json")] //TODO: chicken-egg-problem: if the content.json does not exist we can't queue it
+    if (json) this.fromJSON(json)
     this.updateTree()
   }
   setMainBranch(branch) {

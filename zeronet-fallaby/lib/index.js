@@ -50,4 +50,6 @@ module.exports = function Fallback(type) {
 }
 
 module.exports.types = types.map(t => t.replace(/-([a-z])/gmi, (_, n) => n.toUpperCase()))
-module.exports.types.forEach(t => module.exports[t] = require("zeronet-fallaby/lib/types/" + t)())
+let i = 0
+const tmerge = types.map(t => [module.exports.types[i++], t])
+tmerge.forEach(t => module.exports[t[0]] = require("zeronet-fallaby/lib/types/" + t[1])())

@@ -16,8 +16,8 @@ module.exports = function ContentJSON(zite, inner_path, data) {
   const self = this
 
   const rules = self.rules = zite.tree.getRuleBook(inner_path, data)
-  const real = crypto.PythonJSONDump(data) //the data that was actually signed
   const newfmt = fallaby.contentJson.process(data)
+  self.files = newfmt.files
 
   self.verifySelf = () => {
     /*
@@ -32,6 +32,8 @@ module.exports = function ContentJSON(zite, inner_path, data) {
 
     delete data.sign
     delete data.signs
+
+    const real = crypto.PythonJSONDump(data) //the data that was actually signed
 
     const vs = rules.signs.getValidKeys() //GetValidSigners(address, inner_path, data) //valid signers
     const signs_required = rules.signs.getSignsRequired()

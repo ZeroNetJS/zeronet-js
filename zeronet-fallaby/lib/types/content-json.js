@@ -50,4 +50,6 @@ module.exports = function ContentJSONFallback() {
     data.files = files
     return data
   })
+
+  return f
 }

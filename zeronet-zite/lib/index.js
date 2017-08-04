@@ -52,7 +52,7 @@ module.exports = function Zite(config, node) { //describes a single zite
     Ddht
   ])
   self.pool = new Pool(self, node)
-  const tree = self.tree = new Tree(self)
+  const tree = self.tree = new Tree(self, config.tree)
   const queue = self.queue = new Queue(self, node)
   tree.attach(node.storage)
   const fs = self.fs = tree.fs
@@ -103,6 +103,7 @@ module.exports = function Zite(config, node) { //describes a single zite
    * @category Zite
    */
   self.toJSON = () => {
+    config.tree = tree.toJSON()
     return config
   }
 }
