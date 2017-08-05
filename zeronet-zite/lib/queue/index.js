@@ -2,6 +2,7 @@
 
 //const cache = require("pull-cache")
 const pull = require("pull-stream")
+const queue=require("pull-queue")
 
 const FileStream = require("zeronet-zite/lib/file/stream")
 const PeerStream = require("zeronet-zite/lib/pool/stream")
@@ -10,7 +11,7 @@ function QueueItem(zite, zeronet, info) {
   info.site = zite.address
   return pull(
     PeerStream(zite, zeronet),
-    FileStream(info) //TODO: build a "try again" wrapper arround the filestream
+    FileStream(info)
     //cache TODO: fix caching
   )
 }

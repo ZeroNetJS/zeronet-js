@@ -18,6 +18,8 @@ module.exports = function FileStream(data) {
   assert(!(!data.path.endsWith("/content.json") && data.path != "content.json" && !data.hash), "not verifiable")
 
   let dlpath = data.path + "@" + data.site
+  let othersize = 0
+  //let fullchunk = []
 
   log("init", dlpath)
 
@@ -49,9 +51,19 @@ module.exports = function FileStream(data) {
       if (info.size) args.file_size = info.size
       peer.cmd("getFile", args, function (err, res) {
         if (err) return finishLoop() //goto: next
+        if (!res.body.length) {
+          if (!info.size) return finishLoop()
+          othersize++
+          if (othersize == 2) {
+            //require("fs").writeFileSync("/tmp/site-failed-download",Buffer.concat(fullchunk))
+            return finishLoop(new Error("Other size"))
+          }
+          return finishLoop()
+        }
         if (!info.size) info.size = res.size
         cur += res.body.length
         log("downloaded", dlpath, cur, info.size)
+        //fullchunk.push(res.body)
         chunks.push(res.body)
         return loop()
       })

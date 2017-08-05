@@ -84,7 +84,13 @@ module.exports = function Zite(config, node) { //describes a single zite
       const i = tree.get(path)
       if (i.files) return next()
       if (i.file.optional) return next()
-      queue.add(i.file.info, next)
+      queue.add(i.file.info, (err,stream) => {
+        if (err) return next()
+        pull(
+          stream,
+          tree.storage.writeStream(tree.zite.address, 0, i.path)
+        )
+      })
     }, err => err ? console.error(err) : null)
   }
 

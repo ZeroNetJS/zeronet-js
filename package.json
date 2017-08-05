@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "app-module-path": "^2.2.0",
-    "chai": "^4.1.0",
+    "chai": "^4.1.1",
     "extract-comments": "^0.10.1",
     "jsdoc-to-markdown": "^3.0.0",
     "gene-rator": "0.0.1-pre",
