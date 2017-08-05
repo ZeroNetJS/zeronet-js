@@ -1,6 +1,5 @@
 "use strict"
 
-const binary = require("binary")
 const inet = require("zeronet-common/lib/network/inet")
 
 /*
@@ -21,9 +20,20 @@ module.exports = function PeersPacker() {
 }
 
 module.exports.v4 = {
-  //pack: (ip, port) => inet_aton(ip) + struct.pack("H", port),
+  pack: (conn) => {
+    let ip = conn.split(':')[0]
+    let port = conn.split(':')[1]
+    ip = inet.pton(ip)
+    port = inet.pton(inet.ntoa(port)).substr(2,2).split('')
+    port = port[1] + port[0] // reverse order (little endian)
+    return ip + port
+  },
   unpack: pack => {
-    let i = binary.parse(new Buffer(pack)).word32bu("peer.addr").word16bu("peer.port").vars
-    return inet.ntoa(i.peer.addr) + ":" + i.peer.port
+    let ip = pack.substr(0, 4)
+    let port = pack.substr(4, 2)
+    ip = inet.ntop(ip)
+    port = inet.ntop(port+port).split(".")
+    port = (parseInt(port[1]) * 256) + parseInt(port[0]) // reverse order (little endian)
+	return ip + ":" + port
   }
 }
