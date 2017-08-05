@@ -18,7 +18,10 @@ module.exports = function ContentJSONFallback() {
   })
 
   //Apply fixes
-  //TODO: add
+  f.use("*", "py", data => { //FUTURE: set this to the version py-ver fixes their multisig
+    data.signers_required = 1
+    return data
+  })
   //TODO: add fix for old sigs
 
   //Finally turn py content into js content
