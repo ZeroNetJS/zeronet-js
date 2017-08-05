@@ -1,5 +1,9 @@
 "use strict"
 
+const pack = require("zeronet-protocol/lib/proto/pack")
+const debug = require("debug")
+const log = debug("zeronet:protocol:defaults")
+
 module.exports = function Defaults(protocol, zeronet) {
   protocol.handle("getFile", {
     site: "string",
@@ -11,22 +15,32 @@ module.exports = function Defaults(protocol, zeronet) {
     size: "number"
   }, (data, cb) => {
     if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
+    cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
     //TODO: finish
   })
 
   protocol.handle("ping", {}, {
     body: b => b == "pong"
+  }, (data, cb) => {
+    cb(null, {
+      body: "pong"
+    })
   })
 
   protocol.handle("pex", {
     site: "string",
     peers: Array.isArray,
-    peers_onion: () => true,
-    //peers_onion: Array.isArray,
+    peers_onion: d => !d || Array.isArray(d),
     need: "number"
   }, {
     peers: Array.isArray
-  }, (data) => {
+  }, (data, cb) => {
+    if (data.peers) {
+      let unpack = data.peers.map(pack.v4.unpack)
+      log("got peers for", data.site, unpack.join(", ") || "<none>")
+      zeronet.peerPool.addMany(unpack, data.site)
+    }
+    cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
     //TODO: parse peers
     //TODO: parse onion peers
   })
@@ -34,9 +48,13 @@ module.exports = function Defaults(protocol, zeronet) {
   protocol.handle("update", {
     site: "string",
     inner_path: "string",
-    body: "object"
+    body: "string"
   }, {
     ok: "string"
+  }, (data, cb) => {
+    if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
+    cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
+    //TODO: finish
   })
 
   protocol.handle("listModified", {
@@ -46,6 +64,7 @@ module.exports = function Defaults(protocol, zeronet) {
     modified_files: "object"
   }, (data, cb) => {
     if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
+    cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
     //TODO: finish
   })
 
@@ -53,6 +72,10 @@ module.exports = function Defaults(protocol, zeronet) {
     site: "string"
   }, {
     hashfiled_raw: "object"
+  }, (data, cb) => {
+    if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
+    cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
+    //TODO: finish
   })
 
   protocol.handle("setHashfield", {
@@ -60,6 +83,10 @@ module.exports = function Defaults(protocol, zeronet) {
     hasfield_raw: "object"
   }, {
     ok: "object"
+  }, (data, cb) => {
+    if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
+    cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
+    //TODO: finish
   })
 
   protocol.handle("findHashIds", {
@@ -68,5 +95,9 @@ module.exports = function Defaults(protocol, zeronet) {
   }, {
     peers: "object",
     peers_onion: "object"
+  }, (data, cb) => {
+    if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
+    cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
+    //TODO: finish
   })
 }

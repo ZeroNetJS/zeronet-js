@@ -8,18 +8,18 @@ function genHandshakeData(protocol, client, zeronet) {
   let d = {
     crypt: null,
     crypt_supported: protocol.crypto ? protocol.crypto.supported() : [],
-    fileserver_port: zeronet.server ? zeronet.server.port : 0,
+    fileserver_port: zeronet.swarm.advertise.port || 0,
     protocol: "v2",
-    port_opened: false, //TODO: implent
+    port_opened: zeronet.swarm.advertise.port_open || false,
     rev: zeronet.rev,
     version: zeronet.version,
-    target_ip: "127.0.0.1", //TODO: add
     own: true //this is later removed
   }
   if (client.isTor) {
     d.onion = 0 //TODO: add tor
   } else {
     d.peer_id = zeronet.peer_id
+    d.target_ip = zeronet.swarm.advertise.ip || "0.0.0.0"
   }
   return d
 }
@@ -57,6 +57,16 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
 
   let waiting = []
 
+  function warnNoCrypto() {
+    if (zeronet.zeronet) { //why did we call common "zeronet"???
+      let i = {
+        address: client.addrs.split(" ")[1],
+        direction: client.addrs.split(" ")[0] == "=>" ? "to" : "from"
+      }
+      zeronet.logger("protocol:handshake").warn(i, "No crypto used in connection %s %s", i.direction, i.address)
+    }
+  }
+
   function handshakeComplete(err) {
     //console.log(waiting,opt,new Error("."))
     if (!Array.isArray(waiting)) throw new Error("HandshakeError: Complete called multiple times")
@@ -93,6 +103,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
         })
       } else {
         log("Finished crypto-less handshake", opt)
+        warnNoCrypto()
         handshakeComplete(err)
         return cb(null, handshake)
       }
@@ -122,6 +133,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
       })
     } else {
       log("Finished crypto-less handshake", opt)
+      warnNoCrypto()
       handshakeComplete(null)
     }
   }
@@ -139,7 +151,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
 }
 
 module.exports.def = { //Definitions are symmetric
-  crypt: a => a === null || typeof a == "string",
+  crypt: [a => a === null, "string"],
   crypt_supported: Array.isArray,
   fileserver_port: "number",
   peer_id: "string",

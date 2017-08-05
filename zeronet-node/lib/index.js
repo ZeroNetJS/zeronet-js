@@ -1,7 +1,7 @@
 "use strict"
 
 const Swarm = require("zeronet-swarm")
-const UiServer = require("zeronet-uiserver")
+const UiServer = require("zeronet-uiserver/lib/index.js")
 
 const debug = require("debug")
 const log = debug("zeronet:node")
@@ -72,9 +72,9 @@ function ZeroNetNode(options) {
   log("creating a new node", options)
 
   assert(options.storage, "no zeronet storage given")
-  const storage = new StorageWrapper(options.storage)
 
   const self = this
+  const storage = self.storage = new StorageWrapper(options.storage)
   const common = self.zeronet = options.common || false
 
   self.version = "0.5.6" //TODO: those are all fake. use real ones.
@@ -131,9 +131,11 @@ function ZeroNetNode(options) {
   self.start = cb => series([ //loads all the stuff from disk and starts everything
     storage.start,
     self.boot,
-    cb => sintv = setInterval(self.save, 10 * 1000, cb()), //TODO: "make this great again"
     cb => swarm.start(cb),
-    uiserver ? uiserver.start : cb => cb()
+    ziteManager.start,
+    cb => sintv = setInterval(self.save, 10 * 1000, cb()), //TODO: "make this great again"
+    uiserver ? uiserver.start : cb => cb(),
+    swarm.nat.doDefault
   ], cb)
 
   /**
@@ -175,6 +177,7 @@ function ZeroNetNode(options) {
   self.stop = cb => {
     series([
       uiserver ? uiserver.stop : cb => cb(),
+      ziteManager.stop,
       self.save,
       cb => sintv = clearInterval(sintv, cb()), //TODO: "make this great again"
       cb => swarm.stop(cb),

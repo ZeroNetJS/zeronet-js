@@ -2,6 +2,8 @@
 
 "use strict"
 
+require("colors")
+
 let node
 let dwait = require("./lib/hacky-logs.js")
 
@@ -14,7 +16,7 @@ const ZeroNet = require("zeronet-node")
 
 const FS = require("zeronet-storage-fs")
 
-const Common = require("zeronet-common")
+const Common = require("zeronet-common/index.js")
 
 let dir = require("./lib/storage-dir")()
 
@@ -84,7 +86,11 @@ let exiting
 function exit(code) {
   if (!node) {
     console.error("Stopping before started!")
-    exiting = true
+    exiting = true;
+    ["error", "warn"].forEach(k => console.error[k] = console.error)
+    node = {
+      logger: () => console.error
+    }
     exit(2)
   }
   if (exiting) {
@@ -105,9 +111,11 @@ function exit(code) {
   })
 }
 
-["SIGTERM", "SIGINT", "SIGUSR2"].forEach(sig => process.on(sig, exit))
+if (!process.env.IGNORE_SIG)["SIGTERM", "SIGINT", "SIGUSR2"].forEach(sig => process.on(sig, exit))
 
-require("peer-id").create((err, id) => {
+require("peer-id").create({ //HACK: fix this so we don't have to use an insecure key
+  bits: 100
+}, (err, id) => {
   config.id = id
   node = new ZeroNet(config)
   dwait.map(d => d())

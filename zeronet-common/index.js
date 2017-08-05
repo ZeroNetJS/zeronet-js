@@ -4,7 +4,7 @@ const logger = require("zeronet-common/lib/logger")
 const fs = require("fs")
 
 module.exports = function ZeroNet(config) {
-  //shared module that contains database access, file functions, util functions, etc
+  //shared module that contains database access, file functions, network functions, etc
   //TODO: write
   const self = this
 

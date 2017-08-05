@@ -1,6 +1,10 @@
 language:       node_js
 matrix:
+  allow_failures:
+    - node_js:  "node"
   include:
+    - node_js:  "node"
+      env:      NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/nightly/
     - node_js:  "8"
       env:      COV=true PKG=true
     - node_js:  "6"

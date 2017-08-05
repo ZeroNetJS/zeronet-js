@@ -14,6 +14,8 @@ log.error = debug("zeronet:peer-pool:error")
 module.exports = function PeerPool() {
   const self = this
 
+  let prev
+
   const cache = new hypercache(null, {
     name: "peers",
     keys: ["addr", "id", "multiaddr"],
@@ -27,9 +29,11 @@ module.exports = function PeerPool() {
     return cache.search(peerLike.toString())[0]
   }
 
-  function update() {
+  function update(f) {
+    if (prev == peers.length && !f) return log("skip updating cache. length unchanged", prev)
     log("update cache")
     cache.update(peers)
+    prev = peers.length
   }
 
   function add(peerLike, zite, cb, lazy) {
@@ -82,7 +86,7 @@ module.exports = function PeerPool() {
     map(data, Peer.fromJSON, (err, res) => {
       if (err) return cb(err)
       peers = res
-      update()
+      update(true)
       return cb()
     })
   }

@@ -11,7 +11,7 @@
     "protocol"
   ],
   "author": "Maciej Krüger <mkg20001@gmail.com>",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ZeroNetJS/zeronet-js.git"
@@ -21,14 +21,12 @@
   },
   "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
   "dependencies": {
-    "bufferpack": "0.0.6",
     "clone": "^2.1.1",
     "hypercache": "^0.2.0",
-    "inet": "0.0.3",
     "ip": "^1.1.5",
     "msgpack": "^1.0.2",
     "peer-request": "0.0.1",
-    "pull-pushable": "^2.1.1",
+    "pull-queue": "^0.1.3",
     "pull-stream": "^3.6.0"
   },
   "directories": {

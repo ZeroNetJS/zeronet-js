@@ -31,11 +31,17 @@ parts:
       - node
     source: .
     build: |
-      #cat /etc/passwd | grep "buildd" > /dev/null && cat snap.files/hosts | tee /etc/hosts
+      set -e
       bash scripts/tarball.sh
     install: |
-      mkdir -p /tmp/$$/.{npm,node_gyp}
-      npm_config_cache="/tmp/$$/.npm" npm_config_devdir="/tmp/$$/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" npm shrinkwrap
+      set -e
+      TMP=/tmp/zeronet-js-build
+      rm -rf $TMP
+      mkdir -p $TMP/.{npm,node_gyp}
+      npm_config_cache="$TMP/.npm" npm_config_devdir="$TMP/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" npm shrinkwrap
       node scripts/no-git-deps.js npm-shrinkwrap.json
-      npm_config_cache="/tmp/$$/.npm" npm_config_devdir="/tmp/$$/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
-      rm -rf /tmp/$$
+      npm_config_cache="$TMP/.npm" npm_config_devdir="$TMP/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
+      rm -rf $TMP
+      #HACK: reset the timestamp of every file
+      find $SNAPCRAFT_PART_INSTALL -print0 | xargs -0i touch -a -m -t 200001010000.00 {}
+      find $SNAPCRAFT_STAGE -print0 | xargs -0i touch -a -m -t 200001010000.00 {}

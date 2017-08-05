@@ -16,12 +16,13 @@
  - [ ] Loading Zites
  - [ ] UiServer
  - [ ] Ui
+ - [ ] UPNP
  - [ ] ZeroFrame
  - [ ] Plugin API
  - [ ] Connection encryption
 
 ### Big bugs:
- - [ ] Streams are buggy
+ - [x] Streams are buggy
 
 # Stage 2
 

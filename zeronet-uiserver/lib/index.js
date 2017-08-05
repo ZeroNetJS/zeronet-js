@@ -93,9 +93,10 @@ module.exports = function UiServer(config, zeronet) {
   app.use((req, res, next) => {
     if (verify.verifyAddress(req.zurl.zite)) {
       if (!zeronet.zites[req.zurl.zite]) {
-        new Zite({
+        const z = new Zite({
           address: req.zurl.zite
         }, zeronet)
+        z.start()
       }
 
       req.zite = zeronet.zites[req.zurl.zite]

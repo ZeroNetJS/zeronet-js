@@ -1,3 +1,6 @@
+const pull = require("pull-stream")
+const queue = require("pull-queue")
+
 module.exports = function StorageWrapper(storage) {
   const self = this
 
@@ -21,5 +24,28 @@ module.exports = function StorageWrapper(storage) {
 
   /* files */
 
-  //TODO: add
+  self.exists = storage.file.exists
+  self.readStream = (zite, v, path) => {
+    return pull(
+      pull.values(Array.isArray(path) ? path : [path]),
+      queue(function (end, file, cb) {
+        if (end) return cb(end)
+        storage.file.read(zite, v, path, cb)
+      })
+    )
+  }
+  self.writeStream = (zite, v, path) => {
+    let d = []
+    return queue(function (end, data, cb) {
+      if (end) {
+        if (typeof end == "boolean")
+          storage.file.write(zite, v, path, Buffer.concat(d), err => cb(err || end))
+        else
+          cb(end)
+      } else {
+        d.push(data)
+        return cb(null, data)
+      }
+    })
+  }
 }

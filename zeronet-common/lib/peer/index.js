@@ -15,7 +15,7 @@ const assert = require("assert")
 const debug = require("debug")
 const log = debug("zeronet:peer")
 
-const ip2multi = require("zeronet-common/lib/util/ip2multi")
+const ip2multi = require("zeronet-common/lib/network/ip2multi")
 
 function multi2ip(multi) {
   const s = multi.split("/")
@@ -38,6 +38,8 @@ module.exports = function ZeroNetPeer(peerInfo) {
   const self = this
   assert(Peer.isPeerInfo(peerInfo), "not a peerInfo")
   const pi = self.info = peerInfo
+  self.score = 0
+  let lastDial = 0
 
   self.id = pi.id.toB58String()
   assert.equal(pi.multiaddrs._multiaddrs.length, 1, "peer must have exactly 1 address for now")
@@ -53,7 +55,7 @@ module.exports = function ZeroNetPeer(peerInfo) {
 
   function updateZites() {
     zites_id = {}
-    zites = known_zites.map(z => {
+    zites = self.zites = known_zites.map(z => {
       zites_id[z.zite] = z
       return z.zite
     })
@@ -73,15 +75,58 @@ module.exports = function ZeroNetPeer(peerInfo) {
   function toJSON() {
     return {
       addr: self.multiaddr,
-      zites
+      zites,
+      score: self.score
     }
   }
 
-  function dial(cb, swarm) {
+  function disconnect() {
+    self.score--
+    self.connected = false
+    self.conn = null
+    self.clinet = null
+  }
+
+  function dial(swarm, cb) {
     if (self.conn) cb(null, self.conn.client, self.conn)
-    else swarm.dial(peerInfo, (err, conn) => {
+    else {
+      if (self.score <= -100) return cb(new Error("Score too low"))
+      if (lastDial + 120 * 1000 > new Date().getTime()) return cb(new Error("This peer already was un-successfully dialed in the last 120s"))
+      lastDial = new Date().getTime()
+      swarm.dial(peerInfo, (err, conn) => {
+        if (err) {
+          self.score -= 10
+          return cb(err)
+        }
+        self.connected = true
+        self.score += 10
+        self.conn = conn
+        self.client = self.conn.client
+        self.client.once("end", disconnect)
+        return cb()
+      })
+    }
+  }
+
+  function cmd(cmdName, data, opt, _cb) {
+    if (typeof opt == "function") {
+      _cb = opt
+      opt = {}
+    }
+    if (!opt) opt = {}
+    let cbf = false
+
+    function cb(err, res) {
+      if (cbf) return
+      cbf = true
+      _cb(err, res)
+    }
+    setTimeout(cb, 1000, new Error("Timeout"))
+    if (!self.client && !opt.dial) return cb(new Error("Offline"))
+    dial(opt.dial, function (err) {
       if (err) return cb(err)
-      self.conn = conn
+      if (!self.client.cmd[cmdName]) return cb(new Error("Command Unsupported: " + cmdName))
+      self.client.cmd[cmdName](data, cb)
     })
   }
 
@@ -90,6 +135,7 @@ module.exports = function ZeroNetPeer(peerInfo) {
 
   self.toJSON = toJSON
   self.dial = dial
+  self.cmd = cmd
 }
 
 module.exports.piFromAddr = (pi, cb) => {
@@ -124,6 +170,7 @@ module.exports.fromJSON = (data, cb) => {
   module.exports.fromAddr(multiaddr(data.addr), (err, peer) => {
     if (err) return cb(err)
     data.zites.forEach(zite => peer.setZite(zite))
+    if (data.score) peer.score = data.score
     cb(null, peer)
   })
 }

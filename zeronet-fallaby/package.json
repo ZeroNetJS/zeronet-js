@@ -1,0 +1,30 @@
+{
+  "name": "zeronet-fallaby",
+  "version": "0.0.1-alpha16pre",
+  "description": "ZeroNet Fallback magic",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "zeronet",
+    "fallback"
+  ],
+  "author": "Maciej Krüger <mkg20001@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZeroNetJS/zeronet-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ZeroNetJS/zeronet-js/issues"
+  },
+  "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
+  "dependencies": {
+    "clone": "^2.1.1"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "devDependencies": {}
+}

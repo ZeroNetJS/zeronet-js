@@ -9,7 +9,8 @@ function ip2multi(ip, proto) {
 }
 
 ip2multi.split = ipHost => {
-  const s = ipHost.split(":")
+  let s = ipHost.split(":")
+  s = [s.pop(), s.join(":")].reverse()
   assert.equal(s.length, 2, "not host:port")
   let r = {
     ip: s[0],
@@ -32,4 +33,6 @@ ip2multi.isIp = ipHost => {
   }
 }
 
-module.exports=ip2multi
+ip2multi.reverse4 = multi => multi.split("/").slice(2).filter(a => a != "tcp").join(":")
+
+module.exports = ip2multi

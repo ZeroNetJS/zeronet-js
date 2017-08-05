@@ -50,9 +50,8 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
       })
     }
 
-  self.applyDefaults = () => {
-    Defaults(self, zeronet)
-  }
+  self.applyDefaults = () =>
+    Defaults(self, zeronet, node)
 
   if (opt.crypto) {
     Crypto(self)
