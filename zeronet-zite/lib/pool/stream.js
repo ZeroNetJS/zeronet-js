@@ -8,7 +8,7 @@ const debug = require("debug")
 
 module.exports = function PeerStream(zite, zeronet) {
 
-  const log = debug("zeronet:zite:peer-stream:zite:" + zite.address)
+  const log = process.env.INTENSE_DEBUG ? debug("zeronet:zite:peer-stream:zite:" + zite.address) : () => {}
 
   log("creating")
 
