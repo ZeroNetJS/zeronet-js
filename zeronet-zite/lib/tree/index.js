@@ -68,6 +68,11 @@ class FileTreeObject {
     }
     this.path = path.join("/")
   }
+  getAll() {
+    let r=[]
+    this.children.map(c => r=r.concat(c.getAll()))
+    return r
+  }
 }
 
 class FileTreeLeafObject extends FileTreeObject {
@@ -96,6 +101,9 @@ class FileTreeLeafObject extends FileTreeObject {
   }
   updateTree() {
 
+  }
+  getAll() {
+    return [this.path]
   }
 }
 
@@ -191,6 +199,7 @@ class FileTreeRoot extends FileTreeBranchObject {
       //TODO: not needed for now as no multi-user and multi-content is done
     }
     this.get(dir).setMainBranch(branch)
+    this.zite.downloadLoop()
     return true
   }
 }

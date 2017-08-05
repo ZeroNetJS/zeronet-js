@@ -10,6 +10,7 @@ const Queue = require("zeronet-zite/lib/queue")
 const Tree = require("zeronet-zite/lib/tree")
 
 const series = require("async/series")
+const each = require("async/each")
 
 const Discovery = require("zeronet-zite/lib/discovery")
 const Dtracker = require("zeronet-zite/lib/discovery/tracker")
@@ -74,6 +75,17 @@ module.exports = function Zite(config, node) { //describes a single zite
         )
       })
     } else cb()
+  }
+
+  self.downloadLoop = () => {
+    if (config.manual) return
+    each(tree.getAll(), (path, next) => {
+      if (queue.inQueue(path)) return next()
+      const i = tree.get(path)
+      if (i.files) return next()
+      if (i.file.optional) return next()
+      queue.add(i.file.info, next)
+    }, err => err ? console.error(err) : null)
   }
 
   /* Main */
