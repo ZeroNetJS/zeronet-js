@@ -69,8 +69,8 @@ class FileTreeObject {
     this.path = path.join("/")
   }
   getAll() {
-    let r=[]
-    this.children.map(c => r=r.concat(c.getAll()))
+    let r = []
+    this.children.map(c => r = r.concat(c.getAll()))
     return r
   }
 }

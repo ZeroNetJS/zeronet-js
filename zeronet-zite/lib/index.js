@@ -85,7 +85,7 @@ module.exports = function Zite(config, node) { //describes a single zite
       if (i.files) return next()
       if (i.file.optional) return next()
       return next()
-      queue.add(i.file.info, (err,stream) => {
+      queue.add(i.file.info, (err, stream) => {
         if (err) return next()
         pull(
           stream,
