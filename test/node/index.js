@@ -9,6 +9,6 @@ it("should start", cb => {
     id: global.id
   })
   n.start(cb)
-})
+}).timeout(20000)
 
 it("should stop", cb => n.stop(cb))
