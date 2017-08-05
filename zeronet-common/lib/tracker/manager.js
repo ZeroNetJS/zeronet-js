@@ -49,7 +49,6 @@ module.exports = function TrackerManager(tracker_server, zeronet) {
     tracker.id = uuid()
 
     tracker.complete()
-    tracker.start()
 
     trackers.push(tracker)
 
