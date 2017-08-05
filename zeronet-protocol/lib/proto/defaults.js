@@ -35,13 +35,18 @@ module.exports = function Defaults(protocol, zeronet) {
   }, {
     peers: Array.isArray
   }, (data, cb) => {
-    if (data.peers) {
-      let unpack = data.peers.map(pack.v4.unpack)
+    if (data.peers) { //parse peers. ignore len!=6, but i think it's an encoding error instead
+      let unpack = data.peers.map(p => {
+        try {
+          return pack.v4.unpack(p)
+        } catch (e) {
+          return
+        }
+      }).filter(v => !!v)
       log("got peers for", data.site, unpack.join(", ") || "<none>")
       zeronet.peerPool.addMany(unpack, data.site)
     }
     cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
-    //TODO: parse peers
     //TODO: parse onion peers
   })
 
@@ -80,7 +85,7 @@ module.exports = function Defaults(protocol, zeronet) {
 
   protocol.handle("setHashfield", {
     site: "string",
-    hasfield_raw: "object"
+    hashfield_raw: "object"
   }, {
     ok: "object"
   }, (data, cb) => {

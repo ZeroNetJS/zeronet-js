@@ -2,14 +2,17 @@
 
 const uuid = require("uuid")
 
-function debugDef(d_) {
+function debugDef(d_, ar) {
   let def = {}
+  if (ar) d_ = {
+    _: ar
+  }
   for (var key in d_) {
     def[key] = Array.isArray(d_[key]) ? d_[key] : [d_[key]]
     def[key] = def[key].map(e => typeof e == "function" ? "[function] " + e.toString().split("\n")[0] : e)
     if (def[key].length == 1) def[key] = def[key][0]
   }
-  return def
+  return ar ? def._ : def
 }
 
 function verifyProtocol(def, param) {
@@ -28,7 +31,7 @@ function verifyProtocol(def, param) {
           v = true
           break
         case "string":
-          if (typeof param[p] != d) throw new Error("Invalid value for key " + p + " (type missmatch expected=" + d + ", got=" + param[p] + ")")
+          if (typeof param[p] != d) throw new Error("Invalid value for key " + p + " (type missmatch expected=" + debugDef(dd, true) + ", got=" + typeof param[p] + ")")
           v = true
           break
         }

@@ -1,6 +1,7 @@
 "use strict"
 
 const inet = require("zeronet-common/lib/network/inet")
+const assert = require("assert")
 
 /*
 # ip, port to packed 6byte format
@@ -23,6 +24,7 @@ module.exports.v4 = {
     return ip + port
   },
   unpack: pack => {
+    assert(pack.length, 6, "Packed data has invalid length")
     let ip = pack.substr(0, 4)
     let port = pack.substr(4, 2)
     ip = inet.ntop(ip)
