@@ -18,6 +18,6 @@ cd .pkg
 for f in package* npm-shrinkwrap.json; do sed -r 's|"([a-z-]+)": "file:(.*)"|"\1": "file:./\2.tar.gz"|g' -i $f; done
 mkdir -p $instdir
 mv ../*.tar.gz $instdir
-GZIP=-n tar cvfz ../znjs.tar.gz --mtime='2015-10-21 00:00Z' --sort=name --owner=0 --group=0 --numeric-owner --mode="777" . | sed "s|^|zeronet-js: |g"
+GZIP=-n tar cvfz ../znjs.tar.gz --sort=name --mtime='2015-10-21 00:00Z' --owner=0 --group=0 --numeric-owner --mode="777" . | sed "s|^|zeronet-js: |g"
 mv ../znjs.tar.gz .
 npm i ./znjs.tar.gz --unsafe-perm --production -g
