@@ -2,8 +2,11 @@
 
 "use strict"
 
-const msgpack = require('msgpack')
+const msgpack = require('msgpack5')({
+  compatibilityMode: true
+})
 const queue = require("pull-queue")
+const bl = require("bl")
 
 module.exports.pack = function () {
   var ended = false
@@ -35,45 +38,25 @@ module.exports.pack = function () {
 
 module.exports.unpack = function () {
   //var ended = null
-  let buffer = null
+  let chunks = bl()
 
-  return queue(function (end, chunk, cb) {
+  return queue(function (end, buf, cb) {
     if (end) return cb(end)
-    
+
+    if (buf)
+      chunks.append(buf)
+
     try {
-
-      if (Buffer.isBuffer(buffer)) {
-        var b = new Buffer(buffer.length + chunk.length)
-        buffer.copy(b, 0, 0, buffer.length)
-        chunk.copy(b, buffer.length, 0, chunk.length)
-        buffer = b
-      } else if (chunk) {
-        buffer = chunk
-      }
-
-      let send = []
-
-      while (Buffer.isBuffer(buffer) && buffer.length > 0) {
-        var msg = msgpack.unpack(buffer)
-
-        if (!msg) break
-
-        send.push(msg)
-
-        if (msgpack.unpack.bytes_remaining > 0) {
-          buffer = buffer.slice(
-            buffer.length - msgpack.unpack.bytes_remaining,
-            buffer.length
-          )
-        } else {
-          buffer = null
-        }
-      }
-      cb(null, send)
+      var result = msgpack.decode(chunks)
+      cb(null, result)
     } catch (err) {
-      cb(err)
+      if (err instanceof msgpack.IncompleteBufferError) {
+        cb()
+      } else {
+        cb(err)
+      }
+      return
     }
-  }, {
-    sendMany: true
+    cb()
   })
 }
