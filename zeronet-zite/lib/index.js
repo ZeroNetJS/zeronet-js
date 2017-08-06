@@ -102,25 +102,6 @@ module.exports = function Zite(config, node) { //describes a single zite
     cb => tree.build(cb),
     queue.start,
     config.manual ? cb => cb() : liftOff
-    /*cb => {
-      setTimeout(() => {
-        fs.getFile("content.json", (err, stream) => {
-          if (err) console.error(err)
-          else pull(
-            stream,
-            require("zeronet-zite/lib/file/json").parse(),
-            pull.drain(data => {
-              console.log(data)
-              const cj = new ContentJSON(self, "content.json", data)
-              console.log(cj)
-              console.log(cj.verifySelf())
-              console.log(tree.toJSON())
-            })
-          )
-        })
-      }, 1000)
-      cb()
-    }*/
   ], cb)
 
   self.stop = cb => series([

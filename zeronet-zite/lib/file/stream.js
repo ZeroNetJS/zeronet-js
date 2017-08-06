@@ -79,7 +79,7 @@ module.exports = function FileStream(data) {
     let vsize = 0
     let vchunks = []
     let vended = false
-    let hash = crypto.createHash("sha256")
+    let hash = crypto.createHash("sha512")
 
     verifyStream = queue(function (end, data, cb) { //the verify stream queues up the data until the hash matches OR returns an error if hash != validHash and size >= fileSize
       if (end) return cb(end)
