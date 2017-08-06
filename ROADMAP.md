@@ -13,7 +13,7 @@
 
 # Stage 1
 
- - [ ] Loading Zites
+ - [x] Loading Zites
  - [ ] UiServer
  - [ ] Ui
  - [ ] UPNP
