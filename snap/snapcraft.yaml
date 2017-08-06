@@ -40,6 +40,7 @@ parts:
       mkdir -p $TMP/.{npm,node_gyp}
       npm_config_cache="$TMP/.npm" npm_config_devdir="$TMP/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" npm shrinkwrap
       node scripts/no-git-deps.js npm-shrinkwrap.json
+      node scripts/no-dev-deps.js npm-shrinkwrap.json > /dev/null
       npm_config_cache="$TMP/.npm" npm_config_devdir="$TMP/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
       rm -rf $TMP
   strip-nondeterminism:
