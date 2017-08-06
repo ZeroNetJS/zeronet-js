@@ -5,7 +5,11 @@ set -e
 # tl;dr npm i -g with current src as tarball
 
 inst="$npm_config_prefix"
-[ -z "$inst" ] && inst="/usr"
+if [ -z "$inst" ]; then
+  [ -e "/usr/lib/node_modules" ] && inst="/usr"
+  [ -e "/usr/local/lib/node_modules" ] && inst="/usr/local"
+fi
+[ -z "$inst" ] && echo "Could not determine node install dir" && exit 2
 inst="$inst/lib/node_modules"
 
 instdir="$inst/zeronet"
