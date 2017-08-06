@@ -1,7 +1,4 @@
 FROM node:8
-ADD . /app
-WORKDIR /app
-RUN bash scripts/tarball.sh && npm shrinkwrap && bash scripts/global.sh
-WORKDIR /
-RUN rm -rf /app
+COPY . /app
+RUN cd /app && bash scripts/tarball.sh && npm shrinkwrap && bash scripts/global.sh && rm -rf /app
 ENTRYPOINT zeronet
