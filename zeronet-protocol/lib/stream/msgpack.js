@@ -46,17 +46,34 @@ module.exports.unpack = function () {
     if (buf)
       chunks.append(buf)
 
-    try {
-      var result = msgpack.decode(chunks)
-      cb(null, result)
-    } catch (err) {
-      if (err instanceof msgpack.IncompleteBufferError) {
-        cb()
-      } else {
-        cb(err)
+    let res_ = []
+
+    function d(cb) {
+      try {
+        var result = msgpack.decode(chunks)
+        cb(null, result)
+      } catch (err) {
+        if (err instanceof msgpack.IncompleteBufferError) {
+          cb()
+        } else {
+          cb(err)
+        }
+        return
       }
-      return
     }
-    cb()
+
+    function loop() {
+      d((err, res) => {
+        if (err) return cb(err)
+        if (res) {
+          res_.push(res)
+          loop()
+        } else return cb(null, res_)
+      })
+    }
+
+    loop()
+  }, {
+    sendMany: true
   })
 }

@@ -135,7 +135,7 @@ function ZeroNetNode(options) {
     ziteManager.start,
     cb => sintv = setInterval(self.save, 10 * 1000, cb()), //TODO: "make this great again"
     uiserver ? uiserver.start : cb => cb(),
-    swarm.nat.doDefault
+    options.nat ? swarm.nat.doDefault : cb => cb()
   ], cb)
 
   /**

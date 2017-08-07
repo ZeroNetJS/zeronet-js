@@ -55,6 +55,7 @@ const defaults = {
       "http://tracker1.wasabii.com.tw:6969/announce"
       //"http://localhost:25534/announce"
     ],
+    nat: true
   },
   common: new Common({
     debug_file: path.resolve(dir, path.join("logs", "debug.log")),

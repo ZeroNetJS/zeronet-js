@@ -109,7 +109,7 @@ function Client(conn, protocol, zeronet, opt) {
     return {
       sink: function (read) {
         read(null, function next(end, data) {
-          if (!data || typeof data != "object" || !data.cmd) return setTimeout(read, 250, null, next) //cool down for bad behaviour
+          if (!data || typeof data != "object" || !data.cmd) return read(null, next)
           try {
             if (data.cmd == "response") {
               plog("got  response", addrs, data.to, objectInspect(data, "resp"))
