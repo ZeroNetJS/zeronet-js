@@ -55,4 +55,7 @@ cryptos.forEach(crypto => {
   }).timeout(5000)
 })
 
-afterEach(cb => node.stop(cb))
+afterEach(function (cb) {
+  this.timeout(5000)
+  node.stop(cb)
+})
