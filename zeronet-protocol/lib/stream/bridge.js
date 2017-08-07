@@ -11,8 +11,8 @@ function Queue2() {
   let ed
 
   function unleak() {
-    ee.removeAllListners("err")
-    ee.removeAllListners("data")
+    ee.removeAllListeners("err")
+    ee.removeAllListeners("data")
   }
 
   return {

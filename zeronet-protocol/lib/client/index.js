@@ -5,6 +5,7 @@ const msgstream = require("zeronet-protocol/lib/stream/msgpack")
 const handshake = require("zeronet-protocol/lib/proto/handshake")
 const EE = require("events").EventEmitter
 const util = require("util")
+const Bridge = require("zeronet-protocol/lib/stream/bridge")
 
 const pull = require('pull-stream')
 
@@ -142,7 +143,8 @@ function Client(conn, protocol, zeronet, opt) {
 
   /* logic */
 
-  const s = conn //stable(conn)
+  const s = Bridge(conn)
+  self.cork = () => {}
 
   let d = clientDuplex()
 
@@ -157,12 +159,7 @@ function Client(conn, protocol, zeronet, opt) {
   /* getRaw */
 
   self.getRaw = cb => {
-    try {
-      //
-    } catch (e) {
-      cb(e)
-    }
-    cb(null, conn)
+    cb(null, s.restore())
   }
 
 }
