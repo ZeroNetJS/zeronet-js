@@ -25,7 +25,7 @@ module.exports.pack = function () {
         }
 
         try {
-          callback(null, msgpack.pack(c))
+          callback(null, msgpack.encode(c))
         } catch (err) {
           ended = err
         }

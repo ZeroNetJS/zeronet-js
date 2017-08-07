@@ -48,7 +48,7 @@ class ZeroNetSwarm extends libp2p {
     super(modules, peerInfo, /*peerBook*/ null)
 
     const self = this
-    self.nat = new NAT(self, options)
+    self.nat = options.nat ? new NAT(self, options) : false
     self.zeronet = zeronet
     self.peerInfo = peerInfo
 
