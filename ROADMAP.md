@@ -31,6 +31,7 @@
  - [ ] Pex command issues ([#31](https://github.com/ZeroNetJS/zeronet-js/issues/31))
  - [ ] Msgpack encoding issues ([#39](https://github.com/ZeroNetJS/zeronet-js/issues/39))
  - [ ] TLS RSA (segfaults - [#54](https://github.com/ZeroNetJS/zeronet-js/issues/54))
+ - [ ] Lower the peers score by 20 every time an error response is returned ([#46](https://github.com/ZeroNetJS/zeronet-js/issues/46))
 
 # Stage 2
 
