@@ -13,6 +13,7 @@
 
 # Stage 1
 
+ - [ ] Crypto
  - [ ] Loading Zites
  - [ ] UiServer
  - [ ] Ui
@@ -23,6 +24,9 @@
 
 ### Big bugs:
  - [x] Streams are buggy
+ - [ ] New libp2p peer-id is slowing down startup
+ - [ ] Pex command issues
+ - [ ] Msgpack encoding issues
 
 # Stage 2
 
