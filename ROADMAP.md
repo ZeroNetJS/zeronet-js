@@ -28,6 +28,7 @@
  - [ ] New libp2p peer-id is slowing down startup (#30)
  - [ ] Pex command issues (#31)
  - [ ] Msgpack encoding issues (#39)
+ - [ ] TLS RSA (segfaults - #54)
 
 # Stage 2
 
