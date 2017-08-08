@@ -19,10 +19,10 @@
  - [ ] UPNP
  - [ ] ZeroFrame
  - [ ] Plugin API
- - [ ] Connection encryption (ZeroNetJS 2 ZeroNetJS already works via libp2p-secio)
+ - [ ] Connection encryption (ZeroNetJS 2 ZeroNetJS already works via libp2p-secio - TLS RSA (segfaults) pending #54)
 
 ### Big bugs:
- - [x] Streams are buggy
+ - [x] Streams are buggy (#5)
 
 # Stage 2
 
@@ -43,3 +43,5 @@
 It is not planned to support protocol version v1. Only v2+ will be supported.
 
 Also for now all connections are **unencrypted**. So don't use this in production until beta or until we get tls/secio running.
+
+[Return to README](https://github.com/ZeroNetJS/zeronet-js/blob/master/README.md)
