@@ -1,11 +1,8 @@
 "use strict"
 
 const msgstream = require("zeronet-protocol/lib/stream/msgpack")
-//const stable = require(zeronet-protocol/lib/stream/stable)
-const handshake = require("zeronet-protocol/lib/proto/handshake")
 const util = require("util")
 const Bridge = require("zeronet-protocol/lib/stream/bridge")
-const bl = require("bl")
 const clientDuplex = require("zeronet-protocol/lib/client/duplex")
 const EE = require("events").EventEmitter
 
@@ -29,7 +26,6 @@ function Client(conn, protocol, zeronet, opt) {
 
   function handleIn(data) {
     if (handlers[data.cmd]) handlers[data.cmd].recv(data)
-    else if (!opt.full) disconnect()
   }
 
   /* Callbacks */

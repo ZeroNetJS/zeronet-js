@@ -39,8 +39,8 @@ cryptos.forEach(crypto => {
 
       node.swarm.dial(multiaddr("/ip4/127.0.0.1/tcp/25335"), (e, c) => {
         if (e) return cb(e)
-        c.client.waitForHandshake((err, handshake) => {
-          if (handshake.commonCrypto() != crypto.name) return cb(new Error("Failing: Wrong crypto used " + handshake.commonCrypto() + " != " + crypto.name))
+        console.log(c)
+          if (c.client.handshakeData.commonCrypto() != crypto.name) return cb(new Error("Failing: Wrong crypto used " + c.client.handshakeData.commonCrypto() + " != " + crypto.name))
           c.client.cmd.getFile({
             site: "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
             inner_path: "content.json",
@@ -49,7 +49,6 @@ cryptos.forEach(crypto => {
             if (err) console.error("Unrelated error", err)
             return cb()
           })
-        })
       })
     })
   }).timeout(5000)

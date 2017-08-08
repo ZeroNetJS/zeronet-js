@@ -63,20 +63,10 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
 
   let waiting = []
 
-  function warnNoCrypto() {
-    if (zeronet.zeronet) { //why did we call common "zeronet"???
-      let i = {
-        address: client.addrs.split(" ")[1],
-        direction: client.addrs.split(" ")[0] == "=>" ? "to" : "from"
-      }
-      zeronet.logger("protocol:handshake").warn(i, "No crypto used in connection %s %s", i.direction, i.address)
-    }
-  }
-
-  function handshakeComplete(err) {
+  function handshakeComplete(err, opt) {
     //console.log(waiting,opt,new Error("."))
     if (!Array.isArray(waiting)) throw new Error("HandshakeError: Complete called multiple times")
-    waiting.forEach(w => w(err, client.handshakeData))
+    waiting.forEach(w => w(err, client.handshakeData, client._opt = opt))
     waiting = err
   }
 
@@ -96,23 +86,13 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
       client.handshakeData = handshake
       client.remoteHandshake = remoteHandshake
 
-      if (protocol.crypto && handshake.commonCrypto()) {
-        client.cork()
-        protocol.crypto.wrap(handshake.commonCrypto(), client, {
-          isServer: false
-        }, err => {
-          if (err) return cb(err)
-          log("Finished handshake", opt)
-          handshakeComplete(err)
-          client.isSecure = true
-          return cb(null, handshake)
-        })
-      } else {
-        log("Finished crypto-less handshake", opt)
-        warnNoCrypto()
-        handshakeComplete(err)
-        return cb(null, handshake)
-      }
+      log("Finished handshake", opt)
+      handshakeComplete(null, {
+        isServer: false
+      })
+      return cb(null, handshake, {
+        isServer: false
+      })
 
     })
   }
@@ -126,23 +106,10 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
     cb(null, handshake.toJSON())
     client.handshakeData = handshake
     client.remoteHandshake = remoteHandshake
-    if (protocol.crypto && handshake.commonCrypto()) {
-      client.cork()
-      protocol.crypto.wrap(handshake.commonCrypto(), client, {
-        isServer: true
-      }, err => {
-        waiting.forEach(w => w(err, client.handshakeData))
-        waiting = err
-        if (err) return log("Handshake error") || log(err)
-        log("Finished handshake", opt)
-        handshakeComplete(err)
-        client.isSecure = true
-      })
-    } else {
-      log("Finished crypto-less handshake", opt)
-      warnNoCrypto()
-      handshakeComplete(null)
-    }
+    log("Finished handshake", opt)
+    handshakeComplete(null, {
+      isServer: true
+    })
   }
 
   log("use handshake", opt)
@@ -151,7 +118,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
 
   client.waitForHandshake = cb => {
     if (Array.isArray(waiting)) waiting.push(cb)
-    else cb(waiting, client.handshakeData)
+    else cb(waiting, client.handshakeData, client._opt)
   }
 
   return new PeerRequestHandler("handshake", module.exports.req, client, handshakeGet)

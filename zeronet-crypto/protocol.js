@@ -35,20 +35,14 @@ module.exports = function ZeroNetCrypto(protocol) {
     me.wrap = (crypto, client, conf, cb) => {
       if (!cb) throw new Error("No CB")
       if (!crypto) return cb(null, client)
-      if (conf.crypto) return cb(null, client)
       if (!me.index[crypto]) return cb(new Error("Unsupported crypto " + crypto))
       log("upgrading to crypto", crypto)
-      conf.crypto = crypto
       client.getRaw((err, conn) => {
         if (err) return cb(err)
         me.index[crypto].getSocket(conn, conf, (err, conn) => {
           if (err) return cb(err)
-          log("hey, it worked almost", conf)
-          protocol.upgradeConn(conf)(conn, (err, client) => {
-            if (err) return cb(err)
-            log("hey, it worked", conf)
-            return cb(null, client)
-          })
+          log("crypto finished", conf)
+          return cb(null, conn)
         })
       })
     }

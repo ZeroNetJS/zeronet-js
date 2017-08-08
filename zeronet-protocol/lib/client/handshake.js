@@ -1,7 +1,6 @@
 "use strict"
 
 const msgstream = require("zeronet-protocol/lib/stream/msgpack")
-//const stable = require(zeronet-protocol/lib/stream/stable)
 const handshake = require("zeronet-protocol/lib/proto/handshake")
 const util = require("util")
 const Bridge = require("zeronet-protocol/lib/stream/bridge")
@@ -97,13 +96,33 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
 
   /* upgrade */
 
+  function warnNoCrypto() {
+    if (zeronet.zeronet) { //why did we call common "zeronet"???
+      let i = {
+        address: addrs.split(" ")[1],
+        direction: addrs.split(" ")[0] == "=>" ? "to" : "from"
+      }
+      zeronet.logger("protocol:handshake").warn(i, "No crypto used in connection %s %s", i.direction, i.address)
+    }
+  }
+
   self.upgrade = cb => {
-    (opt.isServer ? self.waitForHandshake : self.handshake)(err => {
+    (opt.isServer ? self.waitForHandshake : self.handshake)((err, handshake, opt) => {
       if (err) return cb(err)
-      cb(null, new Client({
+      const next = conn => cb(null, new Client(conn, protocol, zeronet, {
         isServer: opt.isServer,
-        handshake: self.handshakeData
+        handshake: self.handshakeData,
+        crypto: protocol.crypto && handshake.commonCrypto() ? handshake.commonCrypto() : false
       }))
+      if (protocol.crypto && handshake.commonCrypto()) {
+        protocol.crypto.wrap(handshake.commonCrypto(), self, opt, (err, conn) => {
+          if (err) return cb(err)
+          else next(conn)
+        })
+      } else {
+        warnNoCrypto()
+        self.getRaw((err, conn) => err ? cb(err) : next(conn))
+      }
     })
   }
 
