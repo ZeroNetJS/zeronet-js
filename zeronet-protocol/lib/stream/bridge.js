@@ -106,7 +106,8 @@ module.exports = function DuplexBridge(dup, addr) {
   pull(
     dup.source,
     pull.map(d => {
-      console.log("writein",addr,d.toString())
+      console.log("writein", addr, d.length)
+      console.log(d.toString())
       return d
     }),
     cat.sink
@@ -114,7 +115,8 @@ module.exports = function DuplexBridge(dup, addr) {
   pull(
     cat.source,
     pull.map(d => {
-      console.log("writeout",addr,d.toString())
+      console.log("writeout", addr, d.length)
+      console.log(d.toString())
       return d
     }),
     dup.sink
