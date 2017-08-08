@@ -13,12 +13,12 @@
 
 # Stage 1
 
- - [ ] Loading Zites
- - [ ] UiServer
- - [ ] Ui
- - [ ] UPNP
- - [ ] ZeroFrame
- - [ ] Plugin API
+ - [ ] Loading Zites (#55)
+ - [ ] UiServer (#56)
+ - [ ] Ui (#57)
+ - [ ] UPNP (#58)
+ - [ ] ZeroFrame (#59)
+ - [ ] Plugin API (#60)
  - [ ] Connection encryption (ZeroNetJS 2 ZeroNetJS already works via libp2p-secio)
 
 ### Big bugs:
@@ -46,3 +46,5 @@
 It is not planned to support protocol version v1. Only v2+ will be supported.
 
 Also for now all connections are **unencrypted**. So don't use this in production until beta or until we get tls/secio running.
+
+[Return to README](https://github.com/ZeroNetJS/zeronet-js/blob/master/README.md)
