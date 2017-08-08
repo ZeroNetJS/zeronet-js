@@ -35,10 +35,10 @@
 
 # Stage 2
 
- - [ ] Tor
- - [ ] Sidebar plugin
- - [ ] Torrent plugin
- - [ ] Customizable Ui
+ - [ ] Tor ([#65](https://github.com/ZeroNetJS/zeronet-js/issues/65))
+ - [ ] Sidebar plugin ([#66](https://github.com/ZeroNetJS/zeronet-js/issues/66))
+ - [ ] Torrent plugin ([#67](https://github.com/ZeroNetJS/zeronet-js/issues/67))
+ - [ ] Customizable Ui ([#68](https://github.com/ZeroNetJS/zeronet-js/issues/68))
 
 # Stage 3
 
