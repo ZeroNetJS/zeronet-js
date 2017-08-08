@@ -23,19 +23,21 @@ function verifyProtocol(def, param) {
       if (!Array.isArray(def[p])) dd = [def[p]]
       else dd = def[p]
       let v = false
+      let le //last error
       dd.forEach(d => {
         if (v) return
         switch (typeof d) {
         case "function":
-          if (!d(param[p])) throw new Error("Invalid value for key " + p + " (validation function)")
+          if (!d(param[p])) le = new Error("Invalid value for key " + p + " (validation function)")
           v = true
           break
         case "string":
-          if (typeof param[p] != d) throw new Error("Invalid value for key " + p + " (type missmatch expected=" + debugDef(dd, true) + ", got=" + typeof param[p] + ")")
+          if (typeof param[p] != d) le = new Error("Invalid value for key " + p + " (type missmatch expected=" + debugDef(dd, true) + ", got=" + typeof param[p] + ")")
           v = true
           break
         }
       })
+      if (!v) throw le
     }
   } catch (e) {
     e.stack +=

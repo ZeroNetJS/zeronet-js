@@ -45,8 +45,14 @@ function Handshake(data) {
     delete self.link
   }
 
-  addCMD("commonCrypto", () => self.crypt_supported.filter(c => self.linked.crypt_supported.indexOf(c) != -1)[0], true)
+  self.toJSON = () => {
+    const r = {}
+    for (var p in module.exports.def)
+      r[p] = self[p]
+    return r
+  }
 
+  addCMD("commonCrypto", () => self.crypt_supported.filter(c => self.linked.crypt_supported.indexOf(c) != -1)[0], true)
 }
 
 const debug = require("debug")
@@ -78,7 +84,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
     log("Start handshake", opt)
     const handshake = new Handshake(genHandshakeData(protocol, client, zeronet))
 
-    client.cmd.handshake(handshake, (err, data) => {
+    client.cmd.handshake(handshake.toJSON(), (err, data) => {
       if (err) {
         handshakeComplete(err)
         return cb(err)
@@ -115,8 +121,9 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
     log("Got handshake", opt)
     const handshake = new Handshake(genHandshakeData(protocol, client, zeronet))
     const remoteHandshake = new Handshake(data)
-    cb(null, handshake)
     handshake.link(remoteHandshake)
+    handshake.crypt = protocol.crypto && handshake.commonCrypto() ? handshake.commonCrypto() : null
+    cb(null, handshake.toJSON())
     client.handshakeData = handshake
     client.remoteHandshake = remoteHandshake
     if (protocol.crypto && handshake.commonCrypto()) {
