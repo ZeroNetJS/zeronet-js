@@ -33,12 +33,11 @@ module.exports = function dial(swarm, ZProtocol) {
           if (err) {
             return callback(err)
           }
-          // conn = new Connection(stable(conn))
           conn.setPeerInfo(pi)
-          protocolLayer(conn, err => {
+          protocolLayer(conn, (err, client) => {
             if (err) return callback(err)
-            swarm.conns[b58Id] = conn
-            return callback(null, conn)
+            swarm.conns[b58Id] = client.conn
+            return callback(null, client)
           })
         })
       } else {

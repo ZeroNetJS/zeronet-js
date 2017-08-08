@@ -42,9 +42,9 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
       if (!cb) cb = (() => {})
       const c = conn.client = new HandshakeClient(conn, self, zeronet, Object.assign(opt))
       c.conn = conn.client
-      //const d = opt.isServer ? c.waitForHandshake : c.handshake
       c.upgrade((err, client) => {
         if (err) return cb(err)
+        c.upgraded = client
         log("finished upgrade", opt)
         return cb(null, client)
       })

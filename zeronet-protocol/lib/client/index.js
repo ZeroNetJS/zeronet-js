@@ -19,6 +19,7 @@ function Client(conn, protocol, zeronet, opt) {
 
   const handlers = self.handlers = protocol.getHandlers(self)
   self.handshakeData = opt.handshake
+  self.conn = conn
 
   let addrs
   conn.getObservedAddrs((e, a) => self.addrs = addrs = (opt.isServer ? "=> " : "<= ") + a.map(a => a.toString()).join(", "))
@@ -65,14 +66,13 @@ function Client(conn, protocol, zeronet, opt) {
   /* logic */
 
   const s = Bridge(conn, addrs)
-  self.cork = () => {}
 
   let d = clientDuplex(addrs, handleIn, handleResponse, disconnect)
   self.write = d.write
 
   pull(
     s,
-    d.u = msgstream.unpack(),
+    msgstream.unpack(),
     d,
     msgstream.pack(),
     s

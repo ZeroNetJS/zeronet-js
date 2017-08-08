@@ -70,7 +70,6 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
   /* logic */
 
   const s = Bridge(conn, addrs)
-  self.cork = () => {}
 
   let d = clientDuplex(addrs, handleIn, handleResponse, disconnect)
   self.write = d.write
