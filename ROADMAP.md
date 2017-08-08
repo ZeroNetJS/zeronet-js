@@ -42,10 +42,10 @@
 
 # Stage 3
 
- - [ ] Strict tor
- - [ ] I2P and Strict I2P
- - [ ] Plugin for IPFS integration
- - [ ] IPLD module
+ - [ ] Strict tor ([#69](https://github.com/ZeroNetJS/zeronet-js/issues/69))
+ - [ ] I2P and Strict I2P ([#70](https://github.com/ZeroNetJS/zeronet-js/issues/70))
+ - [ ] Plugin for IPFS integration ([#71](https://github.com/ZeroNetJS/zeronet-js/issues/71))
+ - [ ] IPLD module ([#72](https://github.com/ZeroNetJS/zeronet-js/issues/72))
 
 ## Notes
 
