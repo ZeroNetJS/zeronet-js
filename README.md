@@ -1,3 +1,4 @@
+<center><img src="https://avatars2.githubusercontent.com/u/30019016?v=4&s=200"/></center>
 # ZeroNet JS
 [![Build Status](https://travis-ci.org/ZeroNetJS/zeronet-js.svg?branch=master)](https://travis-ci.org/ZeroNetJS/zeronet-js)
 [![Build status](https://ci.appveyor.com/api/projects/status/u5sbs9ofetft3d8c/branch/master?svg=true)](https://ci.appveyor.com/project/mkg20001/zeronet-js/branch/master)
