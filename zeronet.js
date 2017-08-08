@@ -34,7 +34,9 @@ const defaults = {
       port: 15543
     },
     protocol: {
-      crypto: []
+      crypto: [
+        require("zeronet-crypto/secio")
+      ]
     }
   },
   uiserver: {

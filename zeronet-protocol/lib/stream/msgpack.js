@@ -36,11 +36,12 @@ module.exports.pack = function () {
   }
 }
 
-module.exports.unpack = function () {
+module.exports.unpack = function (limit) {
   //var ended = null
   let chunks = bl()
+  let limited = !!limit
 
-  return queue(function (end, buf, cb) {
+  const stream = queue(function (end, buf, cb) {
     if (end) return cb(end)
 
     if (buf)
@@ -63,8 +64,10 @@ module.exports.unpack = function () {
     }
 
     function loop() {
+      if (limited && !limit) return cb(null, res_)
       d((err, res) => {
-        if (err) return cb(err)
+        if (limited) limit--
+          if (err) return cb(err)
         if (res) {
           res_.push(res)
           loop()
@@ -76,4 +79,6 @@ module.exports.unpack = function () {
   }, {
     sendMany: true
   })
+  stream.getChunks = () => chunks
+  return stream
 }

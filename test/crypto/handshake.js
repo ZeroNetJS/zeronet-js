@@ -2,7 +2,7 @@
 
 const crypto_data = {
   "secio": require("zeronet-crypto/secio"),
-  "tls-rsa": require("zeronet-crypto/tls")
+  //"tls-rsa": require("zeronet-crypto/tls")
 }
 
 const cryptos = Object.keys(crypto_data).map(c => {
@@ -39,20 +39,14 @@ cryptos.forEach(crypto => {
 
       node.swarm.dial(multiaddr("/ip4/127.0.0.1/tcp/25335"), (e, c) => {
         if (e) return cb(e)
-        c.client.waitForHandshake((err, handshake) => {
-          if (handshake.commonCrypto() != crypto.name) return cb(new Error("Failing: Wrong crypto used " + handshake.commonCrypto() + " != " + crypto.name))
-          c.client.cmd.getFile({
-            site: "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
-            inner_path: "content.json",
-            location: 1
-          }, err => {
-            if (err) console.error("Unrelated error", err)
-            return cb()
-          })
-        })
+        if (c.handshakeData.commonCrypto() != crypto.name) return cb(new Error("Failing: Wrong crypto used " + c.handshakeData.commonCrypto() + " != " + crypto.name))
+        c.cmd.ping({}, cb)
       })
     })
   }).timeout(5000)
 })
 
-afterEach(cb => node.stop(cb))
+afterEach(function (cb) {
+  this.timeout(5000)
+  node.stop(cb)
+})
