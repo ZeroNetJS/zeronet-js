@@ -13,13 +13,13 @@
 
 # Stage 1
 
- - [ ] Loading Zites
- - [ ] UiServer
- - [ ] Ui
- - [ ] UPNP
- - [ ] ZeroFrame
- - [ ] Plugin API
- - [ ] Connection encryption (ZeroNetJS 2 ZeroNetJS already works via libp2p-secio - TLS RSA (segfaults) pending #54)
+ - [ ] Loading Zites (#55)
+ - [ ] UiServer (#56)
+ - [ ] Ui (#57)
+ - [ ] UPNP (#58)
+ - [ ] ZeroFrame (#59)
+ - [ ] Plugin API (#60)
+ - [ ] Connection encryption (ZeroNetJS 2 ZeroNetJS already works via libp2p-secio)
 
 ### Big bugs:
  - [x] Streams are buggy (#5)
