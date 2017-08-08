@@ -44,6 +44,7 @@ module.exports = function ZeroNetCrypto(protocol) {
           if (err) return cb(err)
           protocol.upgradeConn(conf)(conn, (err, client) => {
             if (err) return cb(err)
+            log("hey, it worked")
             return cb(null, client)
           })
         })

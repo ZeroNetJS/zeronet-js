@@ -21,6 +21,10 @@ function Queue2() {
       q.push(data)
       ee.emit("data")
     },
+    prepend: data => { //better only call this before the get queue starts
+      if (ed) return ed
+      q.unshift(data)
+    },
     error: e => {
       ed = e
       ee.emit("err", e)
@@ -43,10 +47,12 @@ function Queue2() {
 
 //duplex bridge stream
 
-module.exports = function DuplexBridge(dup) {
+module.exports = function DuplexBridge(dup, addr) {
   const src_q = Queue2()
   const sink_q = Queue2()
   const q = {
+    _pre: Queue2(),
+    _post: Queue2(),
     pre: Queue2(),
     post: Queue2()
   }
@@ -61,6 +67,21 @@ module.exports = function DuplexBridge(dup) {
     })
   }
   gloop()
+
+  /*let srun = true
+
+  function sinkloop() {
+    q["_" + u].get((e, r) => {
+      if (e) return sink_q.error(e, srun = false)
+      if (sink_q.append(r)) {
+        q._pre.error(sink_q.append())
+        q._post.error(sink_q.append())
+        return (srun = false)
+      }
+      return sinkloop()
+    })
+  }
+  sinkloop()*/
 
   const cat = {
     source: function (end, cb) {
@@ -84,10 +105,18 @@ module.exports = function DuplexBridge(dup) {
 
   pull(
     dup.source,
+    pull.map(d => {
+      console.log("writein",addr,d.toString())
+      return d
+    }),
     cat.sink
   )
   pull(
     cat.source,
+    pull.map(d => {
+      console.log("writeout",addr,d.toString())
+      return d
+    }),
     dup.sink
   )
 
@@ -103,12 +132,34 @@ module.exports = function DuplexBridge(dup) {
         if (end) { //pre src has ended
           return
         }
+        //if (q._pre.append(data)) return read(q._pre.append())
         if (sink_q.append(data)) return read(sink_q.append())
         read(null, next)
       })
     },
-    restore: () => {
+    restore: d => {
+      //change the queue to append
       u = "post"
+
+      if (Array.isArray(d)) //prepend data
+        d.forEach(q.post.prepend)
+
+      //move everything from pre queue to post queue
+      q.pre.error(true)
+      //q._pre.error(true)
+      //q._post.error(true)
+
+      function loop() {
+        q.pre.get((e, r) => {
+          if (e) return
+          q.post.append(r)
+          loop()
+        })
+      }
+      loop() //it's in sync so it blocks
+
+      //if (!srun) sinkloop()
+
       return post_stream
     }
   }
@@ -125,6 +176,7 @@ module.exports = function DuplexBridge(dup) {
         if (end) { //pre src has ended
           return
         }
+        //if (q._post.append(data)) return read(q._post.append())
         if (sink_q.append(data)) return read(sink_q.append())
         read(null, next)
       })

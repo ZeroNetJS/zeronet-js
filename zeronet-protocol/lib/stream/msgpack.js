@@ -40,7 +40,7 @@ module.exports.unpack = function () {
   //var ended = null
   let chunks = bl()
 
-  return queue(function (end, buf, cb) {
+  const stream = queue(function (end, buf, cb) {
     if (end) return cb(end)
 
     if (buf)
@@ -76,4 +76,6 @@ module.exports.unpack = function () {
   }, {
     sendMany: true
   })
+  stream.getChunks = () => chunks
+  return stream
 }

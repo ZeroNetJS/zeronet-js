@@ -19,9 +19,7 @@ global.assert = assert
 
 before(function (cb) {
   this.timeout(20000)
-  PeerId.create({
-    bits: 100
-  }, (e, id) => {
+  PeerId.create((e, id) => {
     if (e) return cb(e)
     global.id = id
     cb()
