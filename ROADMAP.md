@@ -13,16 +13,19 @@
 
 # Stage 1
 
+ - [ ] Connection encryption
  - [ ] Loading Zites
  - [ ] UiServer
  - [ ] Ui
  - [ ] UPNP
  - [ ] ZeroFrame
  - [ ] Plugin API
- - [ ] Connection encryption
 
 ### Big bugs:
  - [x] Streams are buggy
+ - [ ] New libp2p peer-id is slowing down startup
+ - [ ] Pex command issues
+ - [ ] Msgpack encoding issues
 
 # Stage 2
 
