@@ -15,20 +15,20 @@
 
 # Stage 1
 
- - [ ] Loading Zites (#55)
- - [ ] UiServer (#56)
- - [ ] Ui (#57)
- - [ ] UPNP (#58)
- - [ ] ZeroFrame (#59)
- - [ ] Plugin API (#60)
- - [ ] Connection encryption (ZeroNetJS 2 ZeroNetJS already works via libp2p-secio)
+ - [ ] Loading Zites ([#55](https://github.com/ZeroNetJS/zeronet-js/issues/55))
+ - [ ] UiServer ([#56](https://github.com/ZeroNetJS/zeronet-js/issues/56))
+ - [ ] Ui ([#57](https://github.com/ZeroNetJS/zeronet-js/issues/57))
+ - [ ] UPNP ([#58](https://github.com/ZeroNetJS/zeronet-js/issues/58))
+ - [ ] ZeroFrame ([#59](https://github.com/ZeroNetJS/zeronet-js/issues/59))
+ - [ ] Plugin API ([#60](https://github.com/ZeroNetJS/zeronet-js/issues/60))
+ - [ ] Connection encryption (ZeroNetJS 2 ZeroNetJS already works via libp2p-secio - [#54](https://github.com/ZeroNetJS/zeronet-js/issues/54))
 
 ### Big bugs:
- - [x] Streams are buggy (#5)
- - [ ] New libp2p peer-id is slowing down startup (#30)
- - [ ] Pex command issues (#31)
- - [ ] Msgpack encoding issues (#39)
- - [ ] TLS RSA (segfaults - #54)
+ - [x] Streams are buggy ([#5](https://github.com/ZeroNetJS/zeronet-js/issues/5))
+ - [ ] New libp2p peer-id is slowing down startup ([#30](https://github.com/ZeroNetJS/zeronet-js/issues/30))
+ - [ ] Pex command issues ([#31](https://github.com/ZeroNetJS/zeronet-js/issues/31))
+ - [ ] Msgpack encoding issues ([#39](https://github.com/ZeroNetJS/zeronet-js/issues/39))
+ - [ ] TLS RSA (segfaults - [#54](https://github.com/ZeroNetJS/zeronet-js/issues/54))
 
 # Stage 2
 
