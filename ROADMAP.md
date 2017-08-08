@@ -1,3 +1,5 @@
+[Return to README](https://github.com/ZeroNetJS/zeronet-js/blob/master/README.md)
+
 # Roadmap
 
 ## The big todos
@@ -46,5 +48,3 @@
 It is not planned to support protocol version v1. Only v2+ will be supported.
 
 Also for now all connections are **unencrypted**. So don't use this in production until beta or until we get tls/secio running.
-
-[Return to README](https://github.com/ZeroNetJS/zeronet-js/blob/master/README.md)
