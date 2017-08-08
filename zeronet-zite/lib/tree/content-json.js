@@ -1,7 +1,7 @@
 "use strict"
 
 const crypto = require("zeronet-crypto")
-const fallaby = require("zeronet-fallaby")
+const fallaby = require("zeronet-fallaby/lib")
 const File = require("zeronet-zite/lib/tree/file")
 const path = require("path")
 

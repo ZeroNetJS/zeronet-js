@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
   "dependencies": {
-    "express": "^4.15.3"
+    "express": "^4.15.4"
   },
   "directories": {
     "lib": "lib"

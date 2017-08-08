@@ -1,4 +1,4 @@
-const HandshakeClient = require("zeronet-protocol/lib/client/handshake")
+const HandshakeClient = require("zeronet-client/lib/handshake")
 
 const PeerRequest = require("peer-request")
 const validate = require("zeronet-common/lib/verify").verifyProtocol

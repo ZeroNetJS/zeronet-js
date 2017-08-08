@@ -1,5 +1,4 @@
-# Standalone ZeroNet peer client
-WIP
+# ZeroNet Protocol Client
 
 -----
 
