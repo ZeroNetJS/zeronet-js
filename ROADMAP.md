@@ -23,9 +23,9 @@
 
 ### Big bugs:
  - [x] Streams are buggy (#5)
- - [ ] New libp2p peer-id is slowing down startup
- - [ ] Pex command issues
- - [ ] Msgpack encoding issues
+ - [ ] New libp2p peer-id is slowing down startup (#30)
+ - [ ] Pex command issues (#31)
+ - [ ] Msgpack encoding issues (#39)
 
 # Stage 2
 
