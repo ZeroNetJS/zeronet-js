@@ -31,6 +31,7 @@ function objectInspect(data, type) {
 function clientDuplex(addrs, handleIn, handleResponse, disconnect) {
   let q = []
   const ee = new EE()
+  let ended = true
 
   return {
     sink: function (read) {
@@ -47,7 +48,7 @@ function clientDuplex(addrs, handleIn, handleResponse, disconnect) {
         } catch (e) {
           plog(e)
         }
-        read(null, next)
+        read(ended, next)
       })
     },
     source: function (end, cb) {
@@ -67,6 +68,9 @@ function clientDuplex(addrs, handleIn, handleResponse, disconnect) {
       }
       q.push(data)
       ee.emit("data")
+    },
+    end: e => {
+      ended = e || true
     }
   }
 }

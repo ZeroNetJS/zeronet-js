@@ -56,12 +56,14 @@ function Client(conn, protocol, zeronet, opt) {
     cmd[name] = handlers[name].send.bind(handlers[name])
 
   function disconnect(e) {
+    d.end()
     self.emit("end", e)
     self.write = () => {
       throw new Error("Offline")
     }
     self.cmd = {}
   }
+  self.disconnect = disconnect
 
   /* logic */
 

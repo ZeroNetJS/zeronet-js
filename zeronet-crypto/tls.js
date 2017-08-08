@@ -3,15 +3,11 @@
 const tls = require("tls")
 const constants = require("constants")
 
-/*const Duplex = require("stream").Duplex
-const Transform = require("stream").Transform
-const crypto = require("crypto")*/
-
 const toPull = require("stream-to-pull-stream")
 const toStream = require("pull-stream-to-stream")
 const Connection = require("interface-connection").Connection
 
-const OpenSSLGenerator = require(__dirname + "/helper").OpenSSLGenerator
+const OpenSSLGenerator = require("zeronet-crypto/helper").OpenSSLGenerator
 
 const debug = require("debug")
 const log = debug("zeronet:crypto:tls")
@@ -26,14 +22,17 @@ module.exports = function TLSSupport(protocol) {
   gen.rsa((err, res) => {
     if (err) throw err
     rsa_cert = res
-    console.log("got cert", rsa_cert)
     rsa_wait.forEach(wait => rsa_crypto(wait[0], wait[1]))
   })
 
   const rsa_crypto = (conn, options, cb) => {
-    let stream = toStream(conn)
     log(options, "tls handshake init", rsa_cert)
     if (options.isServer && !rsa_cert) return rsa_wait.push([options, cb])
+    let stream = toStream(conn)
+    const next = err => {
+      if (err) return cb(err)
+      cb(null, new Connection(toPull.duplex(stream)))
+    }
     if (options.isServer) {
       stream = tls.connect({
         socket: stream,
@@ -50,8 +49,7 @@ module.exports = function TLSSupport(protocol) {
           honorCipherOrder: true,
           secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
         })
-      })
-      stream.on("error", console.error)
+      }, next)
       /*stream = tls.connect({
         socket: stream,
         requestCert: true,
@@ -64,9 +62,9 @@ module.exports = function TLSSupport(protocol) {
         requestCert: true,
         rejectUnauthorized: false,
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-      })
+      }, next)
     }
-    cb(null, new Connection(toPull.duplex(stream)))
+    stream.on("error", console.error)
   }
   protocol.crypto.add("tls-rsa", rsa_crypto)
 }

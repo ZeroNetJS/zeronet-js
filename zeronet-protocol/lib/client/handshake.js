@@ -30,7 +30,7 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
 
   function handleIn(data) {
     if (handlers[data.cmd]) handlers[data.cmd].recv(data)
-    else disconnect(d.end())
+    disconnect(d.end())
   }
 
   /* Callbacks */
@@ -60,12 +60,14 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
     cmd[name] = handlers[name].send.bind(handlers[name])
 
   function disconnect(e) {
+    d.end()
     self.emit("end", e)
     self.write = () => {
       throw new Error("Offline")
     }
     self.cmd = {}
   }
+  self.disconnect = disconnect
 
   /* logic */
 
