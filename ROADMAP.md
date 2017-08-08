@@ -15,6 +15,7 @@
 
 # Stage 1
 
+ - [ ] Save peer-id in config ([#63](Save peer-id in config))
  - [ ] Loading Zites ([#55](https://github.com/ZeroNetJS/zeronet-js/issues/55))
  - [ ] UiServer ([#56](https://github.com/ZeroNetJS/zeronet-js/issues/56))
  - [ ] Ui ([#57](https://github.com/ZeroNetJS/zeronet-js/issues/57))
