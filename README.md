@@ -1,9 +1,10 @@
-<center><img src="https://avatars2.githubusercontent.com/u/30019016?v=4&s=200"/></center>
 # ZeroNet JS
 [![Build Status](https://travis-ci.org/ZeroNetJS/zeronet-js.svg?branch=master)](https://travis-ci.org/ZeroNetJS/zeronet-js)
 [![Build status](https://ci.appveyor.com/api/projects/status/u5sbs9ofetft3d8c/branch/master?svg=true)](https://ci.appveyor.com/project/mkg20001/zeronet-js/branch/master)
 [![codecov](https://codecov.io/gh/ZeroNetJS/zeronet-js/branch/master/graph/badge.svg)](https://codecov.io/gh/ZeroNetJS/zeronet-js)
 [![Snap Status](https://build.snapcraft.io/badge/ZeroNetJS/zeronet-js.svg)](https://build.snapcraft.io/user/ZeroNetJS/zeronet-js)
+
+<center><img src="https://avatars2.githubusercontent.com/u/30019016?v=4&s=200"/></center>
 
 A JS version of ZeroNet, using libp2p.
 
