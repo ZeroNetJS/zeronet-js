@@ -19,6 +19,6 @@ module.exports = function Tracker(zite, node, discovery) {
   self.discover = cb => {
     if (!self.tracker) return cb(new Error("Not running"))
     self.tracker.update()
-    cb()
+    self.tracker.once("update", () => process.nextTick(cb))
   }
 }

@@ -13,7 +13,7 @@ const bs58 = require('base-x')(BASE58)
 const assert = require("assert")
 
 const debug = require("debug")
-const log = debug("zeronet:peer")
+const log = process.env.INTENSE_DEBUG ? debug("zeronet:peer") : () => {}
 
 const ip2multi = require("zeronet-common/lib/network/ip2multi")
 

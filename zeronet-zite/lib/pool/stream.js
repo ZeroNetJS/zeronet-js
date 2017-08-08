@@ -37,9 +37,7 @@ module.exports = function PeerStream(zite, zeronet) {
         } else {
           log("peer:list:out drained. discover")
           zite.discovery.discover(() => {
-            zite.discovery.once("peer", () => {
-              process.nextTick(getLoop)
-            })
+            process.nextTick(getLoop)
           })
         }
       }
