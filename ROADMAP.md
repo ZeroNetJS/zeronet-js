@@ -22,7 +22,7 @@
  - [ ] Connection encryption (ZeroNetJS 2 ZeroNetJS already works via libp2p-secio)
 
 ### Big bugs:
- - [x] Streams are buggy (#5)
+ - [x] Streams are buggy
  - [ ] New libp2p peer-id is slowing down startup
  - [ ] Pex command issues
  - [ ] Msgpack encoding issues
