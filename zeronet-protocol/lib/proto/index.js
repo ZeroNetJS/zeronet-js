@@ -1,4 +1,4 @@
-const Client = require("zeronet-protocol/lib/client")
+const HandshakeClient = require("zeronet-protocol/lib/client/handshake")
 
 const PeerRequest = require("peer-request")
 const validate = require("zeronet-common/lib/verify").verifyProtocol
@@ -40,13 +40,13 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
     (conn, cb) => {
       log("upgrading conn", opt)
       if (!cb) cb = (() => {})
-      const c = conn.client = new Client(conn, self, zeronet, Object.assign(opt))
+      const c = conn.client = new HandshakeClient(conn, self, zeronet, Object.assign(opt))
       c.conn = conn.client
-      const d = opt.isServer ? c.waitForHandshake : c.handshake
-      d(err => {
+      //const d = opt.isServer ? c.waitForHandshake : c.handshake
+      c.upgrade((err, client) => {
         if (err) return cb(err)
         log("finished upgrade", opt)
-        return cb(null, c)
+        return cb(null, client)
       })
     }
 

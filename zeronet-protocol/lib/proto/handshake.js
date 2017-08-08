@@ -13,7 +13,7 @@ function genHandshakeData(protocol, client, zeronet) {
     port_opened: zeronet.swarm.advertise.port_open || false,
     rev: zeronet.rev,
     version: zeronet.version,
-    own: true //this is later removed
+    own: true //this marks our own handshake. required for linking
   }
   if (client.isTor) {
     d.onion = 0 //TODO: add tor
@@ -145,7 +145,6 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
     }
   }
 
-  client.handlers.handshake = new PeerRequestHandler("handshake", module.exports.req, client, handshakeGet)
   log("use handshake", opt)
 
   client.handshake = handshakeInit
@@ -155,6 +154,7 @@ module.exports = function ZeroNetHandshake(client, protocol, zeronet, opt) {
     else cb(waiting, client.handshakeData)
   }
 
+  return new PeerRequestHandler("handshake", module.exports.req, client, handshakeGet)
 }
 
 module.exports.def = { //Definitions are symmetric

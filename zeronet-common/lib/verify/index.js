@@ -24,6 +24,7 @@ function verifyProtocol(def, param) {
       else dd = def[p]
       let v = false
       let le //last error
+      /* jshint ignore: start */
       dd.forEach(d => {
         if (v) return
         switch (typeof d) {
@@ -37,6 +38,7 @@ function verifyProtocol(def, param) {
           break
         }
       })
+      /* jshint ignore: end */
       if (!v) throw le
     }
   } catch (e) {

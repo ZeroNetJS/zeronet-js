@@ -13,23 +13,25 @@ const pull = require('pull-stream')
 
 const debug = require("debug")
 
-const log = debug("zeronet:protocol:client")
+const log = debug("zeronet:protocol:client:handshake")
 
-function Client(conn, protocol, zeronet, opt) {
+const Client = require("zeronet-protocol/lib/client")
+
+function HandshakeClient(conn, protocol, zeronet, opt) {
   const self = this
 
   /* Handling */
 
-  const handlers = self.handlers = protocol.getHandlers(self)
-  self.handshakeData = opt.handshake
-
+  const handlers = self.handlers = {
+    handshake: handshake(self, protocol, zeronet, opt)
+  }
   let addrs
   conn.getObservedAddrs((e, a) => self.addrs = addrs = (opt.isServer ? "=> " : "<= ") + a.map(a => a.toString()).join(", "))
   log("initializing", addrs)
 
   function handleIn(data) {
     if (handlers[data.cmd]) handlers[data.cmd].recv(data)
-    else if (!opt.full) disconnect()
+    else disconnect(d.end())
   }
 
   /* Callbacks */
@@ -47,7 +49,7 @@ function Client(conn, protocol, zeronet, opt) {
     }
   }
 
-  self.req_id = 1 //used the first for handshake
+  self.req_id = 0
 
   self.addCallback = addCallback
 
@@ -76,14 +78,37 @@ function Client(conn, protocol, zeronet, opt) {
 
   pull(
     s,
-    d.u = msgstream.unpack(),
+    d.u = msgstream.unpack(1),
     d,
     msgstream.pack(),
     s
   )
 
+  /* getRaw */
+
+  self.getRaw = cb => {
+    log("leftover size", bl.length)
+    d.u.getChunks().pipe(bl((err, data) => {
+      log("appending leftover %s bytes", addrs, data.length)
+      if (err) return cb(err)
+      cb(null, s.restore([data]))
+    }))
+  }
+
+  /* upgrade */
+
+  self.upgrade = cb => {
+    (opt.isServer ? self.waitForHandshake : self.handshake)(err => {
+      if (err) return cb(err)
+      cb(null, new Client({
+        isServer: opt.isServer,
+        handshake: self.handshakeData
+      }))
+    })
+  }
+
 }
 
-util.inherits(Client, EE)
+util.inherits(HandshakeClient, EE)
 
-module.exports = Client
+module.exports = HandshakeClient
