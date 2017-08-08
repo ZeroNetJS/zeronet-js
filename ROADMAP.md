@@ -19,7 +19,7 @@
  - [ ] UPNP
  - [ ] ZeroFrame
  - [ ] Plugin API
- - [ ] Connection encryption
+ - [ ] Connection encryption (ZeroNetJS 2 ZeroNetJS already works via libp2p-secio)
 
 ### Big bugs:
  - [x] Streams are buggy
