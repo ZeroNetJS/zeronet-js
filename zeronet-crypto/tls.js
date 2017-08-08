@@ -26,12 +26,13 @@ module.exports = function TLSSupport(protocol) {
   gen.rsa((err, res) => {
     if (err) throw err
     rsa_cert = res
+    console.log("got cert", rsa_cert)
     rsa_wait.forEach(wait => rsa_crypto(wait[0], wait[1]))
   })
 
   const rsa_crypto = (conn, options, cb) => {
     let stream = toStream(conn)
-    log(options, "tls handshake init")
+    log(options, "tls handshake init", rsa_cert)
     if (options.isServer && !rsa_cert) return rsa_wait.push([options, cb])
     if (options.isServer) {
       stream = tls.connect({
@@ -65,7 +66,7 @@ module.exports = function TLSSupport(protocol) {
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
       })
     }
-    cb(null, stream)
+    cb(null, new Connection(toPull.duplex(stream)))
   }
   protocol.crypto.add("tls-rsa", rsa_crypto)
 }

@@ -85,7 +85,6 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
   /* getRaw */
 
   self.getRaw = cb => {
-    log("leftover size", bl.length)
     d.u.getChunks().pipe(bl((err, data) => {
       log("appending leftover %s bytes", addrs, data.length)
       if (err) return cb(err)
