@@ -84,13 +84,13 @@ module.exports = function TLSSupport(protocol) {
 }
 
 module.exports.tls_rsa = (protocol) => {
-  basicCrypto("rsa", protocol, (opt, socket, rsa_cert, ready, cb) => {
+  basicCrypto("rsa", protocol, (opt, socket, cert, ready, cb) => {
     let stream
     if (opt.isServer) {
       stream = new tls.TLSSocket(socket, {
         isServer: true,
-        key: rsa_cert.privkey,
-        cert: rsa_cert.cert,
+        key: cert.privkey,
+        cert: cert.cert,
         requestCert: false,
         rejectUnauthorized: false,
         ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:" +
@@ -98,27 +98,27 @@ module.exports.tls_rsa = (protocol) => {
         honorCipherOrder: true,
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
       })
+      stream.on("secureConnect", () => cb())
     } else {
-      stream = new tls.TLSSocket(socket, {
+      stream = tls.connect(socket, {
         isServer: false,
         requestCert: true,
         rejectUnauthorized: false,
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-      })
+      }, cb)
     }
-    stream.on("secureConnect", () => cb())
     ready(null, stream)
   })
 }
 
 module.exports.tls_ecc = (protocol) => {
-  basicCrypto("ecc", protocol, (opt, socket, ecc_cert, ready, cb) => {
+  basicCrypto("ecc", protocol, (opt, socket, cert, ready, cb) => {
     let stream
     if (opt.isServer) {
       stream = new tls.TLSSocket(socket, {
         isServer: true,
-        key: ecc_cert.privkey,
-        cert: ecc_cert.cert,
+        key: cert.privkey,
+        cert: cert.cert,
         requestCert: false,
         rejectUnauthorized: false,
         ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:" +
@@ -126,15 +126,15 @@ module.exports.tls_ecc = (protocol) => {
         honorCipherOrder: true,
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
       })
+      stream.on("secureConnect", () => cb())
     } else {
-      stream = new tls.TLSSocket(socket, {
+      stream = tls.connect(socket, {
         isServer: false,
         requestCert: true,
         rejectUnauthorized: false,
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-      })
+      }, cb)
     }
-    stream.on("secureConnect", () => cb())
     ready(null, stream)
   })
 }
