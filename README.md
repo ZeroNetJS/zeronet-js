@@ -4,6 +4,8 @@
 [![codecov](https://codecov.io/gh/ZeroNetJS/zeronet-js/branch/master/graph/badge.svg)](https://codecov.io/gh/ZeroNetJS/zeronet-js)
 [![Snap Status](https://build.snapcraft.io/badge/ZeroNetJS/zeronet-js.svg)](https://build.snapcraft.io/user/ZeroNetJS/zeronet-js)
 
+<center><img src="https://avatars2.githubusercontent.com/u/30019016?v=4&s=200"/></center>
+
 A JS version of ZeroNet, using libp2p.
 
 # About
