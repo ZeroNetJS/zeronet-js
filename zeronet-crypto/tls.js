@@ -74,7 +74,7 @@ module.exports = function TLSSupport(protocol) {
         }, next)
       }
       log("tls ready", options)
-      stream.on("error", console.error)
+      stream.on("error", e => next(e))
     })
   }
   protocol.crypto.add("tls-rsa", rsa_crypto)
