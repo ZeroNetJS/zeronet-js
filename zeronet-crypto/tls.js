@@ -38,62 +38,77 @@ function pipeThroughNet(dup, cb) {
   })
 }
 
-module.exports = function TLSSupport(protocol) {
-
+function basicCrypto(type, protocol, handler) {
   const gen = new OpenSSLGenerator()
 
-  let rsa_cert
-  let rsa_wait = []
+  let cert
+  let wait = []
 
-  gen.rsa((err, res) => {
+  gen[type]((err, res) => {
     if (err) throw err
-    rsa_cert = res
-    rsa_wait.forEach(wait => wait())
+    cert = res
+    wait.forEach(w => w())
+    wait = null
   })
 
-  const rsa_crypto = (conn, options, cb) => {
-    log("tls init", options)
+  protocol.crypto.add("tls-" + type, (conn, opt, cb) => {
+    log("tls init", type, opt)
     let stream = toStream(conn)
     pipeThroughNet(stream, (err, socket) => {
       if (err) return cb(err)
 
-      const next = err => {
-        if (err) return cb(err)
-        cb(null, new Connection(toPull.duplex(stream)))
+      let stream
+
+      const cont = () => {
+        handler(opt, socket, cert, (err, _s) => {
+          if (err) return cb(err)
+          socket.flow()
+          stream = _s
+          stream.on("error", e => cb(e))
+          log("tls ready", type, opt)
+        }, e => {
+          if (e) cb(e)
+          cb(null, new Connection(toPull.duplex(stream)))
+        })
       }
 
-      const setup = () => {
-        if (options.isServer) {
-          stream = tls.connect({
-            socket,
-            isServer: true,
-            key: rsa_cert.privkey,
-            cert: rsa_cert.cert,
-            agent: true,
-            requestCert: false,
-            rejectUnauthorized: false,
-            ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:" +
-              "!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK",
-            honorCipherOrder: true,
-            secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-          }, next)
-        } else {
-          stream = tls.connect({
-            socket,
-            isServer: false,
-            requestCert: true,
-            rejectUnauthorized: false,
-            secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-          }, next)
-        }
-        socket.flow()
-        log("tls ready", options)
-        stream.on("error", e => next(e))
-      }
-
-      if (options.isServer && !rsa_cert) return rsa_wait.push(setup)
-      else setup()
+      if (opt.isServer && !cert) wait.push(cont)
+      else cont()
     })
-  }
-  protocol.crypto.add("tls-rsa", rsa_crypto)
+  })
+}
+
+module.exports = function TLSSupport(protocol) {
+  module.exports.tls_rsa(protocol)
+  module.exports.tls_ecc(protocol)
+}
+
+module.exports.tls_rsa = (protocol) => {
+  basicCrypto("rsa", protocol, (opt, socket, rsa_cert, ready, cb) => {
+    let stream
+    if (opt.isServer) {
+      stream = tls.connect({
+        socket,
+        isServer: true,
+        key: rsa_cert.privkey,
+        cert: rsa_cert.cert,
+        agent: true,
+        requestCert: false,
+        rejectUnauthorized: false,
+        ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:" +
+          "!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK",
+        honorCipherOrder: true,
+        secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
+      }, cb)
+    } else {
+      stream = tls.connect({
+        socket,
+        isServer: false,
+        requestCert: true,
+        rejectUnauthorized: false,
+        secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
+      }, cb)
+    }
+    ready(null, stream)
+  })
 }
