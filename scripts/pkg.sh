@@ -4,6 +4,15 @@ if node -v | grep "^v8" > /dev/null; then
 
   set -e
 
+  op="$PWD"
+  t="/tmp/libstdcfix/"
+  rm -rf $t
+  mkdir -p $t
+  cd $t
+  apt-get download libstdc++6
+  dpkg -x *.deb $t
+  cd $op
+
   rm -rf .pkg
   mkdir .pkg
   for f in package* zeronet.js lib; do cp -r $f .pkg; done
