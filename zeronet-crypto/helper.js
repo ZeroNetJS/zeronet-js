@@ -87,8 +87,8 @@ function KeyStream(stream) {
   */
 function OpenSSLGenerator() {
   /**
-  * @namespace OpenSSLGenerator
-  */
+   * @namespace OpenSSLGenerator
+   */
   function run(what, cb) {
     let args = ["openssl", what[0]].concat(what.slice(1)) //-keyout /dev/stdout -out /dev/stdout
     //console.log("+", args.join(" "))
@@ -115,7 +115,11 @@ function OpenSSLGenerator() {
   const certdefault = "-new -key $TMP -batch -nodes -config".replace("$TMP", tmpfile).split(" ").concat([path.join(__dirname, "cert.conf")])
 
   function gen(opt, cb) {
-    run(["gen" + opt.keytype, opt.keylength], (err, _privkey) => {
+    GenKey({
+      keytype: opt.keytype,
+      keylength: opt.keylength,
+      keyec: opt.keyec
+    }, (err, _privkey) => {
       if (err) return cb(err)
       const privkey = _privkey[0].data
       fs.writeFileSync(tmpfile, privkey)
@@ -132,7 +136,11 @@ function OpenSSLGenerator() {
   }
 
   function GenKey(opt, cb) {
-    run(["gen" + opt.keytype, opt.keylength], cb)
+    if (opt.keyec) {
+      run(["ecparam", "-name", opt.keytype, "-genkey"], cb)
+    } else {
+      run(["gen" + opt.keytype, opt.keylength], cb)
+    }
   }
 
   function rsa(cb) {
@@ -143,7 +151,17 @@ function OpenSSLGenerator() {
     }, cb)
   }
 
+  function ecc(cb) {
+    gen({
+      keyec: true,
+      keytype: "secp256k1",
+      keylength: "",
+      cert: "req -x509 -sha256".split(" ")
+    }, cb)
+  }
+
   this.rsa = rsa
+  this.ecc = ecc
   this.gen = gen
   this.genkey = GenKey
 }
