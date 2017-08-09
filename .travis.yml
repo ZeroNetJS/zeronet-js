@@ -1,4 +1,6 @@
 language:       node_js
+services:
+  - docker
 matrix:
   allow_failures:
     - node_js:  "node"
@@ -12,6 +14,7 @@ dist:           trusty
 before_install:
 - bash scripts/tarball.sh
 - pip install --user codecov
+- docker pull nofish/zeronet
 install:
 - bash scripts/install.sh
 script:

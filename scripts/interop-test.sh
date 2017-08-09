@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Starting zeronet python in docker container..."
-container=$(docker run -d -p 13344:15441 -p 127.0.0.1:44110:43110 nofish/zeronet)
+container=$(docker run -d -p 13344:15441 -p 127.0.0.1:44110:43110 nofish/zeronet) || (ex=$? && echo "Docker run failed with code $ex" && exit $ex)
 
 docker logs -f $container &
 
