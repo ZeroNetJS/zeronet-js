@@ -26,7 +26,7 @@ mkdirp.sync(path.join(dir, "logs"))
 let cm
 
 const defaults = {
-  id_expire: 60 * 60 * 24 * 7 * 4, //approx 1 month
+  id_expire: 60 * 60 * 24 * 7, //approx 1 week
   swarm: {
     server: {
       host: "0.0.0.0",
