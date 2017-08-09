@@ -20,9 +20,9 @@ install:
 script:
 - npm test
 - bash scripts/interop-test.sh
+- '[ -z "$PKG" ] || bash scripts/pkg.sh'
 after_success:
 - '[ -z "$COV" ] || npm run report-coverage'
-#- '[ -z "$PKG" ] || bash scripts/pkg.sh'
 deploy:
   provider:     releases
   api_key:
