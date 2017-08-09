@@ -13,7 +13,7 @@ if (!process.env.DEBUG) process.env.DEBUG = "*"
 
 const cp = require("child_process")
 
-const bunyan = cp.spawn(process.argv[0], [__dirname + "/zeronet-common/node_modules/.bin/bunyan"], {
+const bunyan = cp.spawn(process.argv[0], [__dirname + "/../node_modules/.bin/bunyan"], {
   stdio: ["pipe", process.stderr, process.stderr]
 })
 
