@@ -8,7 +8,7 @@ const toPull = require("stream-to-pull-stream")
 const toStream = require("pull-stream-to-stream")
 const Connection = require("interface-connection").Connection
 
-const OpenSSLGenerator = require("zeronet-crypto/helper").OpenSSLGenerator
+const gen = require("zeronet-crypto/gen")
 
 const debug = require("debug")
 const log = debug("zeronet:crypto:tls")
@@ -39,17 +39,7 @@ function pipeThroughNet(dup, cb) {
 }
 
 function basicCrypto(type, protocol, handler) {
-  const gen = new OpenSSLGenerator()
-
-  let cert
-  let wait = []
-
-  gen[type]((err, res) => {
-    if (err) throw new Error(err)
-    cert = res
-    wait.forEach(w => w())
-    wait = null
-  })
+  let cert = gen[type]()
 
   protocol.crypto.add("tls-" + type, (conn, opt, cb) => {
     log("tls init", type, opt)
@@ -59,21 +49,17 @@ function basicCrypto(type, protocol, handler) {
 
       let stream
 
-      const cont = () => {
-        handler(opt, socket, cert, (err, _s) => {
-          if (err) return cb(err)
-          socket.flow()
-          stream = _s
-          stream.on("error", e => cb(e))
-          log("tls ready", type, opt)
-        }, e => {
-          if (e) cb(e)
-          cb(null, new Connection(toPull.duplex(stream)))
-        })
-      }
+      handler(opt, socket, cert, (err, _s) => {
+        if (err) return cb(err)
+        socket.flow()
+        stream = _s
+        stream.on("error", e => cb(e))
+        log("tls ready", type, opt)
+      }, e => {
+        if (e) cb(e)
+        cb(null, new Connection(toPull.duplex(stream)))
+      })
 
-      if (opt.isServer && !cert) wait.push(cont)
-      else cont()
     })
   })
 }

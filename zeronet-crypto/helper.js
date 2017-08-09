@@ -86,6 +86,9 @@ function KeyStream(stream) {
   * @constructor
   */
 function OpenSSLGenerator() {
+
+  console.warn("Deperacted! Use zeronet-crypto/gen.{rsa,ecc} instead!")
+
   /**
    * @namespace OpenSSLGenerator
    */
