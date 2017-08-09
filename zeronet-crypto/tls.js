@@ -18,11 +18,22 @@ function pipeThroughNet(dup, cb) {
     s.close()
     socket.on("data", console.log)
     socket.pause()
-    cb(null, socket)
+    s.emit("sock", socket)
   }).on("error", e => cb(e))
+
   s.listen(() => {
-    const c = net.createConnection(s.address(), () => {
-      dup.pipe(c).pipe(dup)
+    const c = net.createConnection(s.address(), () => {})
+    let flow = false
+    let q = []
+    dup.on("data", d => flow ? false : q.push(d))
+    s.once("sock", socket => {
+      socket.flow = () => {
+        flow = true
+        q.forEach(d => c.write(d))
+        q = null
+        dup.pipe(c).pipe(dup)
+      }
+      cb(null, socket)
     })
   })
 }
@@ -41,7 +52,7 @@ module.exports = function TLSSupport(protocol) {
   })
 
   const rsa_crypto = (conn, options, cb) => {
-    log(options, "tls handshake init", rsa_cert)
+    log("tls init", options)
     let stream = toStream(conn)
     pipeThroughNet(stream, (err, socket) => {
       if (err) return cb(err)
@@ -75,6 +86,7 @@ module.exports = function TLSSupport(protocol) {
             secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
           }, next)
         }
+        socket.flow()
         log("tls ready", options)
         stream.on("error", e => next(e))
       }
