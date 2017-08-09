@@ -56,9 +56,9 @@ const certSet = [{
   name: 'subjectKeyIdentifier'
 }]
 
-module.exports.rsa = () => { //x509 2k rsa cert
+module.exports.rsa = (key) => { //x509 2k rsa cert
   // generate a keypair and create an X.509v3 certificate
-  var keys = pki.rsa.generateKeyPair(2048)
+  var keys = key ? pki.privateKeyFromPem(key) : pki.rsa.generateKeyPair(2048)
   var cert = pki.createCertificate()
   cert.publicKey = keys.publicKey;
   // NOTE: serialNumber is the hex encoded value of an ASN.1 INTEGER.
@@ -75,14 +75,9 @@ module.exports.rsa = () => { //x509 2k rsa cert
   // self-sign certificate
   cert.sign(keys.privateKey)
 
-  // convert a Forge certificate to PEM
-  var pem = pki.certificateToPem(cert)
-
-  console.log(pem)
-
   return {
-    cert: new Buffer(pem),
-    privkey: pki.privateKeyToPem(keys.privateKey)
+    cert: new Buffer(pki.certificateToPem(cert)),
+    privkey: new Buffer(pki.privateKeyToPem(keys.privateKey))
   }
 }
-module.exports.ecc=module.exports.rsa //who cares about standarts anyway, right?
+module.exports.ecc = module.exports.rsa //who cares about standarts anyway, right?
