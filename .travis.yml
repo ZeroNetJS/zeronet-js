@@ -14,9 +14,12 @@ before_install:
 - pip install --user codecov
 install:
 - bash scripts/install.sh
+script:
+- npm test
+- bash scripts/interop-test.sh
 after_success:
 - '[ -z "$COV" ] || npm run report-coverage'
-- '[ -z "$PKG" ] || bash scripts/pkg.sh'
+#- '[ -z "$PKG" ] || bash scripts/pkg.sh'
 deploy:
   provider:     releases
   api_key:
