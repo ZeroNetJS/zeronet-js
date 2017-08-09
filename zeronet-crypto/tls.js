@@ -87,28 +87,26 @@ module.exports.tls_rsa = (protocol) => {
   basicCrypto("rsa", protocol, (opt, socket, rsa_cert, ready, cb) => {
     let stream
     if (opt.isServer) {
-      stream = tls.connect({
-        socket,
+      stream = new tls.TLSSocket(socket, {
         isServer: true,
         key: rsa_cert.privkey,
         cert: rsa_cert.cert,
-        agent: true,
         requestCert: false,
         rejectUnauthorized: false,
         ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:" +
           "!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK",
         honorCipherOrder: true,
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-      }, cb)
+      })
     } else {
-      stream = tls.connect({
-        socket,
+      stream = new tls.TLSSocket(socket, {
         isServer: false,
         requestCert: true,
         rejectUnauthorized: false,
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-      }, cb)
+      })
     }
+    stream.on("secureConnect", () => cb())
     ready(null, stream)
   })
 }
@@ -117,28 +115,26 @@ module.exports.tls_ecc = (protocol) => {
   basicCrypto("ecc", protocol, (opt, socket, ecc_cert, ready, cb) => {
     let stream
     if (opt.isServer) {
-      stream = tls.connect({
-        socket,
+      stream = new tls.TLSSocket(socket, {
         isServer: true,
         key: ecc_cert.privkey,
         cert: ecc_cert.cert,
-        agent: true,
         requestCert: false,
         rejectUnauthorized: false,
         ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:" +
           "!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK",
         honorCipherOrder: true,
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-      }, cb)
+      })
     } else {
-      stream = tls.connect({
-        socket,
+      stream = new tls.TLSSocket(socket, {
         isServer: false,
         requestCert: true,
         rejectUnauthorized: false,
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-      }, cb)
+      })
     }
+    stream.on("secureConnect", () => cb())
     ready(null, stream)
   })
 }
