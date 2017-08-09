@@ -8,6 +8,10 @@ const getId = require("zeronet-common/lib/peer").piFromAddr
 
 module.exports = function dial(swarm, ZProtocol) {
 
+  const protocolLayer = ZProtocol.upgradeConn({
+    isServer: false
+  })
+
   return (pi, protocol, callback) => {
     if (typeof protocol === 'function') {
       callback = protocol
@@ -68,12 +72,6 @@ module.exports = function dial(swarm, ZProtocol) {
           return cb(null, conn)
         })
       }
-    }
-
-    function protocolLayer(conn, cb) {
-      ZProtocol.upgradeConn({
-        isServer: false
-      })(conn, cb)
     }
   }
 }

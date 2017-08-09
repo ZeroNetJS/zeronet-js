@@ -109,20 +109,28 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
   self.upgrade = cb => {
     (opt.isServer ? self.waitForHandshake : self.handshake)((err, handshake, opt) => {
       if (err) return cb(err)
-      const next = conn => cb(null, new Client(conn, protocol, zeronet, {
-        isServer: opt.isServer,
-        handshake: self.handshakeData,
-        crypto: protocol.crypto && handshake.commonCrypto() ? handshake.commonCrypto() : false
-      }))
-      if (protocol.crypto && handshake.commonCrypto()) {
-        protocol.crypto.wrap(handshake.commonCrypto(), self, opt, (err, conn) => {
-          if (err) return cb(err)
-          else next(conn)
+      conn.getObservedAddrs((aderr, addr) => {
+        conn.getPeerInfo((pierr, pi) => {
+          const next = conn => {
+            conn.getObservedAddrs = cb => cb(aderr, addr)
+            conn.getPeerInfo = cb => cb(pierr, pi)
+            cb(null, new Client(conn, protocol, zeronet, {
+              isServer: opt.isServer,
+              handshake: self.handshakeData,
+              crypto: protocol.crypto && handshake.commonCrypto() ? handshake.commonCrypto() : false
+            }))
+          }
+          if (protocol.crypto && handshake.commonCrypto()) {
+            protocol.crypto.wrap(handshake.commonCrypto(), self, opt, (err, conn) => {
+              if (err) return cb(err)
+              else next(conn)
+            })
+          } else {
+            warnNoCrypto()
+            self.getRaw((err, conn) => err ? cb(err) : next(conn))
+          }
         })
-      } else {
-        warnNoCrypto()
-        self.getRaw((err, conn) => err ? cb(err) : next(conn))
-      }
+      })
     })
   }
 
