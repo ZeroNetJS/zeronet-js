@@ -20,6 +20,7 @@ function Client(conn, protocol, zeronet, opt) {
   const handlers = self.handlers = protocol.getHandlers(self)
   self.handshakeData = opt.handshake
   self.conn = conn
+  conn.client = self
 
   let addrs
   conn.getObservedAddrs((e, a) => self.addrs = addrs = (opt.isServer ? "=> " : "<= ") + a.map(a => a.toString()).join(", "))

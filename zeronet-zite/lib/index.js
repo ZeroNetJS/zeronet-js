@@ -65,7 +65,7 @@ module.exports = function Zite(config, node) { //describes a single zite
   }*/
 
   function liftOff(cb) { //...and the zite is downloading
-    if (tree.get("content.json").dummy) {
+    if (/*tree.get("content.json").dummy*/ true) {
       fs.getFile("content.json", (err, stream) => { //load the content json first time
         if (err) return cb(err)
         pull(
@@ -84,7 +84,6 @@ module.exports = function Zite(config, node) { //describes a single zite
       const i = tree.get(path)
       if (i.files) return next()
       if (i.file.optional) return next()
-      return next()
       queue.add(i.file.info, (err, stream) => {
         if (err) return next()
         pull(
