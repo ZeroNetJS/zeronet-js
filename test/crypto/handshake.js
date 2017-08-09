@@ -3,7 +3,7 @@
 const crypto_data = {
   "secio": require("zeronet-crypto/secio"),
   "tls-rsa": require("zeronet-crypto/tls").tls_rsa,
-  "tls-ecc": require("zeronet-crypto/tls").tls_ecc
+  //"tls-ecc": require("zeronet-crypto/tls").tls_ecc
 }
 
 const cryptos = Object.keys(crypto_data).map(c => {
