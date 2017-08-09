@@ -23,7 +23,10 @@ let dir = require("./lib/storage-dir")()
 mkdirp.sync(dir)
 mkdirp.sync(path.join(dir, "logs"))
 
+let cm
+
 const defaults = {
+  id_expire: 60 * 60 * 24 * 7 * 4, //approx 1 month
   swarm: {
     server: {
       host: "0.0.0.0",
@@ -59,13 +62,15 @@ const defaults = {
     ],
     nat: true
   },
-  common: new Common({
+  common: cm = new Common({
     debug_file: path.resolve(dir, path.join("logs", "debug.log")),
     debug_shift_file: path.resolve(dir, path.join("logs", "debug-last.log")),
     debug: !!process.env.DEBUG
   }),
   storage: new FS(path.join(dir, "data"))
 }
+
+cm.logger("node")("Starting...")
 
 const errCB = err => {
   if (!err && process.env.TESTOK) process.emit("SIGINT")
@@ -76,11 +81,15 @@ const errCB = err => {
 }
 
 const confpath = path.resolve(dir, process.env.CONFIG_FILE || "config.json")
+const idpath = path.resolve(dir, process.env.ID_FILE || "id.json")
+
+const readJSON = path => JSON.parse(fs.readFileSync(path).toString())
+const writeJSON = (path, data) => fs.writeFileSync(path, new Buffer(JSON.stringify(data)))
 
 let config
 
 if (fs.existsSync(confpath)) {
-  const config_data = JSON.parse(fs.readFileSync(confpath).toString())
+  const config_data = readJSON(confpath)
   config = MergeRecursive(defaults, config_data)
 } else config = defaults
 
@@ -116,12 +125,35 @@ function exit(code) {
 
 if (!process.env.IGNORE_SIG)["SIGTERM", "SIGINT", "SIGUSR2"].forEach(sig => process.on(sig, exit))
 
-require("peer-id").create({ //HACK: fix this so we don't have to use an insecure key
-  bits: 100
-}, (err, id) => {
+const Id = require("peer-id")
+
+const liftoff = (err, id) => {
+  if (err) return errCB(err)
   config.id = id
   node = new ZeroNet(config)
   dwait.map(d => d())
   dwait = null
   node.start(errCB)
-})
+}
+
+const createAndSaveID = () => {
+  cm.logger("id")("Creating/Changing ID... This may take a few seconds...")
+  Id.create((err, id) => {
+    if (err) return errCB(err)
+    cm.logger("id")("Created ID %s!", id.toB58String())
+    id.created_at = new Date().getTime()
+    try {
+      writeJSON(idpath, id)
+      liftoff(null, id)
+    } catch (e) {
+      liftoff(e)
+    }
+  })
+}
+
+if (fs.existsSync(idpath)) {
+  const id = readJSON(idpath)
+  if (id.created_at + config.id_expire < new Date().getTime()) {
+    createAndSaveID()
+  } else Id.createFromJSON(id, liftoff)
+} else createAndSaveID()
