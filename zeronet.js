@@ -136,14 +136,19 @@ const liftoff = (err, id) => {
   node.start(errCB)
 }
 
-const createAndSaveID = () => {
-  cm.logger("id")("Creating/Changing ID... This may take a few seconds...")
-  Id.create((err, id) => {
+const createAndSaveID = r => {
+  cm.logger("id")("%s ID... This may take a few seconds...", r ? "Changing" : "Creating")
+  if (r) cm.logger("id")("(The ID is changed every %s seconds to improve anonymity)", config.id_expire)
+  Id.create({
+    bits: 2048
+  }, (err, id) => {
     if (err) return errCB(err)
     cm.logger("id")("Created ID %s!", id.toB58String())
-    id.created_at = new Date().getTime()
     try {
-      writeJSON(idpath, id)
+      writeJSON(idpath, {
+        id,
+        created_at: new Date().getTime()
+      })
       liftoff(null, id)
     } catch (e) {
       liftoff(e)
@@ -154,9 +159,10 @@ const createAndSaveID = () => {
 try {
   if (fs.existsSync(idpath)) {
     const id = readJSON(idpath)
-    if (id.created_at + config.id_expire < new Date().getTime()) {
-      createAndSaveID()
-    } else Id.createFromJSON(id, liftoff)
+    if ((id.created_at || 0) + config.id_expire < new Date().getTime())
+      createAndSaveID(true)
+    else
+      Id.createFromJSON(id.id, liftoff)
   } else createAndSaveID()
 } catch (e) {
   liftoff(e)
