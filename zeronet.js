@@ -75,8 +75,8 @@ cm.logger("node")("Starting...")
 const errCB = err => {
   if (!err && process.env.TESTOK) process.emit("SIGINT")
   if (!err) return node.logger("node")("Started successfully")
-  console.error("The node failed to start")
-  console.error(err)
+  cm.logger("node").fatal("The node failed to start")
+  cm.logger("node").fatal(err)
   process.exit(2)
 }
 
@@ -97,7 +97,7 @@ let exiting
 
 function exit(code) {
   if (!node) {
-    console.error("Stopping before started!")
+    cm.logger("node").error("Stopping before started!")
     exiting = true;
     ["error", "warn"].forEach(k => console.error[k] = console.error)
     node = {
@@ -114,8 +114,8 @@ function exit(code) {
   node.logger("node")("Press ^C to force stop")
   node.stop(err => {
     if (err) {
-      node.logger("node").error(err)
-      console.error("FAILED TO QUIT GRACEFULLY")
+      cm.logger("node").error(err)
+      cm.logger("node").error("FAILED TO QUIT GRACEFULLY")
       throw err
     }
     node.logger("node")("Stopped")
@@ -151,9 +151,13 @@ const createAndSaveID = () => {
   })
 }
 
-if (fs.existsSync(idpath)) {
-  const id = readJSON(idpath)
-  if (id.created_at + config.id_expire < new Date().getTime()) {
-    createAndSaveID()
-  } else Id.createFromJSON(id, liftoff)
-} else createAndSaveID()
+try {
+  if (fs.existsSync(idpath)) {
+    const id = readJSON(idpath)
+    if (id.created_at + config.id_expire < new Date().getTime()) {
+      createAndSaveID()
+    } else Id.createFromJSON(id, liftoff)
+  } else createAndSaveID()
+} catch (e) {
+  liftoff(e)
+}
