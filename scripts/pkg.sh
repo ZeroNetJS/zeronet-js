@@ -26,7 +26,7 @@ if node -v | grep "^v8" > /dev/null; then
   targets="node$v-linux-x64,node$v-macos-x64,node$v-win-x64"
   for t in $(echo "$targets" | sed "s|,| |g"); do
     tt=$(echo "$t" | sed "s|-| |g")
-    PKG_REPO=zeit/pkg-fetch ../node_modules/.bin/pkg-fetch $tt || ../node_modules/.bin/pkg-fetch $tt
+    PKG_REPO=zeit/pkg-fetch ../node_modules/.bin/pkg-fetch $tt -f || ../node_modules/.bin/pkg-fetch $tt -f
   done
   ../node_modules/.bin/pkg -t $targets .
   RUNINCWD=1 TESTOK=1 ./zeronet-linux && rm -rf .zeronet
