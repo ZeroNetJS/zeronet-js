@@ -6,7 +6,6 @@ const todo = [
 ]
 require("colors")
 const fix = {
-  "zeronet-client": true,
   "zeronet-crypto": true,
   "zeronet-fileserver": true,
   "zeronet-swarm": true
