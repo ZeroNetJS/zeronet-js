@@ -14,6 +14,7 @@
     "mockery": "^2.1.0",
     "moment": "^2.18.1",
     "peer-id": "^0.9.0",
+    "pkg-fetch-mkg": "^2.3.81",
     "zeronet-client": "file:zeronet-client",
     "zeronet-common": "file:zeronet-common",
     "zeronet-crypto": "file:zeronet-crypto",
