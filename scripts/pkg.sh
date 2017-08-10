@@ -22,7 +22,7 @@ if node -v | grep "^v8" > /dev/null; then
   cd .pkg
   for f in package*; do sed -r 's|"([a-z-]+)": "file:(.*)"|"\1": "file:../\2.tar.gz"|g' -i $f; done
   npm i --production
-  v=$(node -v | sed "s|v||g")
+  v="8.2.1" #Change with every new node version if that version gets available in pkg
   targets="node$v-linux-x64,node$v-macos-x64,node$v-win-x64"
   for t in $(echo "$targets" | sed "s|,| |g"); do
     tt=$(echo "$t" | sed "s|-| |g")
