@@ -59,9 +59,9 @@ const defaults = {
       "http://explodie.org:6969/announce",
       "http://tracker1.wasabii.com.tw:6969/announce"
       //"http://localhost:25534/announce"
-    ],
-    nat: true
+    ]
   },
+  nat: true,
   common: cm = new Common({
     debug_file: path.resolve(dir, path.join("logs", "debug.log")),
     debug_shift_file: path.resolve(dir, path.join("logs", "debug-last.log")),

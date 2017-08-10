@@ -12,6 +12,7 @@ const uuid = require("uuid")
 const PeerPool = require("zeronet-common/lib/peer/pool")
 const TrackerManager = require("zeronet-common/lib/tracker/manager")
 const ZiteManager = require("zeronet-zite/lib/manager")
+const NAT = require("zeronet-swarm/nat")
 
 const StorageWrapper = require("zeronet-common/lib/storage/wrapper") //wraps a storage into a more usable api
 const assert = require("assert")
@@ -102,6 +103,7 @@ function ZeroNetNode(options) {
 
   const swarm = self.swarm = new Swarm(options.swarm, self)
   const uiserver = self.uiserver = options.uiserver ? new UiServer(options.uiserver, self) : false
+  const nat = self.nat = options.nat ? new NAT(swarm, options.swarm) : false
 
   const logger = self.logger("node")
 
@@ -135,7 +137,7 @@ function ZeroNetNode(options) {
     ziteManager.start,
     cb => sintv = setInterval(self.save, 10 * 1000, cb()), //TODO: "make this great again"
     uiserver ? uiserver.start : cb => cb(),
-    options.nat ? swarm.nat.doDefault : cb => cb()
+    options.nat ? nat.doDefault : cb => cb()
   ], cb)
 
   /**

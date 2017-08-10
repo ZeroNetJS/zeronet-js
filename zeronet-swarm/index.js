@@ -15,7 +15,6 @@ const Protocol = require("zeronet-protocol")
 const zdial = require("zeronet-swarm/dial")
 const each = require('async/each')
 const series = require('async/series')
-const NAT = require("zeronet-swarm/nat")
 
 const mafmt = require('mafmt')
 
@@ -48,7 +47,6 @@ class ZeroNetSwarm extends libp2p {
     super(modules, peerInfo, /*peerBook*/ null)
 
     const self = this
-    self.nat = options.nat ? new NAT(self, options) : false
     self.zeronet = zeronet
     self.peerInfo = peerInfo
 
