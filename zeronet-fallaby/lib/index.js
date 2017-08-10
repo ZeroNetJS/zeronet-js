@@ -20,15 +20,15 @@ function FallbackType(data) {
 }
 
 module.exports = function Fallback(type) {
-  const self = this
-  self.type = type
-  self.fallbacks = []
-  self.process = data_ => {
+  const self = data_ => {
     let data = clone(data_)
     const v = self.parser(data)
     self.fallbacks.filter(f => f.shouldApply(v)).forEach(f => data = f.apply(data, v))
     return data
   }
+  self.process = self
+  self.type = type
+  self.fallbacks = []
   self.setParser = p => self.parser = p
   self.use = (v, t, f) => {
     if (typeof v == "function") {
@@ -47,9 +47,13 @@ module.exports = function Fallback(type) {
     })
     self.fallbacks.push(type)
   }
+
+  return self
 }
 
 module.exports.types = types.map(t => t.replace(/-([a-z])/gmi, (_, n) => n.toUpperCase()))
-let i = 0
+/*let i = 0
 const tmerge = types.map(t => [module.exports.types[i++], t])
-tmerge.forEach(t => module.exports[t[0]] = require("zeronet-fallaby/lib/types/" + t[1])())
+tmerge.forEach(t => module.exports[t[0]] = require("zeronet-fallaby/lib/types/" + t[1]))
+tmerge.forEach(t => module.exports[t[0]].reverse = require("zeronet-fallaby/lib/reverse/" + t[1]))*/
+module.exports.contentJson = require("zeronet-fallaby/lib/types/content-json.js") //pkg fix
