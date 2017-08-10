@@ -1,6 +1,6 @@
 {
   "name": "zeronet-crypto",
-  "version": "0.0.1-alpha15",
+  "version": "0.0.1-alpha16",
   "description": "ZeroNet crypto modules",
   "main": "index.js",
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "zeronet-fallaby",
-  "version": "0.0.1-alpha16pre",
+  "version": "0.0.1-alpha16",
   "description": "ZeroNet Fallback magic",
   "main": "lib/index.js",
   "scripts": {
