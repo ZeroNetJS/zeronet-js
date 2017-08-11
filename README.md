@@ -4,7 +4,8 @@
 [![codecov](https://codecov.io/gh/ZeroNetJS/zeronet-js/branch/master/graph/badge.svg)](https://codecov.io/gh/ZeroNetJS/zeronet-js)
 [![Snap Status](https://build.snapcraft.io/badge/ZeroNetJS/zeronet-js.svg)](https://build.snapcraft.io/user/ZeroNetJS/zeronet-js)
 
-<center><img src="https://avatars2.githubusercontent.com/u/30019016?v=4&s=200"/></center>
+![Logo](https://avatars2.githubusercontent.com/u/30019016?v=4&s=200)
+
 
 A JS version of ZeroNet, using libp2p.
 
@@ -13,6 +14,10 @@ A JS version of ZeroNet, using libp2p.
 This project was mainly created to see how the zeronet protocol can be improved and to provide better programmaticall usage of zeronet.
 
 But it will also be compatible with zeronet-py (and will have an uiserver).
+
+# CLI Usage
+
+> TODO...
 
 ---
 
@@ -25,10 +30,6 @@ Just run `npm start` and it should:
 -   Launch a server on 0.0.0.0:15543
 -   Launch a uiserver on 127.0.0.1:15544
 -   Make itself visible in the mdns
-
-# API
-
-## API for zeronet.js
 
 -----
 

@@ -209,10 +209,11 @@ function PartDocs(file, parent) {
   }
 
   self.render = () => {
-    let r = new Renderable()
+    let r = rend()
     if (!classes.length) return r
     r.add("## API for " + self.friendlyName, true)
     classes.forEach(c => r.add(c.render(), true))
+    if (r.toString().replace(/\n/g, "").trim() == "## API for " + self.friendlyName) return rend()
     return r
   }
 }
