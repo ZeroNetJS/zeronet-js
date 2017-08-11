@@ -89,7 +89,7 @@ module.exports = function ZeroNetStorageFS(folder) {
      */
     writeStream: (zite, version, inner_path, cb) => waterfall([
       cb => mkdirp(path.dirname(getPath(zite, inner_path)), cb),
-      cb => cb(toPull.sink(fs.createWriteStream(getPath(zite, inner_path))))
+      (_, cb) => cb(toPull.sink(fs.createWriteStream(getPath(zite, inner_path))))
     ], cb)
   }
 

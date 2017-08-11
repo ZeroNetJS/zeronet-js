@@ -1,53 +1,14 @@
 "use strict"
 
 const pull = require("pull-stream")
-const EE = require("events").EventEmitter
 
 //bridge
 
-function Queue2() {
-  const ee = new EE()
-  let q = []
-  let ed
-
-  function unleak() {
-    ee.removeAllListeners("err")
-    ee.removeAllListeners("data")
-  }
-
-  return {
-    append: data => {
-      if (ed) return ed
-      q.push(data)
-      ee.emit("data")
-    },
-    prepend: data => { //better only call this before the get queue starts
-      if (ed) return ed
-      q.unshift(data)
-    },
-    error: e => {
-      ed = e
-      ee.emit("err", e)
-    },
-    get: cb => {
-      unleak()
-      if (ed) return cb(ed)
-      if (q.length) return cb(null, q.shift())
-      ee.once("err", e => {
-        unleak()
-        cb(e)
-      })
-      ee.once("data", () => {
-        unleak()
-        return cb(null, q.shift())
-      })
-    }
-  }
-}
+const Queue2 = require("data-queue")
 
 //duplex bridge stream
 
-module.exports = function DuplexBridge(dup, addr) {
+module.exports = function DuplexBridge(dup) {
   const src_q = Queue2()
   const sink_q = Queue2()
   const q = {

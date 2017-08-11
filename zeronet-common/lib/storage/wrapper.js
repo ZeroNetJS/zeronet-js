@@ -1,5 +1,9 @@
+"use strict"
+
 const pull = require("pull-stream")
 const queue = require("pull-queue")
+
+const Queue2 = require("data-queue")
 
 module.exports = function StorageWrapper(storage) {
   const self = this
@@ -35,17 +39,54 @@ module.exports = function StorageWrapper(storage) {
     )
   }
   self.writeStream = (zite, v, path) => {
-    let d = []
-    return queue(function (end, data, cb) {
-      if (end) {
-        if (typeof end == "boolean")
-          storage.file.write(zite, v, path, Buffer.concat(d), err => cb(err || end))
-        else
-          cb(end)
-      } else {
-        d.push(data)
-        return cb(null, data)
-      }
-    })
+    if (storage.file.writeStream) {
+      const q = Queue2()
+      let f = true
+      const dq = Queue2()
+      storage.file.writeStream(zite, v, path, (err, stream) => {
+        if (err) return q.error(err)
+        else return q.append(stream)
+      })
+      return queue(function (end, data, cb) {
+        const cont = () => {
+          if (end) {
+            dq.error(end)
+            cb(end)
+            return
+          }
+          dq.append(data)
+          return cb()
+        }
+
+        if (f) {
+          q.get((err, str) => {
+            if (err) return cb(err)
+            pull(
+              (end, cb) => {
+                if (end) return cb(end)
+                dq.get(cb)
+              },
+              str
+            )
+            cont()
+          })
+        } else {
+          cont()
+        }
+      })
+    } else {
+      let d = []
+      return queue(function (end, data, cb) {
+        if (end) {
+          if (typeof end == "boolean")
+            storage.file.write(zite, v, path, Buffer.concat(d), err => cb(err || end))
+          else
+            cb(end)
+        } else {
+          d.push(data)
+          return cb(null, data)
+        }
+      })
+    }
   }
 }
