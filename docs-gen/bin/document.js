@@ -1,3 +1,5 @@
+"use strict"
+
 //Document all the things
 const fs = require("fs")
 const gen = require("../lib")
@@ -20,9 +22,18 @@ else
 
 add.map(s => todo.push([s, s + (fix[s] ? "/*.js" : "/lib/**/*.js"), s + "/README.md"]))
 
+let failed = []
+
+function done() {
+  if (!failed.length) process.exit(console.log("DONE".green.bold))
+  const p = "\n  => "
+  console.log("DOCS GEN FOR THE FOLLOWING MODULES FAILED: %s".red.bold, p + failed.join(p))
+  process.exit(2)
+}
+
 function next() {
   const i = todo.shift()
-  if (!i) process.exit(console.log("DONE".green.bold))
+  if (!i) return done()
   try {
     console.log(" => %s".blue.bold, i[0])
     gen(i[0], i[1], {
@@ -31,6 +42,7 @@ function next() {
       if (err) {
         console.error("FAILED TO GENERATE DOCS FOR %s".red.bold, i[0])
         console.error(err)
+        failed.push(i[0])
       } else {
         console.log("   => OK %s".green.bold, i[0])
         let cut
@@ -44,7 +56,7 @@ function next() {
       next()
     })
   } catch (err) {
-    console.error("FAILED TO GENERATE DOCS FOR %s", i[0])
+    console.error("FAILED TO SAVE DOCS FOR %s", i[0])
     console.error(err)
     next()
   }

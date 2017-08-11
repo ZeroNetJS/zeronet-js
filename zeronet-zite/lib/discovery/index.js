@@ -6,6 +6,10 @@ const EE = require('events').EventEmitter
 const util = require("util")
 
 function Discovery(zite, node, types) {
+  /**
+    @namespace Discovery
+    @constructor
+    */
   const self = this
 
   self.methods = types.map(t => new t(zite, node, self)).filter(t => t.isAvailable)

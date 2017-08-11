@@ -29,6 +29,11 @@ function objectInspect(data, type) {
 }
 
 function clientDuplex(addrs, handleIn, handleResponse, disconnect) {
+  /**
+    @namespace clientDuplex
+    @constructor
+    @private
+    */
   let q = []
   const ee = new EE()
   let ended = true

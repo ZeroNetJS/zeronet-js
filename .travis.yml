@@ -20,6 +20,7 @@ install:
 script:
 - npm test
 - bash scripts/interop-test.sh
+- npm run docs
 - '[ -z "$PKG" ] || bash scripts/pkg.sh'
 after_success:
 - '[ -z "$COV" ] || npm run report-coverage'

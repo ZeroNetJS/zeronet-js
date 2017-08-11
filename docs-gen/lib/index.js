@@ -259,7 +259,7 @@ function RenderDocs(mod, files, conf, cb) {
         parts.push(part)
         file.forEach(doc => {
           if (doc.kind == "class" && doc.scope == "global") part.addClass(doc.name, doc)
-          else if (doc.kind == "function" && doc.memberof && !doc.memberof.startsWith("module") && !doc.longname.startsWith("module")) part.addMember(doc.longname, doc)
+          else if (doc.kind == "function" && doc.memberof && !doc.memberof.startsWith("module") && !doc.memberof.startsWith("<anonymous>") && !doc.longname.startsWith("module") && !doc.longname.startsWith("<anonymous>")) part.addMember(doc.longname, doc)
           else log("Unknown", doc.kind, doc.scope, doc.longname)
         })
       })

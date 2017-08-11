@@ -96,6 +96,11 @@ if (fs.existsSync(confpath)) {
 let exiting
 
 function exit(code) {
+  /**
+    @namespace exit
+    @constructor
+    @private
+    */
   if (!node) {
     cm.logger("node").error("Stopping before started!")
     exiting = true;
