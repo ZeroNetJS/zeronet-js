@@ -5,6 +5,9 @@ const path = require("path")
 const mkdirp = require("mkdirp")
 const jsonfile = require("jsonfile")
 const series = require("async/series")
+const waterfall = require("async/waterfall")
+
+const toPull = require("stream-to-pull-stream")
 
 /**
  * Bare filesystem storage for ZeroNetJS
@@ -62,14 +65,32 @@ module.exports = function ZeroNetStorageFS(folder) {
      * @param {data} data - The data to be written
      * @param {callback} - `err`: the filesystem error
      */
-    remove: (zite, version, inner_path, cb) => fs.unlink(getPath(zite, inner_path), cb)
+    remove: (zite, version, inner_path, cb) => fs.unlink(getPath(zite, inner_path), cb),
     /**
      * NOTE: the function will return an error if the file does not exist
      * @param {string} zite - Address of the zite
      * @param {integer} version - Version/Timestamp of the file
      * @param {string} inner_path - Path of the file relative to the zite
-     * @param {callback} - `err`: the filesystem error
+     * @param {callback} - `err`: the filesystem error, 'stream': the read stream
      */
+    readStream: (zite, version, inner_path, cb) => {
+      try {
+        cb(null, toPull.source(fs.createReadStream(getPath(zite, inner_path))))
+      } catch (e) {
+        cb(e)
+      }
+    },
+    /**
+     * NOTE: the function will return an error if the file does not exist
+     * @param {string} zite - Address of the zite
+     * @param {integer} version - Version/Timestamp of the file
+     * @param {string} inner_path - Path of the file relative to the zite
+     * @param {callback} - `err`: the filesystem error, 'stream': the write stream
+     */
+    writeStream: (zite, version, inner_path, cb) => waterfall([
+      cb => mkdirp(path.dirname(getPath(zite, inner_path)), cb),
+      cb => cb(toPull.sink(fs.createWriteStream(getPath(zite, inner_path))))
+    ], cb)
   }
 
   self.json = {
