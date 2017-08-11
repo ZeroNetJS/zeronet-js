@@ -50,6 +50,7 @@ module.exports = function StorageWrapper(storage) {
       return queue(function (end, data, cb) {
         const cont = () => {
           if (end) {
+            if (end instanceof Error) console.log("storage write error", end)
             dq.error(end)
             cb(end)
             return
