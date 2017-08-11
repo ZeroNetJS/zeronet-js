@@ -15,7 +15,7 @@ dist:           trusty
 before_install:
 - bash scripts/tarball.sh
 - pip install --user codecov
-- docker pull nofish/zeronet
+- docker pull mkg20001/zeronet-docker
 install:
 - bash scripts/install.sh
 script:
