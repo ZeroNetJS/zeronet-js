@@ -91,7 +91,7 @@ module.exports = function FileStream(data) {
       hash.update(data)
 
       if (vsize >= info.size && info.size) {
-        const finalHash = hash.digest("hex")
+        const finalHash = hash.digest("hex").substr(0, 64) //WHY THE FUCK ARE THEY ONLY USING THE FIRST PART OF THE HASH?
         vended = true
         if (finalHash != info.hash) {
           vchunks = null
