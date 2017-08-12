@@ -1,57 +1,18 @@
 "use strict"
 
 const Swarm = require("zeronet-swarm")
-const UiServer = require("zeronet-uiserver/lib/index.js")
 
 const debug = require("debug")
 const log = debug("zeronet:node")
 const series = require('async/series')
-const clone = require("clone")
 const uuid = require("uuid")
 
 const PeerPool = require("zeronet-common/lib/peer/pool")
 const TrackerManager = require("zeronet-common/lib/tracker/manager")
 const ZiteManager = require("zeronet-zite/lib/manager")
-const NAT = require("zeronet-swarm/nat")
 
 const StorageWrapper = require("zeronet-common/lib/storage/wrapper") //wraps a storage into a more usable api
 const assert = require("assert")
-
-const defaults = ZeroNetNode.defaults = { //The defaults
-  swarm: {
-    server: {
-      host: "0.0.0.0",
-      port: 15543
-    },
-    server6: {
-      host: "::",
-      port: 15543
-    },
-    protocol: {
-      crypto: []
-    }
-  },
-  uiserver: {
-    listen: {
-      host: "127.0.0.1",
-      port: 15544
-    }
-  },
-  node: {
-    trackers: [
-      //"zero://boot3rdez4rzn36x.onion:15441",
-      //"zero://boot.zeronet.io#f36ca555bee6ba216b14d10f38c16f7769ff064e0e37d887603548cc2e64191d:15441",
-      "udp://tracker.coppersurfer.tk:6969",
-      "udp://tracker.leechers-paradise.org:6969",
-      "udp://9.rarbg.com:2710",
-      "http://tracker.opentrackr.org:1337/announce",
-      "http://explodie.org:6969/announce",
-      "http://tracker1.wasabii.com.tw:6969/announce"
-      //"http://localhost:25534/announce"
-    ],
-  },
-  //storage: new ZNStorage("path", "dbpath")
-}
 
 /**
  * ZeroNet full-node
@@ -62,8 +23,6 @@ const defaults = ZeroNetNode.defaults = { //The defaults
 function ZeroNetNode(options) {
 
   if (!options) options = {}
-
-  options = Object.assign(clone(defaults), options)
 
   if (!Array.isArray(options.trackers))
     options.trackers = [options.trackers]
@@ -100,6 +59,9 @@ function ZeroNetNode(options) {
       return d
     }
   }
+
+  const UiServer = options.modules.uiserver
+  const NAT = options.modules.nat
 
   const swarm = self.swarm = new Swarm(options.swarm, self)
   const uiserver = self.uiserver = options.uiserver ? new UiServer(options.uiserver, self) : false

@@ -1,8 +1,6 @@
 "use strict"
 
 const libp2p = require('libp2p')
-const TCP = require('libp2p-tcp')
-//const WS = require(libp2p-websockets)
 const MulticastDNS = require('libp2p-mdns')
 const DHT = require('libp2p-kad-dht')
 
@@ -32,16 +30,13 @@ class ZeroNetSwarm extends libp2p {
     if (peerInfo.multiaddrs._multiaddrs.length) log("starting server on", peerInfo.multiaddrs._multiaddrs.map(m => m.toString()))
 
     const modules = {
-      transport: [
-        new TCP(),
-        //new WS()
-      ],
+      transport: options.libp2p.transport,
       connection: {},
       discovery: [
-        new MulticastDNS(peerInfo, 'zeronet') //allows us to find network-local nodes easier
-      ],
+        options.libp2p.mdns ? new MulticastDNS(peerInfo, 'zeronet') : null //allows us to find network-local nodes easier
+      ].filter(e => !!e),
       // DHT is passed as its own enabling PeerRouting, ContentRouting and DHT itself components
-      dht: DHT
+      dht: options.libp2p.dht ? DHT : false
     }
 
     super(modules, peerInfo, /*peerBook*/ null)

@@ -25,8 +25,15 @@ mkdirp.sync(path.join(dir, "logs"))
 
 let cm
 
+const TCP = require('libp2p-tcp')
+//const WS = require(libp2p-websockets)
+
 const defaults = {
   id_expire: 1000 * 60 * 60 * 24 * 7, //approx 1 week
+  modules: {
+    uiserver: require("zeronet-uiserver"),
+    nat: require("zeronet-swarm/nat")
+  },
   swarm: {
     server: {
       host: "0.0.0.0",
@@ -40,6 +47,14 @@ const defaults = {
       crypto: [
         require("zeronet-crypto/secio")
       ]
+    },
+    libp2p: {
+      transport: [
+        new TCP(),
+        //new WS()
+      ],
+      mdns: true,
+      dht: false
     }
   },
   uiserver: {
