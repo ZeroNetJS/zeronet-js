@@ -2,8 +2,7 @@
 
 const pull = require("pull-stream")
 const queue = require("pull-queue")
-
-const Queue2 = require("data-queue")
+const defer = require("pull-defer")
 
 module.exports = function StorageWrapper(storage) {
   const self = this
@@ -30,51 +29,31 @@ module.exports = function StorageWrapper(storage) {
 
   self.exists = storage.file.exists
   self.readStream = (zite, v, path) => {
-    return pull(
-      pull.values(Array.isArray(path) ? path : [path]),
-      queue(function (end, file, cb) {
-        if (end) return cb(end)
-        storage.file.read(zite, v, path, cb)
+    if (storage.file.readStream) {
+      const d = defer.source()
+      storage.file.readStream(zite, v, path, (err, stream) => {
+        if (err) throw err
+        d.resolve(stream)
       })
-    )
+      return d
+    } else {
+      return pull(
+        pull.values(Array.isArray(path) ? path : [path]),
+        queue(function (end, file, cb) {
+          if (end) return cb(end)
+          storage.file.read(zite, v, path, cb)
+        })
+      )
+    }
   }
   self.writeStream = (zite, v, path) => {
     if (storage.file.writeStream) {
-      const q = Queue2()
-      let f = true
-      const dq = Queue2()
+      const d = defer.sink()
       storage.file.writeStream(zite, v, path, (err, stream) => {
-        if (err) return q.error(err)
-        else return q.append(stream)
+        if (err) throw err
+        d.resolve(stream)
       })
-      return queue(function (end, data, cb) {
-        const cont = () => {
-          if (end) {
-            if (end instanceof Error) console.log("storage write error", end)
-            dq.error(end)
-            cb(end)
-            return
-          }
-          dq.append(data)
-          return cb()
-        }
-
-        if (f) {
-          q.get((err, str) => {
-            if (err) return cb(err)
-            pull(
-              (end, cb) => {
-                if (end) return cb(end)
-                dq.get(cb)
-              },
-              str
-            )
-            cont()
-          })
-        } else {
-          cont()
-        }
-      })
+      return d
     } else {
       let d = []
       return queue(function (end, data, cb) {

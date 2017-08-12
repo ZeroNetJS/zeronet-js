@@ -94,6 +94,7 @@ module.exports = function FileStream(data) {
         const finalHash = hash.digest("hex").substr(0, 64) //WHY THE FUCK ARE THEY ONLY USING THE FIRST PART OF THE HASH?
         vended = true
         if (finalHash != info.hash) {
+          console.log("vendok")
           vchunks = null
           return cb(new Error("Hash error " + finalHash + " != " + info.hash))
         } else {

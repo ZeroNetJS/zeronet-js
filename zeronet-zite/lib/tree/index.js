@@ -1,5 +1,8 @@
 "use strict"
 
+const pull = require("pull-stream")
+const JSONStream = require("zeronet-zite/lib/file/json")
+
 const RuleBook = require("zeronet-zite/lib/tree/rulebook")
 const FS = require("zeronet-zite/lib/tree/fs")
 const ContentJSON = require("zeronet-zite/lib/tree/content-json")
@@ -12,10 +15,108 @@ function normalize(s) { //fix for "/path/to/file" or "/path//to/file" or "//path
   while ((!s[0] || s[0] == ".") && s.length) s.shift()
 }
 
+const map = require("async/map")
+
+const subtable = {}
+
+/*
+Tree creation process:
+ - Root branch gets created
+   - Loads json
+create(cj)
+   - cj.dummy
+    - true
+     - set sub = [cj]
+    - false
+     - setMainBranch(cj)
+*/
+
+function handleCreation(storage, root, cj, cur, data, cb) {
+  if (data.type == "generic" || data.subtype == "generic") throw new Error("Generic element found!")
+  const cl = subtable[data.subtype]
+  if (!cl) throw new Error("No class for subtype " + data.subtype)
+  let it
+  switch (data.type) {
+  case "leaf":
+    data.path = data.path.split("/").slice(1).join("/")
+    switch (data.subtype) {
+    case "contentjson":
+      storage.getFile(data.path, (err, stream) => { //load the content json first time
+        if (err) return cb(err)
+        pull(
+          stream,
+          JSONStream.parse(),
+          pull.drain(cj => {
+            cj = new ContentJSON(root.zite, data.path, cj)
+            if (!cj.verifySelf()) return cb(new Error("Verification failure"))
+            it = new cl(cj)
+            cb(null, it)
+          })
+        )
+      })
+      break;
+    case "dummy":
+      it = new cl()
+      cb(null, it)
+      break;
+    case "file":
+      it = cj.files.filter(f => f.relpath == data.path)[0]
+      it.version = data.version
+      cb(null, it)
+      break;
+    }
+
+    break;
+
+  case "branch":
+    switch (data.subtype) {
+    case "root":
+    case "branch":
+      if (data.subtype == "root") it = root
+      else it = new cl()
+      handleCreation(storage, root, it, null, data.sub["content.json"], (err, rootcj) => {
+        if (err) return cb(err)
+        it.children = [rootcj]
+        if (rootcj.dummy) {
+          cb(null, it)
+        } else {
+          it.authority = rootcj.authority
+          map(Object.keys(data.sub), (path, next) => {
+            if (path == "content.json") return next()
+            handleCreation(storage, root, rootcj, it, data.sub[path], next)
+          }, (e, r) => {
+            if (e) return cb(e)
+            r.filter(e => !!e).forEach(d => it.add(d))
+            if (data.subtype == "root") it.updateTree()
+            if (data.subtype == "root") console.log(it)
+            cb(null, it)
+          })
+        }
+      })
+      break;
+    case "folder":
+      it = new cl()
+      it.name = _path.basename(data.path)
+      it.authority = cj.authority
+      map(Object.keys(data.sub), (path, next) => {
+        handleCreation(storage, root, cj, it, data.sub[path], next)
+      }, (e, r) => {
+        if (e) return cb(e)
+        r.forEach(d => it.add(d))
+        cb(null, it)
+      })
+      break;
+    }
+
+    break;
+  }
+}
+
 class FileTreeObject {
   consturctor() {
     this.children = []
     this.type = "generic"
+    this.subtype = "generic"
     this.updateTree()
   }
   toJSON() {
@@ -24,13 +125,12 @@ class FileTreeObject {
     return {
       name: "",
       type: this.type,
+      subtype: this.subtype,
+      version: this.version,
       path: this.path,
       dummy: this.dummy,
       sub
     }
-  }
-  fromJSON() {
-    //TODO: add
   }
   exists(path) {
     let s = Array.isArray(path) ? path : path.split("/")
@@ -54,7 +154,7 @@ class FileTreeObject {
   }
   updateTree() {
     this.sub = {}
-    // this.recalculatePath()
+    this.recalculatePath()
     this.children.forEach(c => {
       c.parent = this
       c.recalculatePath()
@@ -70,7 +170,7 @@ class FileTreeObject {
       p = p.parent
     }
     this.path = path.join("/")
-	log("Path", this.path)
+    log("calculated path", this.path)
   }
   getAll() {
     let r = []
@@ -83,11 +183,15 @@ class FileTreeLeafObject extends FileTreeObject {
   constructor() {
     super()
     this.type = "leaf"
+    this.subtype = "leaf"
+    this.version = 0
   }
   toJSON() {
     return {
       name: this.name,
       type: this.type,
+      subtype: this.subtype,
+      version: this.version,
       path: this.path,
       dummy: this.dummy
     }
@@ -115,6 +219,7 @@ class FileTreeFolderObject extends FileTreeObject {
   constructor() {
     super()
     this.type = "branch"
+    this.subtype = "folder"
     this.children = []
     this.updateTree()
   }
@@ -127,6 +232,7 @@ class FileTreeBranchObject extends FileTreeFolderObject {
   constructor() {
     super()
     this.type = "branch"
+    this.subtype = "branch"
   }
   setMainBranch(branch) {
     //sets the main branch aka content.json
@@ -157,6 +263,7 @@ class FileTreeRoot extends FileTreeBranchObject {
   constructor(zite, json) {
     super()
     this.zite = zite
+    this.subtype = "root"
     this.address = zite.address
     this.children = [new DummyObject("content.json")] //TODO: chicken-egg-problem: if the content.json does not exist we can't queue it
     this.json = json
@@ -188,9 +295,10 @@ class FileTreeRoot extends FileTreeBranchObject {
     this.fs = new FS(this.zite, this.storage, this)
   }
   build(cb) {
-    if (this.json) this.fromJSON(this.json)
+    console.log(this.json)
+    if (this.json) handleCreation(this.fs, this, null, this, this.json, cb)
+    else cb()
     delete this.json
-    cb()
   }
   handleContentJSON(path, data) {
     let rule
@@ -212,6 +320,7 @@ class DummyObject extends FileTreeLeafObject {
   constructor(name) {
     super()
     this.name = name
+    this.subtype = "dummy"
     this.dummy = true
   }
 }
@@ -220,6 +329,7 @@ class ContentJSONBranch extends FileTreeLeafObject {
   constructor(cj) {
     super()
     this.authority = cj
+    this.subtype = "contentjson"
     this.name = "content.json"
     this.rules = cj.rules
     this.files = cj.files.map(file => new FileBranch(file, this))
@@ -233,12 +343,24 @@ class FileBranch extends FileTreeLeafObject {
   constructor(file, cjbranch) {
     super()
     this.file = file
+    this.subtype = "file"
     this.name = file.name
-    this.relpath = file.relpath //TODO: use relpath to create empty nodes in the way
+    this.relpath = file.relpath
     this.authority = cjbranch.authority
   }
 }
 
+subtable.generic = FileTreeObject
+
+subtable.branch = FileTreeBranchObject
+subtable.folder = FileTreeFolderObject
+subtable.root = FileTreeRoot
+
+subtable.leaf = FileTreeLeafObject
+subtable.dummy = DummyObject
+subtable.contentjson = ContentJSONBranch
+subtable.file = FileBranch
+
 module.exports = FileTreeRoot
-module.exports.ContentJson = ContentJSONBranch
+module.exports.contentjson = ContentJSONBranch
 module.exports.File = FileBranch
