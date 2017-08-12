@@ -1,0 +1,20 @@
+From b5cbcec420ca8edf3df25d4a84ff5c0cc095e813 Mon Sep 17 00:00:00 2001
+From: mkg20001 <mkg20001@gmail.com>
+Date: Sat, 12 Aug 2017 17:24:28 +0200
+Subject: [PATCH] Remove bang
+
+---
+ bunyan | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/bunyan b/bunyan
+index 3540024..3a24ccf 100755
+--- a/bunyan
++++ b/bunyan
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env node
+ /**
+  * Copyright 2017 Trent Mick
+  * Copyright 2017 Joyent Inc.
+--
+2.7.4

@@ -4,11 +4,8 @@ file="$1"
 
 [ -z "$file" ] && file="node_modules/bunyan/bin/bunyan"
 
-#To do the patches in a convinient way use these commands in node_modules/bin/bunyan
-# git init
-# git add bunyan
-# git commit --no-gpg-sign --author="Nobody <nobody@example.com>" -m "Initial Commit"
-# git apply-patch ../../../scripts/bunyan-patches/*
+#To do the patches in a convinient way use:
+# cd node_modules/bunyan/bin && git init && git add bunyan && git commit --no-gpg-sign --author="Nobody <nobody@example.com>" -m "Initial Commit" && git apply ../../../scripts/bunyan-patches/*.patch && git add bunyan && git commit --no-gpg-sign --author="Nobody <nobody@example.com>" -m "Patches"
 #Then create a commit and a patch-file (adjust filename if neccesary)
 # git commit -m "Stuff" && git patch-file HEAD~
 
