@@ -9,6 +9,11 @@ const waterfall = require("async/waterfall")
 
 const toPull = require("stream-to-pull-stream")
 
+const debug = require("debug")
+const log = debug("zeronet:storage-fs")
+
+let stats
+
 /**
  * Bare filesystem storage for ZeroNetJS
  * @param {string} folder - directory to store files
@@ -87,10 +92,20 @@ module.exports = function ZeroNetStorageFS(folder) {
      * @param {string} inner_path - Path of the file relative to the zite
      * @param {callback} - `err`: the filesystem error, 'stream': the write stream
      */
-    writeStream: (zite, version, inner_path, cb) => waterfall([
-      cb => mkdirp(path.dirname(getPath(zite, inner_path)), cb),
-      (_, cb) => cb(null, toPull.sink(fs.createWriteStream(getPath(zite, inner_path))))
-    ], cb)
+
+    writeStream: (zite, version, inner_path, cb) => {
+      try {
+        stats = fs.statSync(getPath(zite, inner_path))
+        // log("File exists") //skip re-writing
+      }
+      catch (e) {
+        log("Writing file")
+        waterfall([
+          cb => mkdirp(path.dirname(getPath(zite, inner_path)), cb),
+          (_, cb) => cb(null, toPull.sink(fs.createWriteStream(getPath(zite, inner_path))))
+        ], cb)
+      }
+    }
   }
 
   self.json = {
