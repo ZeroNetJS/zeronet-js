@@ -37,4 +37,7 @@ module.exports = function ZeroNet(config) {
     src: !!config.trace,
     streams
   })
+
+  self.title = () => {}
+  if (!process.platform.match(/^win/)) self.title = require("zeronet-common/lib/title")
 }

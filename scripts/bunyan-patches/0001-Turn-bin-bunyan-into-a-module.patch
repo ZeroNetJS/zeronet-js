@@ -1,0 +1,44 @@
+From 9071ff8e811274abc8e3fe8377e377643dc033f6 Mon Sep 17 00:00:00 2001
+From: mkg20001 <mkg20001@gmail.com>
+Date: Sat, 12 Aug 2017 11:01:32 +0200
+Subject: [PATCH 1/2] Turn bin/bunyan into a module
+
+---
+ bunyan | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/bunyan b/bunyan
+index 7c92819..2ceb530 100755
+--- a/bunyan
++++ b/bunyan
+@@ -32,6 +32,7 @@ try {
+     moment = null;
+ }
+ 
++function Bunyan(process) {
+ 
+ //---- globals and constants
+ 
+@@ -1398,7 +1399,8 @@ function processFile(file, opts, stylize, callback) {
+         stream = stream.pipe(require('zlib').createGunzip());
+     }
+     // Manually decode streams - lazy load here as per node/lib/fs.js
+-    var decoder = new (require('string_decoder').StringDecoder)('utf8');
++    var decoder = new (require('string_decoder')
++      .StringDecoder)('utf8');
+ 
+     streams[file].stream = stream;
+ 
+@@ -1706,3 +1708,9 @@ if (require.main === module) {
+ 
+     main(process.argv);
+ }
++
++main([])
++
++}
++
++module.exports = Bunyan
+-- 
+2.7.4
+

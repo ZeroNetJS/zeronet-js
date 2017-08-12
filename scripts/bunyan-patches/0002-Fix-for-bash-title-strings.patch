@@ -1,0 +1,25 @@
+From ba9812ed936a98988f4c61004a61606d5d91ed81 Mon Sep 17 00:00:00 2001
+From: mkg20001 <mkg20001@gmail.com>
+Date: Sat, 12 Aug 2017 11:02:07 +0200
+Subject: [PATCH 2/2] Fix for bash title strings
+
+---
+ bunyan | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/bunyan b/bunyan
+index 2ceb530..3540024 100755
+--- a/bunyan
++++ b/bunyan
+@@ -715,6 +715,8 @@ function handleLogLine(file, line, opts, stylize) {
+ 
+     // Emit non-JSON lines immediately.
+     var rec;
++    if (line && line.startsWith(String.fromCharCode(27) + "]0;"))
++      line = line.replace(/^\033.+{/g, "{")
+     if (!line) {
+         if (!opts.strict) emit(line + '\n');
+         return;
+-- 
+2.7.4
+

@@ -71,10 +71,14 @@ const defaults = {
 }
 
 cm.logger("node")("Starting...")
+cm.title("ZeroNetJS - Starting...")
 
 const errCB = err => {
   if (!err && process.env.TESTOK) process.emit("SIGINT")
-  if (!err) return node.logger("node")("Started successfully")
+  if (!err) {
+    cm.title("ZeroNetJS")
+    return node.logger("node")("Started successfully")
+  }
   cm.logger("node").fatal("The node failed to start")
   cm.logger("node").fatal(err)
   process.exit(2)
