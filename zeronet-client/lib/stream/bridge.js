@@ -148,3 +148,26 @@ module.exports = function DuplexBridge(dup) {
 
   return pre_stream
 }
+
+module.exports.through = function ThroughBridge() {
+  const out = Queue2()
+  const self = function (read) {
+    return function (end, cb) {
+      if (end) out.error(end)
+      return read(end, function (end, data) {
+        if (!end) out.append(data)
+        else out.error(end)
+        cb(end, data)
+      })
+    }
+  }
+  self.source = function (end, cb) {
+    if (end) {
+      out.error(end)
+      return cb(end)
+    }
+    out.get(cb)
+  }
+
+  return self
+}

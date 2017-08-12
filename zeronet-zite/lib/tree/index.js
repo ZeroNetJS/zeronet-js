@@ -88,7 +88,6 @@ function handleCreation(storage, root, cj, cur, data, cb) {
             if (e) return cb(e)
             r.filter(e => !!e).forEach(d => it.add(d))
             if (data.subtype == "root") it.updateTree()
-            if (data.subtype == "root") console.log(it)
             cb(null, it)
           })
         }
@@ -295,7 +294,6 @@ class FileTreeRoot extends FileTreeBranchObject {
     this.fs = new FS(this.zite, this.storage, this)
   }
   build(cb) {
-    console.log(this.json)
     if (this.json) handleCreation(this.fs, this, null, this, this.json, cb)
     else cb()
     delete this.json
