@@ -91,10 +91,9 @@ module.exports = function FileStream(data) {
       hash.update(data)
 
       if (vsize >= info.size && info.size) {
-        const finalHash = hash.digest("hex").substr(0, 64) //WHY THE FUCK ARE THEY ONLY USING THE FIRST PART OF THE HASH?
+        const finalHash = hash.digest("hex").substr(0, 64) //lower security level
         vended = true
         if (finalHash != info.hash) {
-          console.log("vendok")
           vchunks = null
           return cb(new Error("Hash error " + finalHash + " != " + info.hash))
         } else {

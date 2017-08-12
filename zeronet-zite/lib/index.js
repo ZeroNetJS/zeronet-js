@@ -88,10 +88,14 @@ module.exports = function Zite(config, node) { //describes a single zite
       if (i.file.optional) return next()
       if (i.version) return next()
       queue.add(i.file.info, (err, stream) => {
-        return next()
+        if (err) return next()
         pull(
           stream,
-          //pull.onEnd(console.log),
+          pull.through(() => {}, e => {
+            if (typeof e == "boolean") {
+              i.version = i.authority.version
+            }
+          }),
           tree.storage.writeStream(tree.zite.address, 0, i.path)
         )
       })
