@@ -5,6 +5,9 @@ const FS = require("zeronet-zite/lib/tree/fs")
 const ContentJSON = require("zeronet-zite/lib/tree/content-json")
 const _path = require("path")
 
+const debug = require("debug")
+const log = debug("zeronet:zite:tree")
+
 function normalize(s) { //fix for "/path/to/file" or "/path//to/file" or "//path/to/file"
   while ((!s[0] || s[0] == ".") && s.length) s.shift()
 }
@@ -51,7 +54,7 @@ class FileTreeObject {
   }
   updateTree() {
     this.sub = {}
-    this.recalculatePath()
+    // this.recalculatePath()
     this.children.forEach(c => {
       c.parent = this
       c.recalculatePath()
@@ -67,6 +70,7 @@ class FileTreeObject {
       p = p.parent
     }
     this.path = path.join("/")
+	log("Path", this.path)
   }
   getAll() {
     let r = []
@@ -133,7 +137,7 @@ class FileTreeBranchObject extends FileTreeFolderObject {
       let s = f.relpath.split("/")
       normalize(s)
       let p = this
-      while (s.length) {
+      while (s.length - 1) {
         const f = s.shift()
         if (!p.get(f)) {
           const fb = new FileTreeFolderObject()
