@@ -47,10 +47,10 @@ class ZeroNetSwarm extends libp2p {
 
     /* if it's hacky and you know it clap your hands. *clap* */
     self.protocol = new Protocol(self.swarm, self, zeronet, options.protocol)
-    self.handle = self.protocol.handle.bind(self.protocol)
+    self.handleZN = self.protocol.handle.bind(self.protocol)
 
-    self.swarm.dial = zdial(self.swarm, self.protocol)
-    self.dial = self.swarm.dial
+    self.swarm.dialZN = zdial(self.swarm, self.protocol)
+    self.dialZN = self.swarm.dialZN
 
     self.protocol.applyDefaults()
 
@@ -116,6 +116,7 @@ class ZeroNetSwarm extends libp2p {
         },
         (cb) => {
           this.emit('start')
+          console.log(this.swarm.protocols)
           cb()
         }
       ], callback)

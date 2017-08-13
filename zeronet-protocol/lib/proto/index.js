@@ -29,7 +29,7 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
     return res
   }
 
-  self.handle = (name, def, defret, cb) => {
+  self.handle = self.handleZN = (name, def, defret, cb) => {
     if (commands[name]) throw new Error(name + " is already handled")
     log("Handling", name)
     commands[name] = new PeerRequest(name, def, defret, validate)

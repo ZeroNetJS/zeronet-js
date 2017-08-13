@@ -109,28 +109,51 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
   self.upgrade = cb => {
     (opt.isServer ? self.waitForHandshake : self.handshake)((err, handshake, opt) => {
       if (err) return cb(err)
-      conn.getObservedAddrs((aderr, addr) => {
-        conn.getPeerInfo((pierr, pi) => {
-          const next = conn => {
-            conn.getObservedAddrs = cb => cb(aderr, addr)
-            conn.getPeerInfo = cb => cb(pierr, pi)
-            cb(null, new Client(conn, protocol, zeronet, {
-              isServer: opt.isServer,
-              handshake: self.handshakeData,
-              crypto: protocol.crypto && handshake.commonCrypto() ? handshake.commonCrypto() : false
-            }))
-          }
-          if (protocol.crypto && handshake.commonCrypto()) {
-            protocol.crypto.wrap(handshake.commonCrypto(), self, opt, (err, conn) => {
-              if (err) return cb(err)
-              else next(conn)
-            })
-          } else {
-            warnNoCrypto()
-            self.getRaw((err, conn) => err ? cb(err) : next(conn))
-          }
-        })
+      const _conn = conn
+      conn.getObservedAddrs = _conn.getObservedAddrs
+      conn.getPeerInfo = _conn.getObservedAddrs
+      conn.handshake = handshake
+      /*
+      zeronet v2 over multistream-select over zeronet v2:
+        the complete headache (that is zeronet and it's self-made protocol)
+        that prevents webrtc support is being resolved by allowing direct libp2p communication over zeronet v2
+        which then handles /zn/2.0.0 over multistream thus allowing us to have both libp2p and zeronet features over the same conn
+        at it's being resolved here
+
+        spoiler: it's super complex
+      */
+      self.getRaw((err, conn) => {
+        if (err) return cb(err)
+        if (handshake.hasLibp2p()) { //perform a libp2p upgrade
+          conn.isLibp2p = true
+          conn.isEmu = false
+          zeronet.swarm.protocols["/zn/0.0.2"](conn, () => {})
+        } else { //just pass the connection to the handler
+          conn.isLibp2p = false
+          conn.isEmu = true
+          //magic to be added
+        }
       })
+
+      //TODO: move 2 libp2p
+      /*const next = conn => {
+        conn.getObservedAddrs = _conn.getObservedAddrs
+        conn.getPeerInfo = _conn.getObservedAddrs
+        cb(null, new Client(conn, protocol, zeronet, {
+          isServer: opt.isServer,
+          handshake: self.handshakeData,
+          crypto: protocol.crypto && handshake.commonCrypto() ? handshake.commonCrypto() : false
+        }))
+      }
+      if (protocol.crypto && handshake.commonCrypto()) {
+        protocol.crypto.wrap(handshake.commonCrypto(), self, opt, (err, conn) => {
+          if (err) return cb(err)
+          else next(conn)
+        })
+      } else {
+        warnNoCrypto()
+        self.getRaw((err, conn) => err ? cb(err) : next(conn))
+      }*/
     })
   }
 
