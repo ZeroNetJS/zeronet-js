@@ -31,8 +31,8 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
     }
   }
 
-  self.swarm.handle("/zn/2.0.0", (conn, cb) => {
-    self.clientUpgrade(conn, conn.handshakeOPT, conn.handshake, cb || () => {})
+  swarm.handle("/zn/2.0.0", (conn, cb) => {
+    self.clientUpgrade(conn, conn.handshakeOPT, conn.handshake, cb ? cb : () => {})
   })
 
   self.clientUpgrade = (_conn, opt, handshake, cb) => {
@@ -53,6 +53,7 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
   }
 
   self.cryptoUpgrade = (conn, opt, handshake, cb) => {
+    console.log("cc" ,conn, opt, handshake, cb)
     if (conn.isLibp2p) {
       cb(null, conn)
     } else if (self.crypto && handshake.commonCrypto()) {
