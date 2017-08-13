@@ -53,7 +53,6 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
   }
 
   self.cryptoUpgrade = (conn, opt, handshake, cb) => {
-    console.log("cc" ,conn, opt, handshake, cb)
     if (conn.isLibp2p) {
       cb(null, conn)
     } else if (self.crypto && handshake.commonCrypto()) {

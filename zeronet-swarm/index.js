@@ -7,6 +7,9 @@ const DHT = require('libp2p-kad-dht')
 const PeerInfo = require('peer-info')
 const multiaddr = require('multiaddr')
 
+const SPDY = require('libp2p-spdy')
+const SECIO = require('libp2p-secio')
+
 const debug = require("debug")
 const log = debug("zeronet:swarm")
 const Protocol = require("zeronet-protocol")
@@ -31,7 +34,10 @@ class ZeroNetSwarm extends libp2p {
 
     const modules = {
       transport: options.libp2p.transport,
-      connection: {},
+      connection: {
+        muxer: [SPDY],
+        crypto: [SECIO]
+      },
       discovery: [
         options.libp2p.mdns ? new MulticastDNS(peerInfo, 'zeronet') : null //allows us to find network-local nodes easier
       ].filter(e => !!e),
