@@ -14,7 +14,6 @@ const debug = require("debug")
 
 const log = debug("zeronet:protocol:client:handshake")
 
-const Client = require("zeronet-client")
 
 function HandshakeClient(conn, protocol, zeronet, opt) {
   const self = this
@@ -95,16 +94,6 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
   }
 
   /* upgrade */
-
-  function warnNoCrypto() {
-    if (zeronet.zeronet) { //why did we call common "zeronet"???
-      let i = {
-        address: addrs.split(" ")[1],
-        direction: addrs.split(" ")[0] == "=>" ? "to" : "from"
-      }
-      zeronet.logger("protocol:handshake").warn(i, "No crypto used in connection %s %s", i.direction, i.address)
-    }
-  }
 
   self.upgrade = cb => {
     (opt.isServer ? self.waitForHandshake : self.handshake)((err, handshake, opt) => {

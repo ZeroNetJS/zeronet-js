@@ -116,7 +116,6 @@ class ZeroNetSwarm extends libp2p {
         },
         (cb) => {
           this.emit('start')
-          console.log(this.swarm.protocols)
           cb()
         }
       ], callback)
