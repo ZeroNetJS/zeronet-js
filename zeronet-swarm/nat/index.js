@@ -7,6 +7,8 @@ const series = require("async/series")
 const debug = require("debug")
 const log = debug("zeronet:swarm:nat")
 
+const rminmax = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+
 function cbTimeout(ar, opt, callback) {
   let cbf = false
   let errs = []
@@ -145,7 +147,7 @@ module.exports = function NatBroker(swarm, swarmopt) {
           ttl: 100
         }, err => {
           if (err) {
-            eport = 22334 //TODO: use random port
+            eport = rminmax(10000, 30000)
             log("direct mapping failed. trying random port", eport)
             upclient.portMapping({
               private: port,
@@ -165,12 +167,8 @@ module.exports = function NatBroker(swarm, swarmopt) {
         self.getPortOpen(eport, cb)
       }
 
-      forward(err => {
-        swarm.advertise.port = eport
-        if (err) {
-          swarm.advertise.port_open = false
-          return cb(err)
-        } else {
+      verifyIsOpen((err, res) => {
+        const next = () => {
           verifyIsOpen((err, res) => {
             if (err) {
               log("couldn't verify port is open")
@@ -183,6 +181,17 @@ module.exports = function NatBroker(swarm, swarmopt) {
             }
           })
         }
+        if (err || !res) {
+          forward(err => {
+            swarm.advertise.port = eport
+            if (err) {
+              swarm.advertise.port_open = false
+              return cb(err)
+            } else {
+              next()
+            }
+          })
+        } else next()
       })
     }
     forEachPort()
