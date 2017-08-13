@@ -23,15 +23,18 @@ const assert = require("assert")
 function ZeroNetNode(options) {
 
   if (!options) options = {}
-
-  if (!Array.isArray(options.trackers))
-    options.trackers = [options.trackers]
+  if (!options.modules) options.modules = {}
+  if (!options.node) options.node = {
+    trackers: []
+  }
+  if (!options.swarm) options.swarm = {}
 
   options.swarm.id = options.id
 
   log("creating a new node", options)
 
   assert(options.storage, "no zeronet storage given")
+  assert(options.id, "no id given")
 
   const self = this
   const storage = self.storage = new StorageWrapper(options.storage)

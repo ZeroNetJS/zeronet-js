@@ -22,13 +22,21 @@ const mafmt = require('mafmt')
 class ZeroNetSwarm extends libp2p {
   constructor(options, zeronet) {
     options = options || {}
+    options.libp2p = options.libp2p || {
+      transport: []
+    }
 
     const peerInfo = new PeerInfo(options.id)
 
-    if (options.server)
-      peerInfo.multiaddrs.add(multiaddr("/ip4/" + options.server.host + "/tcp/" + options.server.port))
-    if (options.server6)
-      peerInfo.multiaddrs.add(multiaddr("/ip6/" + options.server6.host + "/tcp/" + options.server6.port))
+    if (options.listen) {
+      if (!Array.isArray(options.listen)) options.listen = [options.listen]
+      options.listen.forEach(addr => peerInfo.multiaddrs.add(multiaddr(addr)))
+    } else {
+      if (options.server)
+        peerInfo.multiaddrs.add(multiaddr("/ip4/" + options.server.host + "/tcp/" + options.server.port))
+      if (options.server6)
+        peerInfo.multiaddrs.add(multiaddr("/ip6/" + options.server6.host + "/tcp/" + options.server6.port))
+    }
 
     if (peerInfo.multiaddrs._multiaddrs.length) log("starting server on", peerInfo.multiaddrs._multiaddrs.map(m => m.toString()))
 
