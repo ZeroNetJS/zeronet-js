@@ -113,6 +113,7 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
       conn.getObservedAddrs = _conn.getObservedAddrs
       conn.getPeerInfo = _conn.getObservedAddrs
       conn.handshake = handshake
+      conn.handshakeOPT = opt
       /*
       zeronet v2 over multistream-select over zeronet v2:
         the complete headache (that is zeronet and it's self-made protocol)
@@ -127,11 +128,15 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
         if (handshake.hasLibp2p()) { //perform a libp2p upgrade
           conn.isLibp2p = true
           conn.isEmu = false
-          zeronet.swarm.protocols["/zn/0.0.2"](conn, () => {})
+          //magic to be added
+          //then call cb(null,client,libp2p_client)
         } else { //just pass the connection to the handler
           conn.isLibp2p = false
           conn.isEmu = true
-          //magic to be added
+          zeronet.swarm.protocols["/zn/0.0.2"](conn, (err, client) => {
+            if (err) return cb(err)
+            return cb(null, client, false)
+          })
         }
       })
 
