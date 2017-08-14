@@ -191,7 +191,11 @@ module.exports = function NatBroker(swarm, swarmopt) {
               next()
             }
           })
-        } else next()
+        } else {
+          swarm.advertise.port_open = res
+          log("port open", res)
+          return cb()
+        }
       })
     }
     forEachPort()
