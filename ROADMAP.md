@@ -16,6 +16,7 @@
 # Stage 1
 
  - [x] Save peer-id in config ([#63](https://github.com/ZeroNetJS/zeronet-js/issues/63))
+ - [ ] libp2p interop / webrtc / browser integration ([#84](https://github.com/ZeroNetJS/zeronet-js/issues/84))
  - [ ] Loading Zites ([#55](https://github.com/ZeroNetJS/zeronet-js/issues/55))
  - [ ] UiServer ([#56](https://github.com/ZeroNetJS/zeronet-js/issues/56))
  - [ ] Ui ([#57](https://github.com/ZeroNetJS/zeronet-js/issues/57))
