@@ -38,8 +38,8 @@
     "mock-fs": "^4.4.1",
     "nyc": "^11.1.0",
     "pkg-mkg": "^4.2.2",
-    "sinon": "^3.2.0",
-    "sinon-chai": "^2.12.0"
+    "sinon": "^3.2.1",
+    "sinon-chai": "^2.13.0"
   },
   "scripts": {
     "test": "nyc mocha",
