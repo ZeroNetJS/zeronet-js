@@ -53,6 +53,7 @@ function dialZN(swarm, ZProtocol) {
     return proxyConn
 
     function attemptDial(pi, cb) {
+      console.log(swarm.transports)
       const tKeys = Object.keys(swarm.transports)
 
       if (tKeys.length === 0) {
@@ -309,6 +310,7 @@ function dial(swarm, ZProtocol) { //fallback which allows both libp2p and znv2 a
     callback = callback || function noop() {}
     //dial with znv2
     zdial(peer, (err, conn) => {
+      if (err) return callback(err)
       if (protocol.startsWith("/zn/")) {
         //if libp2p supported
         //use client from conn

@@ -4,6 +4,7 @@ const Node = require("zeronet-node")
 
 const multiaddr = require("multiaddr")
 const memstore = require("zeronet-storage-memory")
+const TCP = require("libp2p-tcp")
 
 let node
 
@@ -15,7 +16,12 @@ it("should handshake", (cb) => {
         host: "127.0.0.1",
         port: 25335
       },
-      protocol: {}
+      protocol: {},
+      libp2p: {
+        transport: [
+          new TCP()
+        ]
+      }
     },
     uiserver: false,
     storage: new memstore()
