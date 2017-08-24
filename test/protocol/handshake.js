@@ -1,30 +1,23 @@
 "use strict"
 
-const Node = require("zeronet-node")
+const ZeroNet = require("../../")
 
 const multiaddr = require("multiaddr")
-const memstore = require("zeronet-storage-memory")
-const TCP = require("libp2p-tcp")
 
 let node
 
 it("should handshake", (cb) => {
-  node = new Node({
+  node = ZeroNet({
     id: global.id,
     swarm: {
       server: {
         host: "127.0.0.1",
         port: 25335
       },
-      protocol: {},
-      libp2p: {
-        transport: [
-          new TCP()
-        ]
+      protocol: {
+        crypto: false
       }
-    },
-    uiserver: false,
-    storage: new memstore()
+    }
   })
   node.start(err => {
     if (err) return cb(err)
@@ -37,23 +30,20 @@ it("should handshake", (cb) => {
 })
 
 it("should handshake with libp2p", (cb) => {
-  node = new Node({
+  node = ZeroNet({
     id: global.id,
     swarm: {
       server: {
         host: "127.0.0.1",
         port: 25335
       },
-      protocol: {},
+      protocol: {
+        crypto: false
+      },
       libp2p: {
-        transport: [
-          new TCP()
-        ],
         native: true
       }
-    },
-    uiserver: false,
-    storage: new memstore()
+    }
   })
   node.start(err => {
     if (err) return cb(err)
@@ -64,7 +54,6 @@ it("should handshake with libp2p", (cb) => {
     })
   })
 })
-
 
 afterEach(function (cb) {
   this.timeout(5000)

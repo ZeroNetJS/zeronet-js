@@ -6,35 +6,6 @@ const MEM = require("zeronet-storage-memory")
 
 const Id = require("peer-id")
 
-function consolePrefix(f, p) {
-  return function () {
-    const a = [...arguments]
-    if (typeof a[0] == "string") a.unshift("[" + p + "] " + a.shift())
-    else a.unshift("[" + p + "]")
-    f.apply(console, a)
-  }
-}
-
-function ZeroNetDefaultCommon(opt) {
-  const self = this
-  self.browser = true
-  self.logger = name => {
-    const l = consolePrefix(console.log, name)
-    l.info = l
-    l.log = l
-
-    l.debug = opt.debug ? consolePrefix(console.info, "DEBUG/" + name) : () => {}
-    l.trace = opt.debug ? consolePrefix(console.info, "TRACE/" + name) : () => {}
-
-    l.warn = consolePrefix(console.warn, name)
-
-    l.error = l.fatal = consolePrefix(console.error, name)
-
-    return l
-  }
-  self.title = () => {}
-}
-
 module.exports = function ZeroNetBundler(opt) {
 
   const bname = opt.name || "ZeroNetBundle"
@@ -42,8 +13,8 @@ module.exports = function ZeroNetBundler(opt) {
   const strict = {
     modules: opt.modules
   }
+
   const defaults = merge(opt.override, {
-    common: opt.common || ZeroNetDefaultCommon,
     swarm: {
       protocol: {
         crypto: [
@@ -71,23 +42,22 @@ module.exports = function ZeroNetBundler(opt) {
     storage: new MEM()
   })
   r[bname] = function (opt, cb) { //hack to set function name
+    if (!cb) cb = () => {}
     let config = merge(merge(defaults, strict), merge(opt, strict))
-    if (!opt.common) config.common = new config.common({
-      debug: opt.debug
-    })
     let node
     const liftoff = (err, id) => {
       if (err) return cb(err)
-      config.id = id
+      if (id) config.id = id
       node = new ZeroNet(config)
       cb(null, node)
+      return node
     }
 
-    if (!config.id) {
+    if (!opt.id) {
       Id.create({
         bits: 2048
       }, liftoff)
-    } else liftoff()
+    } else return liftoff(null, opt.id)
   }
   return r[bname]
 
