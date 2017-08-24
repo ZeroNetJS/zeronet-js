@@ -53,7 +53,6 @@ function dialZN(swarm, ZProtocol) {
     return proxyConn
 
     function attemptDial(pi, cb) {
-      console.log(swarm.transports)
       const tKeys = Object.keys(swarm.transports)
 
       if (tKeys.length === 0) {

@@ -13,7 +13,7 @@ function genHandshakeData(protocol, client, zeronet) {
     port_opened: zeronet.swarm.advertise.port_open || false,
     rev: zeronet.rev,
     version: zeronet.version,
-    libp2p_support: true,
+    libp2p_support: zeronet.swarm.libp2p_native,
     own: true //this marks our own handshake. required for linking
   }
   if (client.isTor) {

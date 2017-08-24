@@ -32,7 +32,6 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
   }
 
   swarm.handle("/zn/2.0.0", (conn, cb) => {
-    console.log("libp2p handle")
     self.clientUpgrade(conn, conn.handshakeOPT, conn.handshake, cb ? cb : () => {})
   })
 

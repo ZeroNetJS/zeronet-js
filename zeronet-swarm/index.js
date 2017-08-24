@@ -60,6 +60,7 @@ class ZeroNetSwarm extends libp2p {
     self.peerInfo = peerInfo
 
     /* if it's hacky and you know it clap your hands. *clap* */
+    self.libp2p_native = options.libp2p.native
     self.protocol = new Protocol(self.swarm, self, zeronet, options.protocol)
     self.handleZN = self.protocol.handle.bind(self.protocol)
 
