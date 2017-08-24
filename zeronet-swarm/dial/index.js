@@ -309,13 +309,15 @@ function dial(swarm, ZProtocol) { //fallback which allows both libp2p and znv2 a
     callback = callback || function noop() {}
     //dial with znv2
     zdial(peer, (err, conn) => {
-      if (protocol.startsWith("/zn")) {
+      if (protocol.startsWith("/zn/")) {
         //if libp2p supported
         //use client from conn
         //if the conn has no client create one
+        callback(null, conn)
       } else {
         //if !libp2p supported
         //fail
+        if (!conn.handshake.hasLibp2p()) callback(new Error("No libp2p support"))
       }
     })
   }
