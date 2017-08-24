@@ -63,8 +63,8 @@ class ZeroNetSwarm extends libp2p {
     self.protocol = new Protocol(self.swarm, self, zeronet, options.protocol)
     self.handleZN = self.protocol.handle.bind(self.protocol)
 
-    self.swarm.dialZN = zdial(self.swarm, self.protocol)
-    self.dialZN = self.swarm.dialZN
+    self.swarm.dial = zdial(self.swarm, self.protocol)
+    self.dial = self.swarm.dial
 
     self.protocol.applyDefaults()
 
