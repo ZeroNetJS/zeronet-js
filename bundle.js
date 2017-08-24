@@ -68,7 +68,7 @@ module.exports = function ZeroNetBundler(opt) {
         //"http://localhost:25534/announce"
       ]
     },
-    store: new MEM()
+    storage: new MEM()
   })
   r[bname] = function (opt, cb) { //hack to set function name
     let config = merge(merge(defaults, strict), merge(opt, strict))
