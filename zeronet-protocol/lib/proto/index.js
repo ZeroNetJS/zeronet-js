@@ -58,7 +58,7 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
     } else if (self.crypto && handshake.commonCrypto()) {
       self.crypto.wrap(handshake.commonCrypto(), conn, opt, (err, conn) => {
         if (err) return cb(err)
-        else cb(conn)
+        else cb(null, conn)
       })
     } else {
       conn.getObservedAddrs((err, addr) => {

@@ -11,16 +11,15 @@ const cryptos = Object.keys(crypto_data).map(c => {
     fnc: crypto_data[c]
   }
 })
-const Node = require("zeronet-node")
+const ZeroNet = require("../..")
 
 const multiaddr = require("multiaddr")
-const memstore = require("zeronet-storage-memory")
 
 let node
 
 cryptos.forEach(crypto => {
   it("should handshake with " + crypto.name, (cb) => {
-    node = new Node({
+    node = ZeroNet({
       id: global.id,
       swarm: {
         server: {
@@ -30,9 +29,7 @@ cryptos.forEach(crypto => {
         protocol: {
           crypto: crypto.fnc
         }
-      },
-      uiserver: false,
-      storage: new memstore()
+      }
     })
     node.start(err => {
       if (err) return cb(err)
