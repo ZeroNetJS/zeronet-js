@@ -29,7 +29,7 @@ it("should handshake", (cb) => {
   })
 })
 
-it("should handshake with libp2p", (cb) => {
+it("should handshake with libp2p-native", (cb) => {
   node = ZeroNet({
     id: global.id,
     swarm: {
@@ -57,5 +57,5 @@ it("should handshake with libp2p", (cb) => {
 
 afterEach(function (cb) {
   this.timeout(5000)
-  node.stop(cb)
+  node.stop(() => cb())
 })
