@@ -300,7 +300,7 @@ function dialL(swarm) {
 function dial(swarm, ZProtocol) { //fallback which allows both libp2p and znv2 and then applies the magic
   const zdial = dialZN(swarm, ZProtocol)
   const ndial = dialL(swarm)
-  return (peer, protocol, callback) => {
+  const self = (peer, protocol, callback) => {
     if (typeof protocol === 'function') {
       callback = protocol
       protocol = "/zn/2.0.0/"
@@ -319,6 +319,10 @@ function dial(swarm, ZProtocol) { //fallback which allows both libp2p and znv2 a
       }
     })
   }
+  self.dialZN = (peer, cb) => {
+    self(peer, "/zn/2.0.0/", cb)
+  }
+  return self
 }
 
 module.exports = dial
