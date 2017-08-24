@@ -11,7 +11,7 @@ const fs = require("fs")
 const path = require("path")
 const mkdirp = require("mkdirp")
 
-const MergeRecursive = require("merge-recursive")
+const MergeRecursive = require("merge-recursive").recursive
 const ZeroNet = require("zeronet-node")
 
 const FS = require("zeronet-storage-fs")
