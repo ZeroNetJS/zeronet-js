@@ -7,6 +7,9 @@ const DHT = require('libp2p-kad-dht')
 const PeerInfo = require('peer-info')
 const multiaddr = require('multiaddr')
 
+const SPDY = require('libp2p-spdy')
+const SECIO = require('libp2p-secio')
+
 const debug = require("debug")
 const log = debug("zeronet:swarm")
 const Protocol = require("zeronet-protocol")
@@ -19,19 +22,30 @@ const mafmt = require('mafmt')
 class ZeroNetSwarm extends libp2p {
   constructor(options, zeronet) {
     options = options || {}
+    options.libp2p = options.libp2p || {
+      transport: []
+    }
 
     const peerInfo = new PeerInfo(options.id)
 
-    if (options.server)
-      peerInfo.multiaddrs.add(multiaddr("/ip4/" + options.server.host + "/tcp/" + options.server.port))
-    if (options.server6)
-      peerInfo.multiaddrs.add(multiaddr("/ip6/" + options.server6.host + "/tcp/" + options.server6.port))
+    if (options.listen) {
+      if (!Array.isArray(options.listen)) options.listen = [options.listen]
+      options.listen.forEach(addr => peerInfo.multiaddrs.add(multiaddr(addr)))
+    } else {
+      if (options.server)
+        peerInfo.multiaddrs.add(multiaddr("/ip4/" + options.server.host + "/tcp/" + options.server.port))
+      if (options.server6)
+        peerInfo.multiaddrs.add(multiaddr("/ip6/" + options.server6.host + "/tcp/" + options.server6.port))
+    }
 
     if (peerInfo.multiaddrs._multiaddrs.length) log("starting server on", peerInfo.multiaddrs._multiaddrs.map(m => m.toString()))
 
     const modules = {
       transport: options.libp2p.transport,
-      connection: {},
+      connection: {
+        muxer: [SPDY],
+        crypto: [SECIO]
+      },
       discovery: [
         options.libp2p.mdns ? new MulticastDNS(peerInfo, 'zeronet') : null //allows us to find network-local nodes easier
       ].filter(e => !!e),
@@ -46,11 +60,14 @@ class ZeroNetSwarm extends libp2p {
     self.peerInfo = peerInfo
 
     /* if it's hacky and you know it clap your hands. *clap* */
+    self.libp2p_native = options.libp2p.native
     self.protocol = new Protocol(self.swarm, self, zeronet, options.protocol)
-    self.handle = self.protocol.handle.bind(self.protocol)
+    self.handleZN = self.protocol.handle.bind(self.protocol)
 
     self.swarm.dial = zdial(self.swarm, self.protocol)
     self.dial = self.swarm.dial
+    self.swarm.dialZN = self.dial.dialZN
+    self.dialZN = self.dial.dialZN
 
     self.protocol.applyDefaults()
 

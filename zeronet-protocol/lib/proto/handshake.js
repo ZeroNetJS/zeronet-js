@@ -13,6 +13,7 @@ function genHandshakeData(protocol, client, zeronet) {
     port_opened: zeronet.swarm.advertise.port_open || false,
     rev: zeronet.rev,
     version: zeronet.version,
+    libp2p_support: zeronet.swarm.libp2p_native,
     own: true //this marks our own handshake. required for linking
   }
   if (client.isTor) {
@@ -53,6 +54,7 @@ function Handshake(data) {
   }
 
   addCMD("commonCrypto", () => self.crypt_supported.filter(c => self.linked.crypt_supported.indexOf(c) != -1)[0], true)
+  addCMD("hasLibp2p", () => self.libp2p_support && self.linked.libp2p_support, true)
 }
 
 const debug = require("debug")
@@ -134,6 +136,7 @@ module.exports.def = { //Definitions are symmetric
   rev: "number",
   target_ip: "string",
   version: "string",
+  libp2p_support: [a => a === undefined, "boolean"]
 }
 
 module.exports.req = new PeerRequest("handshake", module.exports.def, module.exports.def, validate)

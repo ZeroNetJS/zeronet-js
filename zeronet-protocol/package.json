@@ -24,6 +24,8 @@
     "clone": "^2.1.1",
     "hypercache": "^0.2.0",
     "ip": "^1.1.5",
+    "libp2p-secio": "^0.7.1",
+    "libp2p-spdy": "^0.10.6",
     "msgpack5": "^3.5.0",
     "peer-request": "0.0.1",
     "pull-queue": "^0.1.3",

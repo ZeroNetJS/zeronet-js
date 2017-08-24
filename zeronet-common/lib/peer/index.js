@@ -93,7 +93,7 @@ module.exports = function ZeroNetPeer(peerInfo) {
       if (self.score <= -100) return cb(new Error("Score too low"))
       if (lastDial + 120 * 1000 > new Date().getTime()) return cb(new Error("This peer already was un-successfully dialed in the last 120s"))
       lastDial = new Date().getTime()
-      swarm.dial(peerInfo, (err, conn) => {
+      swarm.dialZN(peerInfo, (err, conn) => {
         if (err) {
           self.score -= 10
           return cb(err)

@@ -5,7 +5,7 @@ const debug = require("debug")
 const log = debug("zeronet:protocol:defaults")
 
 module.exports = function Defaults(protocol, zeronet) {
-  protocol.handle("getFile", {
+  protocol.handleZN("getFile", {
     site: "string",
     inner_path: "string",
     location: "number"
@@ -19,7 +19,7 @@ module.exports = function Defaults(protocol, zeronet) {
     //TODO: finish
   })
 
-  protocol.handle("ping", {}, {
+  protocol.handleZN("ping", {}, {
     body: b => b == "pong"
   }, (data, cb) => {
     cb(null, {
@@ -27,7 +27,7 @@ module.exports = function Defaults(protocol, zeronet) {
     })
   })
 
-  protocol.handle("pex", {
+  protocol.handleZN("pex", {
     site: "string",
     peers: Array.isArray,
     peers_onion: d => !d || Array.isArray(d),
@@ -50,7 +50,7 @@ module.exports = function Defaults(protocol, zeronet) {
     //TODO: parse onion peers
   })
 
-  protocol.handle("update", {
+  protocol.handleZN("update", {
     site: "string",
     inner_path: "string",
     body: "string"
@@ -62,7 +62,7 @@ module.exports = function Defaults(protocol, zeronet) {
     //TODO: finish
   })
 
-  protocol.handle("listModified", {
+  protocol.handleZN("listModified", {
     site: "string",
     since: "number"
   }, {
@@ -73,7 +73,7 @@ module.exports = function Defaults(protocol, zeronet) {
     //TODO: finish
   })
 
-  protocol.handle("getHashfield", {
+  protocol.handleZN("getHashfield", {
     site: "string"
   }, {
     hashfiled_raw: "object"
@@ -83,7 +83,7 @@ module.exports = function Defaults(protocol, zeronet) {
     //TODO: finish
   })
 
-  protocol.handle("setHashfield", {
+  protocol.handleZN("setHashfield", {
     site: "string",
     hashfield_raw: "object"
   }, {
@@ -94,7 +94,7 @@ module.exports = function Defaults(protocol, zeronet) {
     //TODO: finish
   })
 
-  protocol.handle("findHashIds", {
+  protocol.handleZN("findHashIds", {
     site: "string",
     hash_ids: Array.isArray //with numbers
   }, {
