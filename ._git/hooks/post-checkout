@@ -1,0 +1,4 @@
+#!/bin/sh
+
+rm -rf node_modules */node_modules
+bash scripts/install.sh
