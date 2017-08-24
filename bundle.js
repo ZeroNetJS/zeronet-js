@@ -3,6 +3,7 @@
 const merge = require("merge-recursive").recursive
 const ZeroNet = require("zeronet-node")
 const MEM = require("zeronet-storage-memory")
+const clone = require("clone")
 
 const Id = require("peer-id")
 
@@ -39,11 +40,13 @@ module.exports = function ZeroNetBundler(opt) {
         //"http://localhost:25534/announce"
       ]
     },
-    storage: new MEM()
+    storage: MEM
   })
   r[bname] = function (opt, cb) { //hack to set function name
     if (!cb) cb = () => {}
-    let config = merge(merge(defaults, strict), merge(opt, strict))
+    if (!opt) opt = {}
+    let config = merge(merge(clone(defaults), clone(strict)), merge(opt, clone(strict)))
+    if (!opt.storage) config.storage = new defaults.storage()
     let node
     const liftoff = (err, id) => {
       if (err) return cb(err)

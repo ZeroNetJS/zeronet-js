@@ -12,3 +12,12 @@ it("should start", cb => {
 }).timeout(20000)
 
 it("should stop", cb => n.stop(cb))
+
+it("should start as bundle", cb => {
+  n = require("../..")({
+    id: global.id
+  })
+  n.start(cb)
+}).timeout(20000)
+
+it("should stop as bundle", cb => n.stop(cb))
