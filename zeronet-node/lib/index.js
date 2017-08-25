@@ -31,10 +31,21 @@ function ZeroNetNode(options) {
 
   options.swarm.id = options.id
 
-  log("creating a new node", options)
-
   assert(options.storage, "no zeronet storage given")
   assert(options.id, "no id given")
+
+  log("creating a new node", process.env.INTENSE_DEBUG ? options : {
+    id: options.id.toB58String(),
+    storage: options.storage.constructor.name,
+    common: options.common,
+    protocol: options.swarm.protocol,
+    swarm: {
+      server: options.swarm.server,
+      server6: options.swarm.server6,
+    },
+    uiserver: options.uiserver,
+    node: options.node
+  })
 
   const self = this
   const storage = self.storage = new StorageWrapper(options.storage)

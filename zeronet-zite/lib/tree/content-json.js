@@ -18,6 +18,7 @@ module.exports = function ContentJSON(zite, inner_path, data) {
 
   const rules = self.rules = zite.tree.getRuleBook(inner_path, data)
   const newfmt = fallaby.contentJson.process(data)
+  self.version = data.modified
 
   self.verifySelf = () => {
     /*

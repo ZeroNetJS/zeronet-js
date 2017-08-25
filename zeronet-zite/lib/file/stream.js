@@ -21,7 +21,7 @@ module.exports = function FileStream(data) {
   let othersize = 0
   //let fullchunk = []
 
-  log("init", dlpath)
+  log("init", dlpath, info)
 
   let sendErr = false
 
@@ -91,11 +91,11 @@ module.exports = function FileStream(data) {
       hash.update(data)
 
       if (vsize >= info.size && info.size) {
-        const finalHash = hash.digest("hex")
+        const finalHash = hash.digest("hex").substr(0, 64) //lower security level
         vended = true
-        if (finalHash != data.hash) {
+        if (finalHash != info.hash) {
           vchunks = null
-          return cb(new Error("Hash error " + finalHash + " != " + data.hash))
+          return cb(new Error("Hash error " + finalHash + " != " + info.hash))
         } else {
           return cb(null, vchunks)
         }

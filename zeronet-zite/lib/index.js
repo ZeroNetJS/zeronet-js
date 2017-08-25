@@ -74,7 +74,9 @@ module.exports = function Zite(config, node) { //describes a single zite
           pull.drain(data => tree.handleContentJSON("content.json", data) && cb())
         )
       })
-    } else cb()
+    } else {
+      self.downloadLoop()
+    }
   }
 
   self.downloadLoop = () => {
@@ -84,11 +86,16 @@ module.exports = function Zite(config, node) { //describes a single zite
       const i = tree.get(path)
       if (i.files) return next()
       if (i.file.optional) return next()
-      return next()
+      if (i.version) return next()
       queue.add(i.file.info, (err, stream) => {
         if (err) return next()
         pull(
           stream,
+          pull.through(() => {}, e => {
+            if (e) return console.error(e)
+            i.version = i.authority.version
+            node.logger("node")("Downloaded %s", i.path)
+          }),
           tree.storage.writeStream(tree.zite.address, 0, i.path)
         )
       })

@@ -25,6 +25,7 @@
     "base-x": "^3.0.2",
     "bittorrent-tracker": "^9.2.3",
     "bunyan": "^1.8.12",
+    "data-queue": "0.0.2",
     "hypercache": "^0.2.0",
     "ip": "^1.1.5",
     "merge-recursive": "0.0.3",
