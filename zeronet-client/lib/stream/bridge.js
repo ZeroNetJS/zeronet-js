@@ -47,7 +47,7 @@ function Queue2() {
 
 //duplex bridge stream
 
-module.exports = function DuplexBridge(dup, addr) {
+module.exports = function DuplexBridge(dup) {
   const src_q = Queue2()
   const sink_q = Queue2()
   const q = {
@@ -105,20 +105,10 @@ module.exports = function DuplexBridge(dup, addr) {
 
   pull(
     dup.source,
-    pull.map(d => {
-      console.log("writein", addr, d.length)
-      console.log(d.toString())
-      return d
-    }),
     cat.sink
   )
   pull(
     cat.source,
-    pull.map(d => {
-      console.log("writeout", addr, d.length)
-      console.log(d.toString())
-      return d
-    }),
     dup.sink
   )
 

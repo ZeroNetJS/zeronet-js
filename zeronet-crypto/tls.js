@@ -54,7 +54,7 @@ function basicCrypto(type, protocol, handler) {
 }
 
 module.exports = function TLSSupport(protocol) {
-  module.exports.tls_ecc(protocol)
+  //module.exports.tls_ecc(protocol)
   module.exports.tls_rsa(protocol)
 }
 
@@ -91,10 +91,12 @@ module.exports.tls_rsa = (protocol) => {
 }
 
 module.exports.tls_ecc = (protocol) => {
-  basicCrypto("ecc", protocol, (opt, socket, cert, ready, cb) => {
+  basicCrypto("ecc", protocol, (opt, host, port, cert, ready, cb) => {
     let stream
     if (opt.isServer) {
-      stream = new tls.TLSSocket(socket, {
+      stream = tls.connect({
+        host,
+        port,
         isServer: true,
         key: cert.privkey,
         cert: cert.cert,
@@ -107,7 +109,9 @@ module.exports.tls_ecc = (protocol) => {
       })
       stream.on("secureConnect", () => cb())
     } else {
-      stream = tls.connect(socket, {
+      stream = tls.connect({
+        host,
+        port,
         isServer: false,
         requestCert: true,
         rejectUnauthorized: false,
