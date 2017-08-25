@@ -5,7 +5,6 @@ const save = (c, f) => fs.writeFileSync(f, JSON.stringify(c, null, 2) + "\n")
 let c = load(file)
 
 const replace = {
-  "github:mkg20001/multiplex": "multiplex",
   "github:mkg20001/multiplex#574b34aeddf291d1fc48fe422a78c5dd3d18dc01": "6.7.0",
   "multiplex": {
     "version": "6.7.0",

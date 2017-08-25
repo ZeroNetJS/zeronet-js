@@ -19,7 +19,7 @@ apps:
 parts:
   node:
     plugin: nodejs
-    node-engine: 8.2.1
+    node-engine: 8.4.0
     source: .empty
     build-packages:
       - python
