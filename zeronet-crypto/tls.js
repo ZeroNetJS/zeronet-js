@@ -15,16 +15,18 @@ const log = debug("zeronet:crypto:tls")
 
 function pipeThroughNet(dup, cb) {
   const s = net.createServer((socket) => {
-    socket.pipe(socket) //in -> out | echo
+    s.emit("sock", socket)
   })
   s.on("error", cb)
   s.listen(e => {
     if (e) return cb(e)
     const client = net.connect(s.address())
-    dup.pipe(client) //conn.out -> client.out -> socket.in
-    client.pipe(dup) //(socket.in -> socket.out) -> client.in -> conn.out
+    s.once("sock", socket => {
+      dup.pipe(socket) //conn4server.out -> server.out -> client.in
+      socket.pipe(dup) //client.out -> server.in -> conn2server.in
+      cb(null, client)
+    })
     client.on("error", cb)
-    cb(null, client)
   })
 }
 
