@@ -89,9 +89,10 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
       if (!cb) cb = (() => {})
       const c = conn.client = new HandshakeClient(conn, self, zeronet, Object.assign(opt))
       c.conn = conn.client
-      c.upgrade((err, client) => {
+      c.upgrade((err, client, libp2p) => {
         if (err) return cb(err)
         c.upgraded = client
+        client.libp2p = libp2p
         log("finished upgrade", opt)
         return cb(null, client)
       })
