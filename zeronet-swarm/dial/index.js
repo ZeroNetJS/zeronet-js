@@ -107,27 +107,22 @@ const getPeerInfo = require('libp2p-swarm/src/get-peer-info')
 const protocolMuxer = require('libp2p-swarm/src/protocol-muxer')
 
 function dialLP2P(swarm) {
-  return (peer, protocol, callback) => {
+  return (conn, protocol, callback) => {
     if (typeof protocol === 'function') {
-      callback = protocol
-      protocol = null
+      return callback()
     }
-
-    callback = callback || function noop() {}
-    const pi = getPeerInfo(peer, swarm._peerBook)
 
     const proxyConn = new Connection()
 
-    const b58Id = pi.id.toB58String()
-    log('dialing %s', b58Id)
+    callback = callback || function noop() {}
 
-    if (!swarm.muxedConns[b58Id]) {
-      return callback(new Error("Expected muxed conn. got none."))
+    if (!conn || !conn.muxer) {
+      return callback(new Error("Expected muxed conn. Got non-muxer."))
     } else {
       if (!protocol) {
         return callback()
       }
-      gotMuxer(swarm.muxedConns[b58Id].muxer)
+      gotMuxer(conn.muxer)
     }
 
     return proxyConn

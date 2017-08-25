@@ -140,6 +140,14 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
                 zeronet.swarm.dial.upgradep2p(pi, conn, (err, muxed_conn) => {
                   if (err) return cb(err)
                   upgradeConn(muxed_conn, conn)
+                  zeronet.swarm.dial.dialp2p(muxed_conn, "/zn/2.0.0", (err, conn) => {
+                    if (err) return cb(err)
+                    upgradeConn(conn, muxed_conn)
+                    zeronet.swarm.swarm.protocols["/zn/2.0.0"].handlerFunc(conn, (err, client) => {
+                      if (err) return cb(err)
+                      return cb(null, client, muxed_conn)
+                    })
+                  })
                 })
               })
             })
