@@ -16,7 +16,7 @@ const debug = require("debug")
 
 function upgradeConn(muxed_conn, conn) {
   muxed_conn.getObservedAddrs = conn.getObservedAddrs
-  muxed_conn.getPeerInfo = conn.getObservedAddrs
+  muxed_conn.getPeerInfo = conn.getPeerInfo
   muxed_conn.handshake = conn.handshake
   muxed_conn.handshakeOPT = conn.handshakeOPT
   muxed_conn.isLibp2p = conn.isLibp2p
@@ -122,7 +122,7 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
       self.getRaw((err, conn) => {
         if (err) return cb(err)
         conn.getObservedAddrs = _conn.getObservedAddrs
-        conn.getPeerInfo = _conn.getObservedAddrs
+        conn.getPeerInfo = _conn.getPeerInfo
         conn.handshake = handshake
         conn.handshakeOPT = opt
         if (handshake.hasLibp2p()) { //perform a libp2p upgrade
@@ -133,12 +133,14 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
             //XXX: we have a handler for that (zn client creation @ server), but still we have a cb. make it an anti-requirement for server to have cb?
             libp2pProtocolMuxer.bind(null, zeronet.swarm.swarm.protocols)(conn) //FIXME: this strips some values that need to be preserved
           } else {
+            if (!conn.getObservedAddrs) return cb(new Error("conn.getObservedAddrs is missing"))
             conn.getObservedAddrs((err, addr) => {
               if (err) return cb(err)
               getPi(addr[0], (err, pi) => { //TODO: user peer-book
                 if (err) return cb(err)
                 zeronet.swarm.dial.upgradep2p(pi, conn, (err, muxed_conn) => {
                   if (err) return cb(err)
+                  //console.log("upp", _opt)
                   upgradeConn(muxed_conn, conn)
                   zeronet.swarm.dial.dialp2p({
                     muxer: muxed_conn
@@ -147,6 +149,7 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
                     upgradeConn(conn, muxed_conn)
                     zeronet.swarm.swarm.protocols["/zn/2.0.0"].handlerFunc(conn, (err, client) => {
                       if (err) return cb(err)
+                      client.muxer = muxed_conn
                       return cb(null, client, muxed_conn)
                     })
                   })

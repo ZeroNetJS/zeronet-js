@@ -32,6 +32,10 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
   }
 
   swarm.handle("/zn/2.0.0", (conn, cb) => {
+    if (typeof conn == "string") {
+      conn = cb
+      cb = null
+    }
     self.clientUpgrade(conn, conn.handshakeOPT, conn.handshake, cb ? cb : () => {})
   })
 
@@ -53,6 +57,7 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
   }
 
   self.cryptoUpgrade = (conn, opt, handshake, cb) => {
+    //console.log("crypto", conn, opt, handshake, cb)
     if (conn.isLibp2p) {
       cb(null, conn)
     } else if (self.crypto && handshake.commonCrypto()) {
@@ -61,6 +66,7 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
         else cb(null, conn)
       })
     } else {
+      if (!conn.getObservedAddrs) return cb(new Error("conn.getObservedAddrs missing"))
       conn.getObservedAddrs((err, addr) => {
         if (err) return cb(err)
         warnNoCrypto(addr)
