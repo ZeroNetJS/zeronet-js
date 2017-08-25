@@ -129,8 +129,7 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
           conn.isLibp2p = true
           conn.isEmu = false
           //FIXME: no disconnect
-          if (_opt.isServer) { //FIXME: no cb TODO: somehow ignore that and rewrite stuff to be more p2p-server-like
-            //XXX: we have a handler for that (zn client creation @ server), but still we have a cb. make it an anti-requirement for server to have cb?
+          if (_opt.isServer) {
             libp2pProtocolMuxer.bind(null, zeronet.swarm.swarm.protocols)(conn) //FIXME: this strips some values that need to be preserved
           } else {
             if (!conn.getObservedAddrs) return cb(new Error("conn.getObservedAddrs is missing"))
