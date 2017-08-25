@@ -15,18 +15,16 @@ const log = debug("zeronet:crypto:tls")
 
 function pipeThroughNet(dup, cb) {
   const s = net.createServer((socket) => {
-    s.emit("sock", socket)
+    dup.pipe(socket).pipe(dup)
+    s.close()
   })
   s.on("error", cb)
-  s.listen(e => {
+  s.listen({
+    host: "127.0.0.1",
+    port: 0
+  }, e => {
     if (e) return cb(e)
-    const client = net.connect(s.address())
-    s.once("sock", socket => {
-      dup.pipe(socket) //conn4server.out -> server.out -> client.in
-      socket.pipe(dup) //client.out -> server.in -> conn2server.in
-      cb(null, client)
-    })
-    client.on("error", cb)
+    cb(null, "127.0.0.1", s.address().port)
   })
 }
 
@@ -36,14 +34,13 @@ function basicCrypto(type, protocol, handler) {
   protocol.crypto.add("tls-" + type, (conn, opt, cb) => {
     log("tls init", type, opt)
     let stream = toStream(conn)
-    pipeThroughNet(stream, (err, socket) => {
+    pipeThroughNet(stream, (err, host, port) => {
       if (err) return cb(err)
 
       let stream
 
-      handler(opt, socket, cert, (err, _s) => {
+      handler(opt, host, port, cert, (err, _s) => {
         if (err) return cb(err)
-        //socket.flow()
         stream = _s
         stream.on("error", e => cb(e))
         log("tls ready", type, opt)
@@ -62,10 +59,12 @@ module.exports = function TLSSupport(protocol) {
 }
 
 module.exports.tls_rsa = (protocol) => {
-  basicCrypto("rsa", protocol, (opt, socket, cert, ready, cb) => {
+  basicCrypto("rsa", protocol, (opt, host, port, cert, ready, cb) => {
     let stream
     if (opt.isServer) {
-      stream = new tls.TLSSocket(socket, {
+      stream = new tls.connect({
+        host,
+        port,
         isServer: true,
         key: cert.privkey,
         cert: cert.cert,
@@ -78,7 +77,9 @@ module.exports.tls_rsa = (protocol) => {
       })
       stream.on("secureConnect", () => cb())
     } else {
-      stream = tls.connect(socket, {
+      stream = tls.connect({
+        host,
+        port,
         isServer: false,
         requestCert: true,
         rejectUnauthorized: false,
