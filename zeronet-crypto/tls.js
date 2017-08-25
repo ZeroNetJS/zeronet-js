@@ -15,26 +15,16 @@ const log = debug("zeronet:crypto:tls")
 
 function pipeThroughNet(dup, cb) {
   const s = net.createServer((socket) => {
-    s.close()
-    socket.on("data", console.log)
-    socket.pause()
-    s.emit("sock", socket)
-  }).on("error", e => cb(e))
-
-  s.listen(() => {
-    const c = net.createConnection(s.address(), () => {})
-    let flow = false
-    let q = []
-    dup.on("data", d => flow ? false : q.push(d))
-    s.once("sock", socket => {
-      socket.flow = () => {
-        flow = true
-        q.forEach(d => c.write(d))
-        q = null
-        dup.pipe(c).pipe(dup)
-      }
-      cb(null, socket)
-    })
+    socket.pipe(socket) //in -> out | echo
+  })
+  s.on("error", cb)
+  s.listen(e => {
+    if (e) return cb(e)
+    const client = net.connect(s.address())
+    dup.pipe(client) //conn.out -> client.out -> socket.in
+    client.pipe(dup) //(socket.in -> socket.out) -> client.in -> conn.out
+    client.on("error", cb)
+    cb(null, client)
   })
 }
 
@@ -51,7 +41,7 @@ function basicCrypto(type, protocol, handler) {
 
       handler(opt, socket, cert, (err, _s) => {
         if (err) return cb(err)
-        socket.flow()
+        //socket.flow()
         stream = _s
         stream.on("error", e => cb(e))
         log("tls ready", type, opt)
