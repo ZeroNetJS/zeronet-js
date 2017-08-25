@@ -4,12 +4,12 @@ services:
 matrix:
   allow_failures:
     - node_js:  "node"
+    - node_js:  "6"
   include:
     - node_js:  "node"
       env:      NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/nightly/
     - node_js:  "8"
       env:      COV=true PKG=true
-    - node_js:  "6"
 dist:           trusty
 before_install:
 - bash scripts/tarball.sh
