@@ -106,13 +106,69 @@ const getPeerInfo = require('libp2p-swarm/src/get-peer-info')
 
 const protocolMuxer = require('libp2p-swarm/src/protocol-muxer')
 
-function dialL(swarm) {
+function dialLP2P(swarm) {
   return (peer, protocol, callback) => {
     if (typeof protocol === 'function') {
       callback = protocol
       protocol = null
     }
 
+    callback = callback || function noop() {}
+    const pi = getPeerInfo(peer, swarm._peerBook)
+
+    const proxyConn = new Connection()
+
+    const b58Id = pi.id.toB58String()
+    log('dialing %s', b58Id)
+
+    if (!swarm.muxedConns[b58Id]) {
+      return callback(new Error("Expected muxed conn. got none."))
+    } else {
+      if (!protocol) {
+        return callback()
+      }
+      gotMuxer(swarm.muxedConns[b58Id].muxer)
+    }
+
+    return proxyConn
+
+    function gotMuxer(muxer) {
+      if (swarm.identify) {
+        // TODO: Consider:
+        // 1. overload getPeerInfo
+        // 2. exec identify (through getPeerInfo)
+        // 3. update the peerInfo that is already stored in the conn
+      }
+
+      openConnInMuxedConn(muxer, (conn) => {
+        protocolHandshake(conn, protocol, callback)
+      })
+    }
+
+    function openConnInMuxedConn(muxer, cb) {
+      cb(muxer.newStream())
+    }
+
+    function protocolHandshake(conn, protocol, cb) {
+      const ms = new multistream.Dialer()
+      ms.handle(conn, (err) => {
+        if (err) {
+          return cb(err)
+        }
+        ms.select(protocol, (err, conn) => {
+          if (err) {
+            return cb(err)
+          }
+          proxyConn.setInnerConn(conn)
+          cb(null, proxyConn)
+        })
+      })
+    }
+  }
+}
+
+function dialL(swarm) {
+  return (peer, conn, callback) => {
     callback = callback || function noop() {}
     const pi = getPeerInfo(peer, swarm._peerBook)
 
@@ -135,9 +191,6 @@ function dialL(swarm) {
         gotWarmedUpConn(conn)
       }
     } else {
-      if (!protocol) {
-        return callback()
-      }
       gotMuxer(swarm.muxedConns[b58Id].muxer)
     }
 
@@ -146,16 +199,9 @@ function dialL(swarm) {
     function gotWarmedUpConn(conn) {
       conn.setPeerInfo(pi)
       attemptMuxerUpgrade(conn, (err, muxer) => {
-        if (!protocol) {
-          if (err) {
-            swarm.conns[b58Id] = conn
-          }
-          return callback()
-        }
 
         if (err) {
-          // couldn't upgrade to Muxer, it is ok
-          protocolHandshake(conn, protocol, callback)
+          callback(err)
         } else {
           gotMuxer(muxer)
         }
@@ -163,57 +209,30 @@ function dialL(swarm) {
     }
 
     function gotMuxer(muxer) {
-      if (swarm.identify) {
-        // TODO: Consider:
-        // 1. overload getPeerInfo
-        // 2. exec identify (through getPeerInfo)
-        // 3. update the peerInfo that is already stored in the conn
-      }
-
-      openConnInMuxedConn(muxer, (conn) => {
-        protocolHandshake(conn, protocol, callback)
-      })
+      return callback(null, muxer)
     }
 
     function attemptDial(pi, cb) {
-      const tKeys = swarm.availableTransports(pi)
 
-      if (tKeys.length === 0) {
-        return cb(new Error('No available transport to dial to'))
-      }
+      cryptoDial()
 
-      nextTransport(tKeys.shift())
-
-      function nextTransport(key) {
-        swarm.transport.dial(key, pi, (err, conn) => {
+      function cryptoDial() {
+        const ms = new multistream.Dialer()
+        ms.handle(conn, (err) => {
           if (err) {
-            if (tKeys.length === 0) {
-              return cb(new Error('Could not dial in any of the transports'))
+            return cb(err)
+          }
+
+          const id = swarm._peerInfo.id
+          log('selecting crypto: %s', swarm.crypto.tag)
+          ms.select(swarm.crypto.tag, (err, conn) => {
+            if (err) {
+              return cb(err)
             }
-            return nextTransport(tKeys.shift())
-          }
 
-          cryptoDial()
-
-          function cryptoDial() {
-            const ms = new multistream.Dialer()
-            ms.handle(conn, (err) => {
-              if (err) {
-                return cb(err)
-              }
-
-              const id = swarm._peerInfo.id
-              log('selecting crypto: %s', swarm.crypto.tag)
-              ms.select(swarm.crypto.tag, (err, conn) => {
-                if (err) {
-                  return cb(err)
-                }
-
-                const wrapped = swarm.crypto.encrypt(id, id.privKey, conn)
-                cb(null, wrapped)
-              })
-            })
-          }
+            const wrapped = swarm.crypto.encrypt(id, id.privKey, conn)
+            cb(null, wrapped)
+          })
         })
       }
     }
@@ -274,32 +293,13 @@ function dialL(swarm) {
         })
       }
     }
-
-    function openConnInMuxedConn(muxer, cb) {
-      cb(muxer.newStream())
-    }
-
-    function protocolHandshake(conn, protocol, cb) {
-      const ms = new multistream.Dialer()
-      ms.handle(conn, (err) => {
-        if (err) {
-          return cb(err)
-        }
-        ms.select(protocol, (err, conn) => {
-          if (err) {
-            return cb(err)
-          }
-          proxyConn.setInnerConn(conn)
-          cb(null, proxyConn)
-        })
-      })
-    }
   }
 }
 
 function dial(swarm, ZProtocol) { //fallback which allows both libp2p and znv2 and then applies the magic
   const zdial = dialZN(swarm, ZProtocol)
   const ndial = dialL(swarm)
+  const ldial = dialLP2P(swarm)
   const self = (peer, protocol, callback) => {
     if (typeof protocol === 'function') {
       callback = protocol
@@ -325,8 +325,9 @@ function dial(swarm, ZProtocol) { //fallback which allows both libp2p and znv2 a
   self.dialZN = (peer, cb) => {
     self(peer, "/zn/2.0.0/", cb)
   }
+  self.upgradep2p = ndial
+  self.dialp2p = ldial
   return self
 }
 
 module.exports = dial
-module.exports.libp2p = dialL
