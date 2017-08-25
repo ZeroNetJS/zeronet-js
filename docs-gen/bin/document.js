@@ -7,11 +7,7 @@ const todo = [
   ["zeronet", "zeronet.js", "./README.md"]
 ]
 require("colors")
-const fix = {
-  "zeronet-crypto": true,
-  "zeronet-fileserver": true,
-  "zeronet-swarm": true
-}
+const fix = require("./fix")
 const read = f => fs.readFileSync(f).toString().split("\n")
 let add
 if (process.env.ONLY)
