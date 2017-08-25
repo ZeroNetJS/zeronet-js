@@ -167,44 +167,17 @@ function dialL(swarm) {
     callback = callback || function noop() {}
     const pi = getPeerInfo(peer, swarm._peerBook)
 
-    const proxyConn = new Connection()
-
     const b58Id = pi.id.toB58String()
     log('dialing %s', b58Id)
 
     if (!swarm.muxedConns[b58Id]) {
-      if (!swarm.conns[b58Id]) {
-        attemptDial(pi, (err, conn) => {
-          if (err) {
-            return callback(err)
-          }
-          gotWarmedUpConn(conn)
-        })
-      } else {
-        const conn = swarm.conns[b58Id]
-        swarm.conns[b58Id] = undefined
-        gotWarmedUpConn(conn)
-      }
-    } else {
-      gotMuxer(swarm.muxedConns[b58Id].muxer)
-    }
-
-    return proxyConn
-
-    function gotWarmedUpConn(conn) {
-      conn.setPeerInfo(pi)
-      attemptMuxerUpgrade(conn, (err, muxer) => {
-
-        if (err) {
-          callback(err)
-        } else {
-          gotMuxer(muxer)
-        }
+      attemptDial(pi, (err, conn) => {
+        if (err) return callback(err)
+        conn.setPeerInfo(pi)
+        attemptMuxerUpgrade(conn, callback)
       })
-    }
-
-    function gotMuxer(muxer) {
-      return callback(null, muxer)
+    } else {
+      callback(null, swarm.muxedConns[b58Id].muxer)
     }
 
     function attemptDial(pi, cb) {
