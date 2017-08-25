@@ -31,6 +31,7 @@
     "libp2p-tcp": "^0.10.2",
     "mafmt": "^2.1.8",
     "multiaddr": "^2.3.0",
+    "multiplex": "github:mkg20001/multiplex",
     "nat-upnp": "^1.1.0",
     "peer-info": "^0.10.0",
     "request": "^2.81.0"
