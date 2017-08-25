@@ -78,11 +78,9 @@ module.exports.rsa = () => { //x509 2k rsa cert
   // convert a Forge certificate to PEM
   var pem = pki.certificateToPem(cert)
 
-  console.log(pem)
-
   return {
     cert: new Buffer(pem),
-    privkey: pki.privateKeyToPem(keys.privateKey)
+    privkey: new Buffer(pki.privateKeyToPem(keys.privateKey))
   }
 }
 module.exports.ecc=module.exports.rsa //who cares about standarts anyway, right?
