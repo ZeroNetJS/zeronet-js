@@ -29,7 +29,12 @@ function pipeThroughNet(dup, cb) {
 }
 
 function basicCrypto(type, protocol, handler) {
-  let cert = gen[type]()
+  let cert, certq = []
+  gen[type]((err, _cert) => {
+    cert = _cert
+    certq.forEach(c => c())
+    certq = null
+  })
 
   protocol.crypto.add("tls-" + type, (conn, opt, cb) => {
     log("tls init", type, opt)
@@ -39,15 +44,20 @@ function basicCrypto(type, protocol, handler) {
 
       let stream
 
-      handler(opt, host, port, cert, (err, _s) => {
-        if (err) return cb(err)
-        stream = _s
-        stream.on("error", e => cb(e))
-        log("tls ready", type, opt)
-      }, e => {
-        if (e) cb(e)
-        cb(null, new Connection(toPull.duplex(stream)))
-      })
+      const next = () => {
+        handler(opt, host, port, cert, (err, _s) => {
+          if (err) return cb(err)
+          stream = _s
+          stream.on("error", e => cb(e))
+          log("tls ready", type, opt)
+        }, e => {
+          if (e) cb(e)
+          cb(null, new Connection(toPull.duplex(stream)))
+        })
+      }
+
+      if (opt.isServer && !cert) certq.push(next)
+      else next()
 
     })
   })

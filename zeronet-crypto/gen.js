@@ -1,6 +1,8 @@
 "use strict"
 
 const forge = require("node-forge")
+const debug = require("debug")
+const log = debug("zeronet-crypto:gen")
 const pki = forge.pki
 
 const attrs = [{
@@ -56,7 +58,7 @@ const certSet = [{
   name: 'subjectKeyIdentifier'
 }]
 
-module.exports.rsa = () => { //x509 2k rsa cert
+function rsa() { //x509 2k rsa cert
   // generate a keypair and create an X.509v3 certificate
   var keys = pki.rsa.generateKeyPair(2048)
   var cert = pki.createCertificate()
@@ -83,4 +85,95 @@ module.exports.rsa = () => { //x509 2k rsa cert
     privkey: new Buffer(pki.privateKeyToPem(keys.privateKey))
   }
 }
-module.exports.ecc=module.exports.rsa //who cares about standarts anyway, right?
+
+const cp = require("child_process")
+
+let w, q
+const Queue = require("data-queue")
+
+function spawnWorker(cb) {
+  log("spawning worker")
+  w = cp.fork(__filename, {
+    env: {
+      "IS_TLS_GEN_WORKER": "1"
+    }
+  })
+  w.once("message", m => cb(!m.ready))
+}
+
+function doTask(t) {
+  return cb => {
+    if (!q) {
+      q = Queue()
+      spawnWorker(err => {
+        q.error(err)
+        if (err) {
+          q = null
+          return cb(err)
+        }
+
+        function gloop() {
+          q.get((e, d) => {
+            if (e) return
+            w.send({
+              type: "gen",
+              key: d.t
+            })
+            log("sending work to worker")
+            w.once("message", m => {
+              log("work finished")
+              if (m.res) {
+                d.cb(null, m.res)
+              } else if (m.err) {
+                const e = new Error("Keygen failed")
+                e.stack = m.err
+                d.cb(e)
+              }
+              gloop()
+            })
+          })
+        }
+        gloop()
+
+        log("adding task for %s to new worker", t)
+        if (q.append({
+            cb,
+            t
+          })) return cb(q.append())
+      })
+
+    } else {
+      log("adding task for %s to existing worker", t)
+      if (q.append({
+          cb,
+          t
+        })) return cb(q.append())
+    }
+  }
+}
+
+if (!process.env.IS_TLS_GEN_WORKER) {
+  module.exports.rsa = doTask("rsa")
+} else {
+  const types = {
+    rsa
+  }
+  process.send({
+    ready: true
+  })
+  process.on("message", (msg) => {
+    if (msg.type == "die") {
+      process.exit(0)
+    } else if (msg.type == "gen") {
+      try {
+        process.send({
+          r: types[msg.key]()
+        })
+      } catch (e) {
+        process.send({
+          e: e.stack
+        })
+      }
+    }
+  })
+}
