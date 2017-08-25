@@ -7,13 +7,23 @@ const Bridge = require("zeronet-client/lib/stream/bridge")
 const bl = require("bl")
 const clientDuplex = require("zeronet-client/lib/duplex")
 const EE = require("events").EventEmitter
+const libp2pProtocolMuxer = require("libp2p-swarm/src/protocol-muxer")
+const getPi = require("zeronet-common/lib/peer").piFromAddr
 
 const pull = require('pull-stream')
 
 const debug = require("debug")
 
-const log = debug("zeronet:protocol:client:handshake")
+function upgradeConn(muxed_conn, conn) {
+  muxed_conn.getObservedAddrs = conn.getObservedAddrs
+  muxed_conn.getPeerInfo = conn.getObservedAddrs
+  muxed_conn.handshake = conn.handshake
+  muxed_conn.handshakeOPT = conn.handshakeOPT
+  muxed_conn.isLibp2p = conn.isLibp2p
+  muxed_conn.isEmu = conn.isEmu
+}
 
+const log = debug("zeronet:protocol:client:handshake")
 
 function HandshakeClient(conn, protocol, zeronet, opt) {
   const self = this
@@ -96,6 +106,7 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
   /* upgrade */
 
   self.upgrade = cb => {
+    const _opt = opt; //this one get's overwritten by crypto but for libp2p upgrades we need it
     (opt.isServer ? self.waitForHandshake : self.handshake)((err, handshake, opt) => {
       if (err) return cb(err)
       const _conn = conn
@@ -119,6 +130,20 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
           conn.isEmu = false
           //magic to be added
           //then call cb(null,client,libp2p_client)
+          if (_opt.isServer) {
+            libp2pProtocolMuxer.bind(null, zeronet.swarm.swarm.protocols)(conn) //FIXME: this strips some values that need to be preserved
+          } else {
+            conn.getObservedAddrs((err, addr) => {
+              if (err) return cb(err)
+              getPi(addr[0], (err, pi) => { //TODO: user peer-book
+                if (err) return cb(err)
+                zeronet.swarm.dial.upgradep2p(pi, conn, (err, muxed_conn) => {
+                  if (err) return cb(err)
+                  upgradeConn(muxed_conn, conn)
+                })
+              })
+            })
+          }
         } else { //just pass the connection to the handler
           conn.isLibp2p = false
           conn.isEmu = true
