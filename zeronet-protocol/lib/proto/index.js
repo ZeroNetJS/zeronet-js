@@ -57,7 +57,6 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
   }
 
   self.cryptoUpgrade = (conn, opt, handshake, cb) => {
-    //console.log("crypto", conn, opt, handshake, cb)
     if (conn.isLibp2p) {
       cb(null, conn)
     } else if (self.crypto && handshake.commonCrypto()) {
@@ -66,7 +65,7 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
         else cb(null, conn)
       })
     } else {
-      if (!conn.getObservedAddrs) return cb(new Error("conn.getObservedAddrs missing"))
+      if (!conn.getObservedAddrs) return cb(new Error("conn.getObservedAddrs is missing"))
       conn.getObservedAddrs((err, addr) => {
         if (err) return cb(err)
         warnNoCrypto(addr)

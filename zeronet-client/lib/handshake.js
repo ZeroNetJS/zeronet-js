@@ -14,7 +14,7 @@ const pull = require('pull-stream')
 
 const debug = require("debug")
 
-function upgradeConn(muxed_conn, conn) {
+function upgradeConn(conn, muxed_conn) {
   muxed_conn.getObservedAddrs = conn.getObservedAddrs
   muxed_conn.getPeerInfo = conn.getPeerInfo
   muxed_conn.handshake = conn.handshake
@@ -129,7 +129,7 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
           conn.isLibp2p = true
           conn.isEmu = false
           //FIXME: no disconnect
-          if (_opt.isServer) {
+          if (_opt.isServer) { //HACK: hack swarm.handle or multistream to upgrade our conn
             libp2pProtocolMuxer.bind(null, zeronet.swarm.swarm.protocols)(conn) //FIXME: this strips some values that need to be preserved
           } else {
             if (!conn.getObservedAddrs) return cb(new Error("conn.getObservedAddrs is missing"))
@@ -139,17 +139,16 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
                 if (err) return cb(err)
                 zeronet.swarm.dial.upgradep2p(pi, conn, (err, muxed_conn) => {
                   if (err) return cb(err)
-                  //console.log("upp", _opt)
-                  upgradeConn(muxed_conn, conn)
+                  upgradeConn(conn, muxed_conn)
                   zeronet.swarm.dial.dialp2p({
                     muxer: muxed_conn
                   }, "/zn/2.0.0", (err, conn) => {
                     if (err) return cb(err)
-                    upgradeConn(conn, muxed_conn)
+                    upgradeConn(muxed_conn, conn)
                     zeronet.swarm.swarm.protocols["/zn/2.0.0"].handlerFunc(conn, (err, client) => {
                       if (err) return cb(err)
                       client.muxer = muxed_conn
-                      return cb(null, client, muxed_conn)
+                      return cb(null, client)
                     })
                   })
                 })
@@ -161,7 +160,7 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
           conn.isEmu = true
           zeronet.swarm.swarm.protocols["/zn/2.0.0"].handlerFunc(conn, (err, client) => {
             if (err) return cb(err)
-            return cb(null, client, false)
+            return cb(null, client)
           })
         }
       })
