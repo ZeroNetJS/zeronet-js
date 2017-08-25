@@ -64,6 +64,9 @@
     "zeronet": "zeronet.js"
   },
   "pkg": {
+    "scripts": [
+      "node_modules/zeronet-swarm/hacks/**"
+    ],
     "assets": [
       "node_modules/zeronet-uiserver/ui/**",
       "node_modules/zeronet-crypto/cert.conf"
