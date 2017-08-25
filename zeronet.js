@@ -45,7 +45,8 @@ const defaults = {
     },
     protocol: {
       crypto: [
-        require("zeronet-crypto/secio")
+        require("zeronet-crypto/secio"),
+        require("zeronet-crypto/tls").tls_rsa
       ]
     },
     libp2p: {

@@ -1,7 +1,7 @@
 "use strict"
 
 const crypto_data = {
-  "tls-rsa": require("zeronet-crypto/tls")
+  "tls-rsa": require("zeronet-crypto/tls").tls_rsa
 }
 
 const cryptos = Object.keys(crypto_data).map(c => {
@@ -10,24 +10,25 @@ const cryptos = Object.keys(crypto_data).map(c => {
     fnc: crypto_data[c]
   }
 })
-const Node = require("zeronet-node")
+const ZeroNet = require("../..")
 
 const multiaddr = require("multiaddr")
-const memstore = require("zeronet-storage-memory")
 
 let node
 
 cryptos.forEach(crypto => {
   it("should handshake with " + crypto.name, (cb) => {
-    node = new Node({
+    node = ZeroNet({
       id: global.id,
       swarm: {
+        server: {
+          host: "127.0.0.1",
+          port: 25335
+        },
         protocol: {
           crypto: crypto.fnc
         }
-      },
-      uiserver: false,
-      storage: new memstore()
+      }
     })
     node.start(err => {
       if (err) return cb(err)
@@ -38,7 +39,7 @@ cryptos.forEach(crypto => {
         c.cmd.ping({}, cb)
       })
     })
-  }).timeout(5000)
+  }).timeout(20000)
 })
 
 afterEach(function (cb) {
