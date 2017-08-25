@@ -95,7 +95,8 @@ function spawnWorker(cb) {
   log("spawning worker")
   w = cp.fork(__filename, {
     env: {
-      "IS_TLS_GEN_WORKER": "1"
+      "IS_TLS_GEN_WORKER": "1",
+      "DEBUG": process.env.DEBUG
     }
   })
   w.once("message", m => cb(!m.ready))
