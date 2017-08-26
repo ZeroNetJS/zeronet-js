@@ -123,8 +123,8 @@ function doTask(t) {
             log("sending work to worker")
             w.once("message", m => {
               log("work finished")
-              if (m.res) {
-                d.cb(null, m.res)
+              if (m.r) {
+                d.cb(null, m.r)
               } else if (m.err) {
                 const e = new Error("Keygen failed")
                 e.stack = m.err
@@ -164,13 +164,17 @@ if (!process.env.IS_TLS_GEN_WORKER) {
   })
   process.on("message", (msg) => {
     if (msg.type == "die") {
+      log("worker: exiting")
       process.exit(0)
     } else if (msg.type == "gen") {
+      log("worker: doing work %s", msg.key)
       try {
         process.send({
           r: types[msg.key]()
         })
+        log("worker: work success")
       } catch (e) {
+        log("worker: work failed")
         process.send({
           e: e.stack
         })

@@ -32,6 +32,7 @@ function basicCrypto(type, protocol, handler) {
   let cert, certq = []
   gen[type]((err, _cert) => {
     cert = _cert
+    log("got cert for %s queue %s", type, certq.length)
     certq.forEach(c => c())
     certq = null
   })
@@ -85,7 +86,6 @@ module.exports.tls_rsa = (protocol) => {
         honorCipherOrder: true,
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
       })
-      stream.on("secureConnect", () => cb())
     } else {
       stream = tls.connect({
         host,
@@ -96,6 +96,7 @@ module.exports.tls_rsa = (protocol) => {
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
       }, cb)
     }
+    //stream.on("secureConnect", () => cb())
     ready(null, stream)
   })
 }
@@ -117,7 +118,6 @@ module.exports.tls_ecc = (protocol) => {
         honorCipherOrder: true,
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
       })
-      stream.on("secureConnect", () => cb())
     } else {
       stream = tls.connect({
         host,
@@ -128,6 +128,7 @@ module.exports.tls_ecc = (protocol) => {
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
       }, cb)
     }
+    //stream.on("secureConnect", () => cb())
     ready(null, stream)
   })
 }

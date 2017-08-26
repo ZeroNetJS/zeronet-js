@@ -16,6 +16,12 @@ module.exports = Bundler({
         ],
         mdns: true,
         dht: false
+      },
+      protocol: {
+        crypto: [
+          require("zeronet-crypto/secio"),
+          require("zeronet-crypto/tls").tls_rsa
+        ]
       }
     }
   }
