@@ -14,6 +14,8 @@ const debug = require("debug")
 
 const log = debug("zeronet:protocol:client:handshake")
 
+const Client = require("zeronet-client")
+
 function HandshakeClient(conn, protocol, zeronet, opt) {
   const self = this
 
@@ -94,19 +96,39 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
 
   /* upgrade */
 
+  function warnNoCrypto() {
+    if (zeronet.zeronet) { //why did we call common "zeronet"???
+      let i = {
+        address: addrs.split(" ")[1],
+        direction: addrs.split(" ")[0] == "=>" ? "to" : "from"
+      }
+      zeronet.logger("protocol:handshake").warn(i, "No crypto used in connection %s %s", i.direction, i.address)
+    }
+  }
+
   self.upgrade = cb => {
     (opt.isServer ? self.waitForHandshake : self.handshake)((err, handshake, opt) => {
       if (err) return cb(err)
-      const _conn = conn
-      self.getRaw((err, conn) => {
-        if (err) return cb(err)
-        conn.getObservedAddrs = _conn.getObservedAddrs
-        conn.getPeerInfo = _conn.getPeerInfo
-        conn.handshake = handshake
-        conn.handshakeOPT = opt
-        zeronet.swarm.swarm.protocols["/zn/2.0.0"].handlerFunc(conn, (err, client) => {
-          if (err) return cb(err)
-          return cb(null, client)
+      conn.getObservedAddrs((aderr, addr) => {
+        conn.getPeerInfo((pierr, pi) => {
+          const next = conn => {
+            conn.getObservedAddrs = cb => cb(aderr, addr)
+            conn.getPeerInfo = cb => cb(pierr, pi)
+            cb(null, new Client(conn, protocol, zeronet, {
+              isServer: opt.isServer,
+              handshake: self.handshakeData,
+              crypto: protocol.crypto && handshake.commonCrypto() ? handshake.commonCrypto() : false
+            }))
+          }
+          if (protocol.crypto && handshake.commonCrypto()) {
+            protocol.crypto.wrap(handshake.commonCrypto(), self, opt, (err, conn) => {
+              if (err) return cb(err)
+              else next(conn)
+            })
+          } else {
+            warnNoCrypto()
+            self.getRaw((err, conn) => err ? cb(err) : next(conn))
+          }
         })
       })
     })
