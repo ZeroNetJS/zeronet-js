@@ -2,6 +2,7 @@
 
 const debug = require("debug")
 const plog = debug("zeronet:protocol:client")
+plog.enabled = !!process.env.DEBUG_PACKETS
 const clone = require("clone")
 const EE = require("events").EventEmitter
 
