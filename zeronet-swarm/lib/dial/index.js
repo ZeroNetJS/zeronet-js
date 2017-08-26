@@ -34,7 +34,8 @@ module.exports = function Dial(zero, lp2p) { //dynamic dialer that switches betw
     zero,
     lp2p
   }
-  return (peer, protocol, data, cb) => {
+  let dial
+  return (dial = (peer, protocol, data, cb) => {
     if (typeof data == "function") {
       cb = data
       data = null
@@ -50,12 +51,23 @@ module.exports = function Dial(zero, lp2p) { //dynamic dialer that switches betw
 
     if (typeof protocol == "string" && typeof data == "object" && typeof cb == "function") {
       //zeronet peer cmd
+      if (type == "zero") {
+        zero.dial(peer, protocol, data, cb)
+      } else {
+        lp2p.cmd(peer, protocol, data, cb)
+      }
     } else if (typeof protocol == "string" && data == null && typeof cb == "function") {
       //libp2p dial
-      if (type == "zero") return cb(new Error("Tried libp2p dial on ZNv2 node"))
+      if (type == "zero") {
+        zero.dial(peer, (err, client, peerInfo) => {
+          if (err) return cb(err)
+          if (client) return cb(new Error("Tried libp2p dial on ZNv2 node"))
+          if (peerInfo) lp2p.dial(peerInfo, protocol, cb)
+        })
+      } else lp2p.dial(peer, protocol, cb)
     } else if (protocol == null && data == null && typeof cb == "function") {
       //just connect to the peer
       t[ntype].dial(peer, cb)
     }
-  }
+  })
 }

@@ -109,28 +109,36 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
   self.upgrade = cb => {
     (opt.isServer ? self.waitForHandshake : self.handshake)((err, handshake, opt) => {
       if (err) return cb(err)
-      conn.getObservedAddrs((aderr, addr) => {
-        conn.getPeerInfo((pierr, pi) => {
-          const next = conn => {
-            conn.getObservedAddrs = cb => cb(aderr, addr)
-            conn.getPeerInfo = cb => cb(pierr, pi)
-            cb(null, new Client(conn, protocol, {
-              isServer: opt.isServer,
-              handshake: self.handshakeData,
-              crypto: protocol.crypto && handshake.commonCrypto() ? handshake.commonCrypto() : false
-            }))
-          }
-          if (protocol.crypto && handshake.commonCrypto()) {
-            protocol.crypto.wrap(handshake.commonCrypto(), self, opt, (err, conn) => {
-              if (err) return cb(err)
-              else next(conn)
-            })
-          } else {
-            warnNoCrypto()
-            self.getRaw((err, conn) => err ? cb(err) : next(conn))
-          }
-        })
-      })
+      const _conn = conn
+      const next = conn => {
+        conn.getObservedAddrs = _conn.getObservedAddrs
+        cb(null, new Client(conn, protocol, {
+          isServer: opt.isServer,
+          handshake: self.handshakeData,
+          crypto: protocol.crypto && handshake.commonCrypto() ? handshake.commonCrypto() : false
+        }))
+      }
+      if (handshake.getLibp2p() && handshake.getLibp2p().length) {
+        cb(null, null, handshake.getLibp2p()) //trigger upgrade
+        /*self.getRaw((err, conn) => { //closes the conn
+          if (err) return
+          pull(
+            pull.values([]),
+            conn,
+            pull.drain()
+          )
+        })*/
+      } else {
+        if (protocol.crypto && handshake.commonCrypto()) {
+          protocol.crypto.wrap(handshake.commonCrypto(), self, opt, (err, conn) => {
+            if (err) return cb(err)
+            else next(conn)
+          })
+        } else {
+          warnNoCrypto()
+          self.getRaw((err, conn) => err ? cb(err) : next(conn))
+        }
+      }
     })
   }
 

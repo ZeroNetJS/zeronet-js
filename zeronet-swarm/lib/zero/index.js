@@ -15,8 +15,17 @@ const ZProtocol = require("zeronet-protocol").Zero
 const LimitDialer = require("libp2p-swarm/src/limit-dialer")
 const uuid = require("uuid")
 
+const Id = require("peer-id")
 const Peer = require("peer-info")
 const ip2multi = require("zeronet-common/lib/network/ip2multi")
+
+function peerInfoFromMultiaddrs(addrs) {
+  const b58 = addrs[0].split("/")[0]
+  const id = Id.createFromB58String(b58)
+  const info = new Peer(id)
+  addrs.forEach(addr => info.multiaddrs.add(multiaddr(addr)))
+  return info
+}
 
 function getMultiaddrList(pi) {
   if (Peer.isPeerInfo(pi))
@@ -136,11 +145,16 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
       cb = data
       data = {}
     }
-    self.connect(peer, (err, client) => {
+    self.connect(peer, (err, client, peerInfo) => {
       if (err) return cb(err)
-      if (!cmd) return cb(null, client)
-      if (!client.cmd[cmd]) return cb(new Error("CMD Unsupported!")) //TODO: use a real method for that
-      client.cmd[cmd](data, cb)
+      if (peerInfo) {
+        if (!cmd) return cb(null, null, peerInfo)
+        else lp2p.cmd(cmd, data, cb)
+      } else {
+        if (!cmd) return cb(null, client)
+        if (!client.cmd[cmd]) return cb(new Error("CMD Unsupported!")) //TODO: use a real method for that
+        client.cmd[cmd](data, cb)
+      }
     })
   }
 
@@ -162,13 +176,26 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
     }
     const jobs = sortByTransport(addrs, tr)
 
-    function finish(multiaddr, conn, cb) {
-      upgradeClient(conn, (err, client) => {
+    function finishLibp2p(peer, cb) {
+      lp2p.dial(peer, err => {
         if (err) return cb(err)
-        conn.client = client
-        client.ma = multiaddr
-        conns[multiaddr] = conn
-        return cb(null, client)
+        lp2p.dial(null, null, peer)
+      })
+    }
+
+    function finish(multiaddr, conn, cb) {
+      upgradeClient(conn, (err, client, upgradeable) => {
+        if (err) return cb(err)
+        if (!upgradeable) {
+          conn.client = client
+          client.ma = multiaddr
+          conns[multiaddr] = conn
+          return cb(null, client)
+        } else {
+          const peer = peerInfoFromMultiaddrs(upgradeable)
+          addrs.map(a => a.toString()).forEach(a => conns[a] = peer)
+          finishLibp2p(peer, cb)
+        }
       })
     }
 
