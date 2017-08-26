@@ -2,7 +2,7 @@
 
 const PeerRequest = require("peer-request")
 const validate = require("zeronet-common/lib/verify").verifyProtocol
-const PeerRequestHandler = require("zeronet-protocol/lib/request/peer-request-handler")
+const PeerRequestHandler = require("./peer-request-handler")
 
 function genHandshakeData(protocol, client, zeronet) {
   let d = {
