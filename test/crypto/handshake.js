@@ -41,7 +41,7 @@ cryptos.forEach(crypto => {
         c.cmd.ping({}, cb)
       })
     })
-  }).timeout(5000)
+  }).timeout(20000)
 })
 
 afterEach(function (cb) {

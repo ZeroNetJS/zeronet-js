@@ -2,31 +2,16 @@
 
 const tls = require("tls")
 const net = require("net")
-const constants = require("constants")
 
 const toPull = require("stream-to-pull-stream")
 const toStream = require("pull-stream-to-stream")
 const Connection = require("interface-connection").Connection
+const sslConfig = require('ssl-config')('modern')
 
 const gen = require("zeronet-crypto/gen")
 
 const debug = require("debug")
 const log = debug("zeronet:crypto:tls")
-
-function pipeThroughNet(dup, cb) {
-  const s = net.createServer((socket) => {
-    dup.pipe(socket).pipe(dup)
-    s.close()
-  })
-  s.on("error", cb)
-  s.listen({
-    host: "127.0.0.1",
-    port: 0
-  }, e => {
-    if (e) return cb(e)
-    cb(null, "127.0.0.1", s.address().port)
-  })
-}
 
 function basicCrypto(type, protocol, handler) {
   let cert, certq = []
@@ -39,28 +24,45 @@ function basicCrypto(type, protocol, handler) {
 
   protocol.crypto.add("tls-" + type, (conn, opt, cb) => {
     log("tls init", type, opt)
-    let stream = toStream(conn)
-    pipeThroughNet(stream, (err, host, port) => {
-      if (err) return cb(err)
-
-      let stream
-
+    if (opt.isServer) {
       const next = () => {
-        handler(opt, host, port, cert, (err, _s) => {
-          if (err) return cb(err)
-          stream = _s
-          stream.on("error", e => cb(e))
-          log("tls ready", type, opt)
-        }, e => {
-          if (e) cb(e)
-          cb(null, new Connection(toPull.duplex(stream)))
+        log("tls %s [server] prepare", type)
+        const s = handler.server(cert, socket => {
+          cb(null, new Connection(toPull.duplex(socket), conn))
+        })
+        s.on("error", cb)
+        s.listen(e => {
+          if (e) return cb(e)
+          log("tls %s [server] start", type)
+          log("tls %s [server] client.connecting", type)
+          const client = net.connect(s.address(), e => {
+            if (e) return cb(e)
+            let stream = toStream(conn)
+            stream.pipe(client).pipe(stream)
+            log("tls %s [server] client.ready", type)
+          })
+          client.on("error", cb)
         })
       }
-
-      if (opt.isServer && !cert) certq.push(next)
-      else next()
-
-    })
+      if (cert) next()
+      else certq.push(next)
+    } else {
+      log("tls %s [client] server.prepare", type)
+      const s = net.createServer(socket => {
+        let stream = toStream(conn)
+        stream.pipe(socket).pipe(stream)
+        s.close()
+      })
+      s.on("error", cb)
+      s.listen(e => {
+        if (e) return cb(e)
+        log("tls %s [client] server.ready", type)
+        log("tls %s [client] connect", type)
+        const client = handler.client(s.address().host, s.address().port)
+        client.on("error", cb)
+        client.on("secureConnect", () => cb(null, new Connection(toPull.duplex(client), conn)))
+      })
+    }
   })
 }
 
@@ -70,37 +72,28 @@ module.exports = function TLSSupport(protocol) {
 }
 
 module.exports.tls_rsa = (protocol) => {
-  basicCrypto("rsa", protocol, (opt, host, port, cert, ready, cb) => {
-    let stream
-    if (opt.isServer) {
-      stream = new tls.connect({
-        host,
-        port,
-        isServer: true,
-        key: cert.privkey,
+  basicCrypto("rsa", protocol, {
+    server: (cert, onConnect) => {
+      return tls.createServer({
+        key: cert.key,
         cert: cert.cert,
-        requestCert: false,
-        rejectUnauthorized: false,
-        ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:" +
-          "!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK",
+        ciphers: sslConfig.ciphers,
         honorCipherOrder: true,
-        secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-      })
-    } else {
-      stream = tls.connect({
+        secureOptions: sslConfig.minimumTLSVersion
+      }, onConnect)
+    },
+    client: (host, port) => {
+      return tls.connect({
         host,
         port,
-        isServer: false,
         requestCert: true,
-        rejectUnauthorized: false,
-        secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-      }, cb)
+        honorCipherOrder: true,
+        secureOptions: sslConfig.minimumTLSVersion
+      })
     }
-    //stream.on("secureConnect", () => cb())
-    ready(null, stream)
   })
 }
-
+/* TODO: fix and rewrite
 module.exports.tls_ecc = (protocol) => {
   basicCrypto("ecc", protocol, (opt, host, port, cert, ready, cb) => {
     let stream
@@ -128,7 +121,8 @@ module.exports.tls_ecc = (protocol) => {
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
       }, cb)
     }
-    //stream.on("secureConnect", () => cb())
+    stream.on("secureConnect", () => cb(null, stream))
     ready(null, stream)
   })
 }
+*/
