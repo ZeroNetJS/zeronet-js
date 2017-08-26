@@ -5,12 +5,64 @@
 //ZNv2 on *:15543
 //don't ever put 2 swarms on the same port
 
+//basics
 const ZeroSwarm = require("./zero")
 const libp2p = require("libp2p")
 
+//multiformats
+const PeerInfo = require('peer-info')
+const multiaddr = require('multiaddr')
+
+//libp2p connection
+const SPDY = require('libp2p-spdy')
+const MULTIPLEX = require('libp2p-multiplex')
+const SECIO = require('libp2p-secio')
+
+//discovery
+const Railing = require("libp2p-railing")
+const MulticastDNS = require('libp2p-mdns')
+
+//dht
+const DHT = require('libp2p-kad-dht')
+
 function ZeroNetSwarm(opt) {
   const self = this
-  const zero = self.zero = new ZeroSwarm(opt.zero || {})
+
+  //znv2
+
+  if (!opt.zero) opt.zero = {}
+  opt.zero.id = opt.id
+  const zero = self.zero = new ZeroSwarm(opt.zero)
+
+  //libp2p
+
+  const peerInfo = new PeerInfo(opt.id);
+  (opt.libp2p.listen || []).forEach(addr => peerInfo.multiaddrs.add(multiaddr(addr)))
+
+  let dht
+
+  if (!opt.libp2p) opt.libp2p = {}
+  let discovery = []
+
+  if (opt.libp2p.bootstrap && opt.libp2p.bootstrap.length) discovery.push(new Railing(opt.libp2p.bootstrap))
+  if (opt.libp2p.mdns) discovery.push(new MulticastDNS(peerInfo, "zeronet"))
+  if (opt.libp2p.dht) dht = DHT
+  if (opt.libp2p.custom_dht) dht = opt.libp2p.custom_dht
+
+  const modules = {
+    transport: opt.libp2p.transports || [],
+    connection: {
+      muxer: [
+        MULTIPLEX,
+        SPDY
+      ],
+      crypto: [SECIO]
+    },
+    discovery: (opt.libp2p.discover || []).concat(discovery),
+    dht
+  }
+
+  const lp2p = self.lp2p = self.libp2p = new libp2p(modules, peerInfo /*, peerBook*/ )
 }
 
 module.exports = ZeroNetSwarm
