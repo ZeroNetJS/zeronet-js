@@ -29,7 +29,7 @@ function peerInfoFromMultiaddrs(addrs) {
 
 function getMultiaddrList(pi) {
   if (Peer.isPeerInfo(pi))
-    return Peer.multiaddrs
+    return Peer.multiaddrs.toArray()
 
   if (multiaddr.isMultiaddr(pi))
     return [pi]
@@ -56,6 +56,7 @@ function createListeners(transport, ma, handler) {
         }
         listener.removeListener('error', done)
         transport.listeners.push(listener)
+        done()
       })
     }
   })
@@ -128,7 +129,7 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
   if (opt.nat) nat = self.nat = new NAT(self, opt)
 
   self.start = cb => series([
-    listen, //FIXME: get's stuck here
+    listen,
     nat ? nat.doDefault : cb => cb()
   ], cb)
   self.stop = cb => series([
@@ -149,7 +150,7 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
       if (err) return cb(err)
       if (peerInfo) {
         if (!cmd) return cb(null, null, peerInfo)
-        else lp2p.cmd(cmd, data, cb)
+        else lp2p.cmd(peerInfo, cmd, data, cb)
       } else {
         if (!cmd) return cb(null, client)
         if (!client.cmd[cmd]) return cb(new Error("CMD Unsupported!")) //TODO: use a real method for that
@@ -219,7 +220,10 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
 
     const readyconns = addrs.map(a => a.toString()).filter(a => conns[a]).map(a => conns[a])
     if (!readyconns.length) dialLoop()
-    else cb(null, readyconns[0].client)
+    else {
+      if (Peer.isPeerInfo(readyconns[0])) cb(null, null, readyconns[0]) //upgrade is handled in .dial
+      else cb(null, readyconns[0].client)
+    }
   }
 }
 module.exports = ZNV2Swarm

@@ -121,7 +121,7 @@ module.exports = function NatBroker(swarm, swarmopt) {
 
   self.freePort = cb => {
     let d = {}
-    let ports = swarmopt.listen.forEach(ma => parseInt(ma.split("/").slice(-2)[0], 10)).filter(p => {
+    let ports = (swarmopt.listen || []).map(ma => parseInt(ma.split("/").slice(-1)[0], 10)).filter(p => {
       const r = !d[p]
       d[p] = true
       return r
