@@ -126,8 +126,22 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
     unlisten
   ], cb)
 
-  self.dial = (peer, cmd, data, cb) => {
-
+  self.dial = (peer, cmd, data, cb) => { //TODO: handle upgrading
+    if (typeof cmd == "function") {
+      cb = cmd
+      cmd = null
+      data = null
+    }
+    if (typeof data == "function") {
+      cb = data
+      data = {}
+    }
+    self.connect(peer, (err, client) => {
+      if (err) return cb(err)
+      if (!cmd) return cb(null, client)
+      if (!client.cmd[cmd]) return cb(new Error("CMD Unsupported!")) //TODO: use a real method for that
+      client.cmd[cmd](data, cb)
+    })
   }
 
   const upgradeClient = proto.upgradeConn({
