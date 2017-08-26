@@ -59,6 +59,9 @@ function Libp2pSwarm(opt) {
       cb()
     }
   ], cb)
+
   self.stop = lp2p.stop.bind(lp2p)
+
+  self.dial = lp2p.dial.bind(lp2p)
 }
 module.exports = Libp2pSwarm

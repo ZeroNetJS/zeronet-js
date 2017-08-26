@@ -42,7 +42,7 @@ function dialables(tp, multiaddrs) {
   return tp.filter(multiaddrs)
 }
 
-function ZNV2Swarm(opt, protocol, zeronet) {
+function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
   const self = this
   const proto = self.proto = self.protocol = new ZProtocol({
     crypto: opt.crypto
@@ -85,5 +85,13 @@ function ZNV2Swarm(opt, protocol, zeronet) {
   self.stop = cb => series([
     unlisten
   ], cb)
+
+  self.dial = (peer, cmd, data, cb) => {
+
+  }
+
+  self.connect = (peer, cb) => {
+    
+  }
 }
 module.exports = ZNV2Swarm

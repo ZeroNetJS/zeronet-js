@@ -8,6 +8,7 @@
 //basics
 const ZeroSwarm = require("./zero")
 const Lp2pSwarm = require("./lp2p")
+const Dial = require("./dial")
 const series = require('async/series')
 
 function ZeroNetSwarm(opt, zeronet) {
@@ -23,7 +24,7 @@ function ZeroNetSwarm(opt, zeronet) {
   //znv2
   if (!opt.zero) opt.zero = {}
   opt.zero.id = opt.id
-  const zero = self.zero = new ZeroSwarm(opt.zero, protocol, zeronet)
+  const zero = self.zero = new ZeroSwarm(opt.zero, protocol, zeronet, lp2p)
 
   self.start = cb => series([
     lp2p.start,
@@ -34,6 +35,8 @@ function ZeroNetSwarm(opt, zeronet) {
     lp2p.stop,
     zero.stop
   ], cb)
+
+  self.dial = Dial(zero, lp2p)
 }
 
 module.exports = ZeroNetSwarm
