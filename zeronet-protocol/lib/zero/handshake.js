@@ -8,19 +8,19 @@ function genHandshakeData(protocol, client, zeronet) {
   let d = {
     crypt: null,
     crypt_supported: protocol.crypto ? protocol.crypto.supported() : [],
-    fileserver_port: zeronet.swarm.advertise.port || 0,
+    fileserver_port: zeronet.swarm.zero.advertise.port || 0,
     protocol: "v2",
-    port_opened: zeronet.swarm.advertise.port_open || false,
+    port_opened: zeronet.swarm.zero.advertise.port_open || false,
     rev: zeronet.rev,
     version: zeronet.version,
-    libp2p_support: zeronet.swarm.libp2p_native,
     own: true //this marks our own handshake. required for linking
   }
   if (client.isTor) {
     d.onion = 0 //TODO: add tor
   } else {
     d.peer_id = zeronet.peer_id
-    d.target_ip = zeronet.swarm.advertise.ip || "0.0.0.0"
+    d.target_ip = zeronet.swarm.zero.advertise.ip || "0.0.0.0"
+    d.libp2p = zeronet.swarm.lp2p.adv
   }
   return d
 }

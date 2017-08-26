@@ -10,18 +10,20 @@ const ZeroSwarm = require("./zero")
 const Lp2pSwarm = require("./lp2p")
 const series = require('async/series')
 
-function ZeroNetSwarm(opt) {
+function ZeroNetSwarm(opt, zeronet) {
   const self = this
+
+  const protocol = {} //TODO: add meta-protocol for protobuf and msgpack handler creation
 
   //libp2p
   if (!opt.libp2p) opt.libp2p = {}
   opt.libp2p.id = opt.id
-  const lp2p = self.lp2p = self.libp2p = new Lp2pSwarm(opt.libp2p)
+  const lp2p = self.lp2p = self.libp2p = new Lp2pSwarm(opt.libp2p, protocol, zeronet)
 
   //znv2
   if (!opt.zero) opt.zero = {}
   opt.zero.id = opt.id
-  const zero = self.zero = new ZeroSwarm(opt.zero)
+  const zero = self.zero = new ZeroSwarm(opt.zero, protocol, zeronet)
 
   self.start = cb => series([
     lp2p.start,

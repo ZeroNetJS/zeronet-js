@@ -114,7 +114,7 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
           const next = conn => {
             conn.getObservedAddrs = cb => cb(aderr, addr)
             conn.getPeerInfo = cb => cb(pierr, pi)
-            cb(null, new Client(conn, protocol, zeronet, {
+            cb(null, new Client(conn, protocol, {
               isServer: opt.isServer,
               handshake: self.handshakeData,
               crypto: protocol.crypto && handshake.commonCrypto() ? handshake.commonCrypto() : false

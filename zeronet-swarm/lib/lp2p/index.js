@@ -2,6 +2,7 @@
 
 //basics
 const libp2p = require("libp2p")
+const series = require("async/series")
 
 //multiformats
 const PeerInfo = require('peer-info')
@@ -24,7 +25,8 @@ function Libp2pSwarm(opt) {
 
   const peerInfo = new PeerInfo(opt.id);
   (opt.listen || []).forEach(addr => peerInfo.multiaddrs.add(multiaddr(addr)))
-
+  self.adv = []
+  //peerInfo.multiaddrs.forEach(ma => )
   let dht
 
   let discovery = []
@@ -49,7 +51,14 @@ function Libp2pSwarm(opt) {
 
   const lp2p = self.lp2p = self.libp2p = new libp2p(modules, peerInfo /*, peerBook*/ )
 
-  self.start = lp2p.start.bind(lp2p)
+  self.start = cb => series([
+    lp2p.start.bind(lp2p),
+    cb => {
+      self.adv = []
+      peerInfo.multiaddrs.forEach(ma => self.adv.push(ma.toString()))
+      cb()
+    }
+  ], cb)
   self.stop = lp2p.stop.bind(lp2p)
 }
 module.exports = Libp2pSwarm

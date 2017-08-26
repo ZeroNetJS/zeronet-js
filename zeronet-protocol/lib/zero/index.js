@@ -9,7 +9,7 @@ const PeerRequestHandler = require("../request/peer-request-handler.js")
 const Crypto = require("zeronet-crypto/protocol")
 const debug = require("debug")
 
-function ZProtocol(opt) {
+function ZProtocol(opt, zeronet) {
 
   if (!opt) opt = {}
 
@@ -27,7 +27,7 @@ function ZProtocol(opt) {
     (conn, cb) => {
       log("upgrading conn", opt)
       if (!cb) cb = (() => {})
-      const c = conn.client = new HandshakeClient(conn, self, Object.assign(opt))
+      const c = conn.client = new HandshakeClient(conn, self, zeronet, Object.assign(opt))
       c.conn = conn.client
       c.upgrade((err, client) => {
         if (err) return cb(err)

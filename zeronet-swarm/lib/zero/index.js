@@ -42,11 +42,11 @@ function dialables(tp, multiaddrs) {
   return tp.filter(multiaddrs)
 }
 
-function ZNV2Swarm(opt) {
+function ZNV2Swarm(opt, protocol, zeronet) {
   const self = this
   const proto = self.proto = self.protocol = new ZProtocol({
     crypto: opt.crypto
-  })
+  }, zeronet)
 
   const tr = self.transport = {}
   const ma = self.multiaddrs = opt.listen.map(m => multiaddr(m))
