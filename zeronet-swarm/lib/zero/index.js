@@ -12,6 +12,8 @@ const series = require("async/series")
 const parallel = require('async/parallel')
 
 const ZProtocol = require("zeronet-protocol").Zero
+const LimitDialer = require("libp2p-swarm/src/limit-dialer")
+const uuid = require("uuid")
 
 const Peer = require("peer-info")
 const ip2multi = require("zeronet-common/lib/network/ip2multi")
@@ -50,6 +52,19 @@ function createListeners(transport, ma, handler) {
   })
 }
 
+function sortByTransport(tr, addrs) {
+  let r = []
+  for (var p in tr) {
+    const d = dialables(tr[p], addrs)
+    if (d.length) r.push({
+      transport: tr[p],
+      tr_name: p,
+      addrs: d
+    })
+  }
+  return r
+}
+
 function closeListeners(transport, callback) {
   parallel(transport.listeners.map((listener) => {
     return (cb) => {
@@ -69,6 +84,9 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
   const proto = self.proto = self.protocol = new ZProtocol({
     crypto: opt.crypto
   }, zeronet)
+
+  const conns = self.conns = {}
+  const dialer = new LimitDialer(8, 10 * 1000) //defaults from libp2p-swarm
 
   const tr = self.transport = {}
   const ma = self.multiaddrs = opt.listen.map(m => multiaddr(m))
@@ -112,26 +130,55 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
 
   }
 
+  const upgradeClient = proto.upgradeConn({
+    isServer: false
+  })
+
   self.connect = (peer, cb) => {
     const addrs = getMultiaddrList(peer).slice(0)
     if (!addrs.length) return cb(new Error("No addresses found in peerInfo"))
 
     log("dialing %s address(es)", addrs.length)
 
-    function tryDial(ma, cb) {
-      //TODO: add dialing
+    const job = uuid()
+    const peerInfo = {
+      toB58String() {
+        return job
+      }
+    }
+    const jobs = sortByTransport(addrs, tr)
+
+    function finish(multiaddr, conn, cb) {
+      upgradeClient(conn, (err, client) => {
+        if (err) return cb(err)
+        conn.client = client
+        client.ma = multiaddr
+        conns[multiaddr] = conn
+        return cb(null, client)
+      })
+    }
+
+    function tryDial(j, cb) {
+      dialer.dialMany(peerInfo, j.transport, j.addrs, (err, success) => {
+        if (err) return cb(err)
+        log("successfully dialed %s", success.multiaddr.toString())
+        return cb(null, success.multiaddr.toString(), success.conn)
+      })
     }
 
     function dialLoop() {
-      const a = addrs.shift()
-      if (!a) return cb(new Error("Couldn't dial into any of the addresses"))
-      log("dialing %s", a)
-      tryDial(a, (err, conn, upgradeable) => {
+      const j = jobs.shift()
+      if (!j) return cb(new Error("Couldn't dial into any of the addresses"))
+      log("dialing with %s (%s address(es))", j.tr_name, j.addrs.length)
+      tryDial(j, (err, multiaddr, conn) => {
         if (err) return dialLoop()
-        if (!upgradeable) return cb(null, conn)
+        return finish(multiaddr, conn, cb)
       })
     }
-    dialLoop()
+
+    const readyconns = addrs.map(a => a.toString()).filter(a => conns[a]).map(a => conns[a])
+    if (!readyconns.length) dialLoop()
+    else cb(null, readyconns[0].client)
   }
 }
 module.exports = ZNV2Swarm
