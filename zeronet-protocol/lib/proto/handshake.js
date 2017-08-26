@@ -54,7 +54,7 @@ function Handshake(data) {
   }
 
   addCMD("commonCrypto", () => self.crypt_supported.filter(c => self.linked.crypt_supported.indexOf(c) != -1)[0], true)
-  addCMD("hasLibp2p", () => self.libp2p_support && self.linked.libp2p_support, true)
+  addCMD("getLibp2p", () => self.libp2p && self.linked.libp2p ? self.linked.libp2p : false, true)
 }
 
 const debug = require("debug")
@@ -136,7 +136,7 @@ module.exports.def = { //Definitions are symmetric
   rev: "number",
   target_ip: "string",
   version: "string",
-  libp2p_support: [a => a === undefined, "boolean"]
+  libp2p: [a => a === undefined, "string"]
 }
 
 module.exports.req = new PeerRequest("handshake", module.exports.def, module.exports.def, validate)

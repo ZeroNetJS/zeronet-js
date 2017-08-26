@@ -31,7 +31,7 @@ const defaults = {
   //id_expire: 1000 * 60 * 60 * 24 * 7, //approx 1 week
   modules: {
     uiserver: require("zeronet-uiserver"),
-    nat: require("zeronet-swarm/nat")
+    nat: require("zeronet-swarm/lib/zero/nat")
   },
   swarm: {
     zero: {
@@ -195,7 +195,7 @@ try {
     //if ((id.created_at || 0) + config.id_expire < new Date().getTime())
     //  createAndSaveID(true)
     //else
-      Id.createFromJSON(id.id, liftoff)
+    Id.createFromJSON(id.id, liftoff)
   } else createAndSaveID()
 } catch (e) {
   liftoff(e)

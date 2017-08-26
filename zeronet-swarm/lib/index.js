@@ -8,43 +8,34 @@
 //basics
 const ZeroSwarm = require("./zero")
 const Lp2pSwarm = require("./lp2p")
+const series = require('async/series')
 
 function ZeroNetSwarm(opt) {
   const self = this
+
+  //libp2p
+  if (!opt.libp2p) opt.libp2p = {}
+  opt.libp2p.id = opt.id
+  const lp2p = self.lp2p = self.libp2p = new Lp2pSwarm(opt.libp2p)
 
   //znv2
   if (!opt.zero) opt.zero = {}
   opt.zero.id = opt.id
   const zero = self.zero = new ZeroSwarm(opt.zero)
 
-  //libp2p
-  if (!opt.libp2p) opt.libp2p = {}
-  opt.libp2p.id = opt.id
-  const lp2p = self.lp2p = self.libp2p = new Lp2pSwarm(opt.libp2p)
+  self.start = cb => series([
+    lp2p.start,
+    zero.start
+  ], cb)
+
+  self.stop = cb => series([
+    lp2p.stop,
+    zero.stop
+  ], cb)
 }
 
 module.exports = ZeroNetSwarm
 /*"use strict"
-
-const libp2p = require('libp2p')
-const MulticastDNS = require('libp2p-mdns')
-const DHT = require('libp2p-kad-dht')
-
-const PeerInfo = require('peer-info')
-const multiaddr = require('multiaddr')
-
-const SPDY = require('libp2p-spdy')
-const MULTIPLEX = require('libp2p-multiplex')
-const SECIO = require('libp2p-secio')
-
-const debug = require("debug")
-const log = debug("zeronet:swarm")
-const Protocol = require("zeronet-protocol")
-const zdial = require("zeronet-swarm/dial")
-const each = require('async/each')
-const series = require('async/series')
-
-const mafmt = require('mafmt')
 
 class ZeroNetSwarm extends libp2p {
   constructor(options, zeronet) {
