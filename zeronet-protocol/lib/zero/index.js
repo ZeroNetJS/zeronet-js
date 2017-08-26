@@ -67,8 +67,7 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
       })
     }
 
-  self.applyDefaults = () =>
-    Defaults(self, zeronet, node)
+  self.applyDefaults = () => console.warn(".applyDefaults does not exist anymore")
 
   if (opt.crypto) {
     Crypto(self)

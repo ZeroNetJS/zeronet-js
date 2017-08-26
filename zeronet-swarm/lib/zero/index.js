@@ -70,8 +70,12 @@ function ZNV2Swarm(opt, protocol) {
     port_open: null
   }
 
+  let nat
+  if (opt.nat) nat = self.nat = new NAT(self, opt)
+
   self.start = cb => series([
-    listen
+    listen,
+    nat ? nat.doDefault : cb => cb()
   ], cb)
   self.stop = cb => series([
     unlisten

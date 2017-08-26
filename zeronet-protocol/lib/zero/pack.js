@@ -24,7 +24,7 @@ module.exports.v4 = {
     return ip + port
   },
   unpack: pack => {
-    assert(pack.length, 6, "Packed data has invalid length")
+    assert.equals(pack.length, 6, "Packed data has invalid length")
     let ip = pack.substr(0, 4)
     let port = pack.substr(4, 2)
     ip = inet.ntop(ip)
