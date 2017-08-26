@@ -100,6 +100,13 @@ const errCB = err => {
   process.exit(2)
 }
 
+process.on('uncaughtException', err => {
+  console.error(err.stack)
+  cm.logger("node").fatal("FATAL ERROR")
+  cm.logger("node").fatal(err)
+  process.nextTick(() => process.exit(2))
+})
+
 const confpath = path.resolve(dir, process.env.CONFIG_FILE || "config.json")
 const idpath = path.resolve(dir, process.env.ID_FILE || "id.json")
 
