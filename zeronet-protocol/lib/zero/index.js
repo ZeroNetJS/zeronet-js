@@ -9,7 +9,7 @@ const PeerRequestHandler = require("../request/peer-request-handler.js")
 const Crypto = require("zeronet-crypto/protocol")
 const debug = require("debug")
 
-module.exports = function Protocol(swarm, node, zeronet, opt) {
+function ZProtocol(opt) {
 
   if (!opt) opt = {}
 
@@ -27,7 +27,7 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
     (conn, cb) => {
       log("upgrading conn", opt)
       if (!cb) cb = (() => {})
-      const c = conn.client = new HandshakeClient(conn, self, zeronet, Object.assign(opt))
+      const c = conn.client = new HandshakeClient(conn, self, Object.assign(opt))
       c.conn = conn.client
       c.upgrade((err, client) => {
         if (err) return cb(err)
@@ -51,27 +51,15 @@ module.exports = function Protocol(swarm, node, zeronet, opt) {
     handlers[name] = cb
   }
 
-  self.upgradeConn = opt =>
-    (conn, cb) => {
-      log("upgrading conn", opt)
-      if (!cb) cb = (() => {})
-      const c = conn.client = new HandshakeClient(conn, self, zeronet, Object.assign(opt))
-      c.conn = conn.client
-      c.upgrade((err, client, libp2p) => {
-        if (err) return cb(err)
-        c.upgraded = client
-        client.libp2p = libp2p
-        log("finished upgrade", opt)
-        return cb(null, client)
-      })
-    }
-
   self.applyDefaults = () => console.warn(".applyDefaults does not exist anymore")
 
   if (opt.crypto) {
     Crypto(self)
     if (!Array.isArray(opt.crypto)) opt.crypto = [opt.crypto]
-    opt.crypto.map(c => c(self, zeronet))
+    opt.crypto.map(c => c(self))
   }
 
 }
+
+module.exports = ZProtocol
+module.exports.Handshake = require("./handshake")

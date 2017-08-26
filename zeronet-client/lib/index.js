@@ -12,7 +12,7 @@ const debug = require("debug")
 
 const log = debug("zeronet:protocol:client")
 
-function Client(conn, protocol, zeronet, opt) {
+function Client(conn, protocol, opt) {
   const self = this
 
   /* Handling */

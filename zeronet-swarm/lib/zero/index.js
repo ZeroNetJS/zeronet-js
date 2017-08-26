@@ -42,8 +42,11 @@ function dialables(tp, multiaddrs) {
   return tp.filter(multiaddrs)
 }
 
-function ZNV2Swarm(opt, protocol) {
+function ZNV2Swarm(opt) {
   const self = this
+  const proto = self.proto = self.protocol = new ZProtocol({
+    crypto: opt.crypto
+  })
 
   const tr = self.transport = {}
   const ma = self.multiaddrs = opt.listen.map(m => multiaddr(m))
@@ -56,7 +59,7 @@ function ZNV2Swarm(opt, protocol) {
 
   function listen(cb) {
     each(Object.keys(tr), (t, next) =>
-      parallel(createListeners(tr[t], ma, protocol.upgradeConn({
+      parallel(createListeners(tr[t], ma, proto.upgradeConn({
         isServer: true
       })), next), cb)
   }

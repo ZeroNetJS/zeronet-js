@@ -1,7 +1,7 @@
 "use strict"
 
-const msgstream = require("zeronet-client/lib/stream/msgpack")
-const handshake = require("zeronet-protocol/lib/proto/handshake")
+const msgstream = require("./stream/msgpack")
+const handshake = require("zeronet-protocol/lib/zero/handshake")
 const util = require("util")
 const Bridge = require("zeronet-client/lib/stream/bridge")
 const bl = require("bl")
