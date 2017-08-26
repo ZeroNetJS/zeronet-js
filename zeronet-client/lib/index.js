@@ -86,3 +86,4 @@ function Client(conn, protocol, zeronet, opt) {
 util.inherits(Client, EE)
 
 module.exports = Client
+module.exports.HandshakeClient = require("./handshake")

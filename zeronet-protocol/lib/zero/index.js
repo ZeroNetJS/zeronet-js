@@ -1,12 +1,11 @@
 "use strict"
 
-const HandshakeClient = require("zeronet-client/lib/handshake")
+const HandshakeClient = require("zeronet-client").HandshakeClient
 
 const PeerRequest = require("peer-request")
 const validate = require("zeronet-common/lib/verify").verifyProtocol
-const PeerRequestHandler = require("zeronet-protocol/lib/request/peer-request-handler.js")
+const PeerRequestHandler = require("../request/peer-request-handler.js")
 
-const Defaults = require("zeronet-protocol/lib/proto/defaults")
 const Crypto = require("zeronet-crypto/protocol")
 const debug = require("debug")
 

@@ -8,6 +8,8 @@ const each = require("async/each")
 const series = require("async/series")
 const parallel = require('async/parallel')
 
+const ZProtocol = require("zeronet-protocol").Zero
+
 function createListeners(transport, ma, handler) {
   return dialables(transport, ma).map((ma) => {
     return (cb) => {
@@ -54,7 +56,7 @@ function ZNV2Swarm(opt, protocol) {
 
   function listen(cb) {
     each(Object.keys(tr), (t, next) =>
-      parallel(createListeners(tr[t], ma, protocol.upgradeConnZNV2({
+      parallel(createListeners(tr[t], ma, protocol.upgradeConn({
         isServer: true
       })), next), cb)
   }
