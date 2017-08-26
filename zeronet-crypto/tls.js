@@ -87,6 +87,8 @@ module.exports.tls_rsa = (protocol) => {
         host,
         port,
         requestCert: true,
+        rejectUnauthorized: false,
+        ciphers: sslConfig.ciphers,
         honorCipherOrder: true,
         secureOptions: sslConfig.minimumTLSVersion
       })
