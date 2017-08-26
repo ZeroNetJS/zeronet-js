@@ -70,7 +70,7 @@ const defaults = {
         //"/dns4/zn.mkg20001.sytes.net/" //TODO: write this and create this peer
       ],
       mdns: true,
-      dht: false
+      dht: true
     }
   },
   uiserver: {

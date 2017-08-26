@@ -2,7 +2,7 @@
   "name": "zeronet-protocol",
   "version": "0.0.1-alpha17",
   "description": "ZeroNet protocol",
-  "main": "lib/proto/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

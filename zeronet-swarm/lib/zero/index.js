@@ -40,7 +40,7 @@ function dialables(tp, multiaddrs) {
   return tp.filter(multiaddrs)
 }
 
-function ZNV2Swarm(opt) {
+function ZNV2Swarm(opt, protocol) {
   const self = this
 
   const tr = self.transport = {}
@@ -54,7 +54,9 @@ function ZNV2Swarm(opt) {
 
   function listen(cb) {
     each(Object.keys(tr), (t, next) =>
-      parallel(createListeners(tr[t], ma, console.log), next), cb)
+      parallel(createListeners(tr[t], ma, protocol.upgradeConnZNV2({
+        isServer: true
+      })), next), cb)
   }
 
   function unlisten(cb) {
