@@ -114,8 +114,17 @@ function doTask(t) {
         }
 
         function gloop() {
+          const t = setTimeout(() => {
+            q.error(true)
+            w.send({
+              type: "die"
+            })
+            w = null
+            q = null
+          }, 1000)
           q.get((e, d) => {
             if (e) return
+            clearTimeout(t)
             w.send({
               type: "gen",
               key: d.t
