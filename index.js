@@ -29,16 +29,16 @@ module.exports = Bundler({
         crypto: [
           require("zeronet-crypto/secio"),
           //require("zeronet-crypto/tls").tls_rsa
-        ],
-        nat: true
+        ]/*,
+        nat: false*/
       },
       libp2p: {
         listen: [],
         transports: [
           new TCP()
-        ],
-        mdns: true,
-        dht: true
+        ]/*,
+        mdns: false,
+        dht: false*/
       }
     }
   }

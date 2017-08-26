@@ -52,7 +52,7 @@ function Libp2pSwarm(opt) {
   const lp2p = self.lp2p = self.libp2p = new libp2p(modules, peerInfo /*, peerBook*/ )
 
   self.start = cb => series([
-    lp2p.start.bind(lp2p),
+    cb => lp2p.start(cb),
     cb => {
       self.adv = []
       peerInfo.multiaddrs.forEach(ma => self.adv.push(ma.toString()))
@@ -60,8 +60,8 @@ function Libp2pSwarm(opt) {
     }
   ], cb)
 
-  self.stop = lp2p.stop.bind(lp2p)
+  self.stop = cb => lp2p.stop(cb)
 
-  self.dial = lp2p.dial.bind(lp2p)
+  self.dial = (peer, proto, cb) => lp2p.dial(peer, proto, cb)
 }
 module.exports = Libp2pSwarm

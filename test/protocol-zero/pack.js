@@ -1,6 +1,6 @@
 "use strict"
 
-const pack = require("zeronet-protocol/lib/proto/pack")
+const pack = require("zeronet-protocol/lib/zero/pack")
 const assert = require("assert")
 
 const map = {

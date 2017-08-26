@@ -61,7 +61,7 @@ const defaults = {
     libp2p: {
       listen: [
         "/ip4/0.0.0.0/tcp/15542",
-        "/ip6/::/tcp/15542"
+        //"/ip6/::/tcp/15542"
       ],
       transports: [
         new TCP()
@@ -70,7 +70,7 @@ const defaults = {
         //"/dns4/zn.mkg20001.sytes.net/" //TODO: write this and create this peer
       ],
       mdns: true,
-      dht: true
+      dht: false
     }
   },
   uiserver: {

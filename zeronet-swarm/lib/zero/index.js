@@ -98,9 +98,9 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
   const dialer = new LimitDialer(8, 10 * 1000) //defaults from libp2p-swarm
 
   const tr = self.transport = {}
-  const ma = self.multiaddrs = opt.listen.map(m => multiaddr(m))
+  const ma = self.multiaddrs = (opt.listen || []).map(m => multiaddr(m));
 
-  opt.transports.forEach(transport => {
+  (opt.transports || []).forEach(transport => {
     tr[transport.tag || transport.constructor.name] = transport
     if (!transport.listeners)
       transport.listeners = []
@@ -128,7 +128,7 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
   if (opt.nat) nat = self.nat = new NAT(self, opt)
 
   self.start = cb => series([
-    listen,
+    listen, //FIXME: get's stuck here
     nat ? nat.doDefault : cb => cb()
   ], cb)
   self.stop = cb => series([

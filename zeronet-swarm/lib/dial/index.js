@@ -4,6 +4,9 @@ const multiaddr = require("multiaddr")
 const Peer = require("peer-info")
 const ip2multi = require("zeronet-common/lib/network/ip2multi")
 
+const debug = require("debug")
+const log = debug("zeronet:swarm:dial")
+
 function getPeerIdType(pi) {
   if (Peer.isPeerInfo(pi))
     return "libp2p"
@@ -12,9 +15,8 @@ function getPeerIdType(pi) {
     return "zero"
 
   if (multiaddr.isMultiaddr(pi)) {
-    if (pi.toString().indexOf("ipfs") != -1) {
+    if (pi.toString().indexOf("ipfs") != -1)
       return "libp2p"
-    }
     return "zero"
   }
 
@@ -46,28 +48,39 @@ module.exports = function Dial(zero, lp2p) { //dynamic dialer that switches betw
       protocol = null
     }
 
+    let st
+
     const type = getPeerIdType(peer)
     const ntype = peer == "libp2p" ? "lp2p" : (peer || "zero")
 
     if (typeof protocol == "string" && typeof data == "object" && typeof cb == "function") {
       //zeronet peer cmd
       if (type == "zero") {
+        st = "znv2->peercmd"
         zero.dial(peer, protocol, data, cb)
       } else {
+        st = "lp2p->peercmd"
         lp2p.cmd(peer, protocol, data, cb)
       }
     } else if (typeof protocol == "string" && data == null && typeof cb == "function") {
       //libp2p dial
       if (type == "zero") {
+        st = "znv2->(up)lp2p->proto"
         zero.dial(peer, (err, client, peerInfo) => {
           if (err) return cb(err)
           if (client) return cb(new Error("Tried libp2p dial on ZNv2 node"))
           if (peerInfo) lp2p.dial(peerInfo, protocol, cb)
         })
-      } else lp2p.dial(peer, protocol, cb)
+      } else {
+        st = "lp2p->proto"
+        lp2p.dial(peer, protocol, cb)
+      }
     } else if (protocol == null && data == null && typeof cb == "function") {
       //just connect to the peer
+      st = "(dial)" + ntype
       t[ntype].dial(peer, cb)
     }
+
+    log("dialing %s as %s (over %s)", peer.toString(), st, ntype)
   })
 }
