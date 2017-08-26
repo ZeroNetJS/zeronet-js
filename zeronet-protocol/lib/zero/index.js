@@ -56,7 +56,7 @@ function ZProtocol(opt, zeronet) {
   if (opt.crypto) {
     Crypto(self)
     if (!Array.isArray(opt.crypto)) opt.crypto = [opt.crypto]
-    opt.crypto.map(c => c(self))
+    opt.crypto.map(c => c(self, zeronet, opt.id))
   }
 
 }

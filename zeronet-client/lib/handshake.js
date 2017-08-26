@@ -130,9 +130,12 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
         })*/
       } else {
         if (protocol.crypto && handshake.commonCrypto()) {
-          protocol.crypto.wrap(handshake.commonCrypto(), self, opt, (err, conn) => {
+          self.getRaw((err, conn) => {
             if (err) return cb(err)
-            else next(conn)
+            protocol.crypto.wrap(handshake.commonCrypto(), conn, opt, (err, conn) => {
+              if (err) return cb(err)
+              else next(conn)
+            })
           })
         } else {
           warnNoCrypto()

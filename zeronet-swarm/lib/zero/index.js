@@ -92,7 +92,8 @@ function dialables(tp, multiaddrs) {
 function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
   const self = this
   const proto = self.proto = self.protocol = new ZProtocol({
-    crypto: opt.crypto
+    crypto: opt.crypto,
+    id: opt.id
   }, zeronet)
 
   const conns = self.conns = {}
@@ -175,7 +176,7 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
         return job
       }
     }
-    const jobs = sortByTransport(addrs, tr)
+    const jobs = sortByTransport(tr, addrs)
 
     function finishLibp2p(peer, cb) {
       lp2p.dial(peer, err => {

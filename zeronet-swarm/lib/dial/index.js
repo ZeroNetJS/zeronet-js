@@ -51,7 +51,7 @@ module.exports = function Dial(zero, lp2p) { //dynamic dialer that switches betw
     let st
 
     const type = getPeerIdType(peer)
-    const ntype = peer == "libp2p" ? "lp2p" : (peer || "zero")
+    const ntype = type == "libp2p" ? "lp2p" : (type || "zero")
 
     if (typeof protocol == "string" && typeof data == "object" && typeof cb == "function") {
       //zeronet peer cmd
