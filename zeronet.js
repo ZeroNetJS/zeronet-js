@@ -54,7 +54,7 @@ const defaults = {
       ],
       crypto: [
         require("zeronet-crypto/secio"),
-        require("zeronet-crypto/tls").tls_rsa
+        //require("zeronet-crypto/tls").tls_rsa
       ],
       nat: true
     },
@@ -67,7 +67,7 @@ const defaults = {
         new TCP()
       ],
       bootstrap: [
-        "/dns4/zn.mkg20001.sytes.net/" //TODO: write this and create this peer
+        //"/dns4/zn.mkg20001.sytes.net/" //TODO: write this and create this peer
       ],
       mdns: true,
       dht: false

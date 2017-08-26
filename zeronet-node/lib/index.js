@@ -24,9 +24,6 @@ function ZeroNetNode(options) {
 
   if (!options) options = {}
   if (!options.modules) options.modules = {}
-  if (!options.node) options.node = {
-    trackers: []
-  }
   if (!options.swarm) options.swarm = {}
 
   options.swarm.id = options.id
@@ -38,13 +35,9 @@ function ZeroNetNode(options) {
     id: options.id.toB58String(),
     storage: options.storage.constructor.name,
     common: options.common,
-    protocol: options.swarm.protocol,
-    swarm: {
-      server: options.swarm.server,
-      server6: options.swarm.server6,
-    },
+    libp2p: options.swarm.libp2p,
     uiserver: options.uiserver,
-    node: options.node
+    zero: options.swarm.zero
   })
 
   const self = this
@@ -92,7 +85,7 @@ function ZeroNetNode(options) {
 
   const pool = self.peerPool = new PeerPool()
   /*const trackerManager = */
-  self.trackers = new TrackerManager(options.node.trackers, self)
+  self.trackers = new TrackerManager(options.swarm.zero.trackers, self)
 
   const ziteManager = self.zitem = new ZiteManager(self)
   self.peerInfo = swarm.peerInfo

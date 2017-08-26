@@ -136,7 +136,7 @@ module.exports.def = { //Definitions are symmetric
   rev: "number",
   target_ip: "string",
   version: "string",
-  libp2p: [a => a === undefined, "string"]
+  libp2p: [a => a === undefined, Array.isArray]
 }
 
 module.exports.req = new PeerRequest("handshake", module.exports.def, module.exports.def, validate)

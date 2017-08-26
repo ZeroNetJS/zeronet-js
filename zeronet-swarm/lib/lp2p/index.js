@@ -23,19 +23,19 @@ function Libp2pSwarm(opt) {
   const self = this
 
   const peerInfo = new PeerInfo(opt.id);
-  (opt.libp2p.listen || []).forEach(addr => peerInfo.multiaddrs.add(multiaddr(addr)))
+  (opt.listen || []).forEach(addr => peerInfo.multiaddrs.add(multiaddr(addr)))
 
   let dht
 
   let discovery = []
 
-  if (opt.libp2p.bootstrap && opt.libp2p.bootstrap.length) discovery.push(new Railing(opt.libp2p.bootstrap))
-  if (opt.libp2p.mdns) discovery.push(new MulticastDNS(peerInfo, "zeronet"))
-  if (opt.libp2p.dht) dht = DHT
-  if (opt.libp2p.custom_dht) dht = opt.libp2p.custom_dht
+  if (opt.bootstrap && opt.bootstrap.length) discovery.push(new Railing(opt.bootstrap))
+  if (opt.mdns) discovery.push(new MulticastDNS(peerInfo, "zeronet"))
+  if (opt.dht) dht = DHT
+  if (opt.custom_dht) dht = opt.custom_dht
 
   const modules = {
-    transport: opt.libp2p.transports || [],
+    transport: opt.transports || [],
     connection: {
       muxer: [
         MULTIPLEX,
@@ -43,10 +43,13 @@ function Libp2pSwarm(opt) {
       ],
       crypto: [SECIO]
     },
-    discovery: (opt.libp2p.discover || []).concat(discovery),
+    discovery: (opt.discover || []).concat(discovery),
     dht
   }
 
   const lp2p = self.lp2p = self.libp2p = new libp2p(modules, peerInfo /*, peerBook*/ )
+
+  self.start = lp2p.start.bind(lp2p)
+  self.stop = lp2p.stop.bind(lp2p)
 }
 module.exports = Libp2pSwarm
