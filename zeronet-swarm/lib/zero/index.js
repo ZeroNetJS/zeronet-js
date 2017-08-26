@@ -3,12 +3,34 @@
 const NAT = require("./nat")
 const multiaddr = require("multiaddr")
 
+const debug = require("debug")
+const log = debug("zeronet:swarm:zn")
+
 const once = require("once")
 const each = require("async/each")
 const series = require("async/series")
 const parallel = require('async/parallel')
 
 const ZProtocol = require("zeronet-protocol").Zero
+
+const Peer = require("peer-info")
+const ip2multi = require("zeronet-common/lib/network/ip2multi")
+
+function getMultiaddrList(pi) {
+  if (Peer.isPeerInfo(pi))
+    return Peer.multiaddrs
+
+  if (multiaddr.isMultiaddr(pi))
+    return [pi]
+
+  if (ip2multi.isIp(pi))
+    return [multiaddr(ip2multi(pi, "tcp"))]
+
+  if (typeof pi == "string" && (pi.match(/\/.+\/.+\/.+\/.+\//) || pi.match(/\/.+\/.+\/.+\/.+/) || pi.match(/\/.+\/.+\/.+\/.+\/.+\/.+\//) || pi.match(/\/.+\/.+\/.+\/.+\/.+\/.+/)))
+    return [multiaddr(pi)]
+
+  return []
+}
 
 function createListeners(transport, ma, handler) {
   return dialables(transport, ma).map((ma) => {
@@ -91,7 +113,25 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
   }
 
   self.connect = (peer, cb) => {
-    
+    const addrs = getMultiaddrList(peer).slice(0)
+    if (!addrs.length) return cb(new Error("No addresses found in peerInfo"))
+
+    log("dialing %s address(es)", addrs.length)
+
+    function tryDial(ma, cb) {
+      //TODO: add dialing
+    }
+
+    function dialLoop() {
+      const a = addrs.shift()
+      if (!a) return cb(new Error("Couldn't dial into any of the addresses"))
+      log("dialing %s", a)
+      tryDial(a, (err, conn, upgradeable) => {
+        if (err) return dialLoop()
+        if (!upgradeable) return cb(null, conn)
+      })
+    }
+    dialLoop()
   }
 }
 module.exports = ZNV2Swarm
