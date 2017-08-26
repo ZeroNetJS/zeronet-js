@@ -1,7 +1,5 @@
 "use strict"
 
-require("./hacks/mockery")()
-
 const libp2p = require('libp2p')
 const MulticastDNS = require('libp2p-mdns')
 const DHT = require('libp2p-kad-dht')
