@@ -1,5 +1,21 @@
 "use strict"
 
+//2 swarms
+//Libp2p on *:15542
+//ZNv2 on *:15543
+//don't ever put 2 swarms on the same port
+
+const ZeroSwarm = require("./zero")
+const libp2p = require("libp2p")
+
+function ZeroNetSwarm(opt) {
+  const self = this
+  const zero = self.zero = new ZeroSwarm(opt.zero || {})
+}
+
+module.exports = ZeroNetSwarm
+/*"use strict"
+
 const libp2p = require('libp2p')
 const MulticastDNS = require('libp2p-mdns')
 const DHT = require('libp2p-kad-dht')
@@ -57,13 +73,13 @@ class ZeroNetSwarm extends libp2p {
       dht: options.libp2p.dht ? DHT : false
     }
 
-    super(modules, peerInfo, /*peerBook*/ null)
+    super(modules, peerInfo, null)
 
     const self = this
     self.zeronet = zeronet
     self.peerInfo = peerInfo
 
-    /* if it's hacky and you know it clap your hands. *clap* */
+    /* if it's hacky and you know it clap your hands. *clap*
     self.libp2p_native = options.libp2p.native
     self.protocol = new Protocol(self.swarm, self, zeronet, options.protocol)
     self.handleZN = self.protocol.handle.bind(self.protocol)
@@ -144,4 +160,4 @@ class ZeroNetSwarm extends libp2p {
   }
 }
 
-module.exports = ZeroNetSwarm
+module.exports = ZeroNetSwarm*/

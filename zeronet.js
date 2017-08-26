@@ -26,33 +26,48 @@ mkdirp.sync(path.join(dir, "logs"))
 let cm
 
 const TCP = require('libp2p-tcp')
-//const WS = require(libp2p-websockets)
 
 const defaults = {
-  id_expire: 1000 * 60 * 60 * 24 * 7, //approx 1 week
+  //id_expire: 1000 * 60 * 60 * 24 * 7, //approx 1 week
   modules: {
     uiserver: require("zeronet-uiserver"),
     nat: require("zeronet-swarm/nat")
   },
   swarm: {
-    server: {
-      host: "0.0.0.0",
-      port: 15543
-    },
-    server6: {
-      host: "::",
-      port: 15543
-    },
-    protocol: {
+    zero: {
+      listen: [
+        "/ip4/0.0.0.0/tcp/15543"
+      ],
+      transports: [
+        new TCP()
+      ],
+      trackers: [
+        //"zero://boot3rdez4rzn36x.onion:15441",
+        //"zero://boot.zeronet.io#f36ca555bee6ba216b14d10f38c16f7769ff064e0e37d887603548cc2e64191d:15441",
+        "udp://tracker.coppersurfer.tk:6969",
+        "udp://tracker.leechers-paradise.org:6969",
+        "udp://9.rarbg.com:2710",
+        "http://tracker.opentrackr.org:1337/announce",
+        "http://explodie.org:6969/announce",
+        "http://tracker1.wasabii.com.tw:6969/announce"
+        //"http://localhost:25534/announce"
+      ],
       crypto: [
         require("zeronet-crypto/secio"),
         require("zeronet-crypto/tls").tls_rsa
-      ]
+      ],
+      nat: true
     },
     libp2p: {
-      transport: [
-        new TCP(),
-        //new WS()
+      listen: [
+        "/ip4/0.0.0.0/tcp/15542",
+        "/ip6/::/tcp/15542"
+      ],
+      transports: [
+        new TCP()
+      ],
+      bootstrap: [
+        "/dns4/zn.mkg20001.sytes.net/" //TODO: write this and create this peer
       ],
       mdns: true,
       dht: false
@@ -64,20 +79,6 @@ const defaults = {
       port: 15544
     }
   },
-  node: {
-    trackers: [
-      //"zero://boot3rdez4rzn36x.onion:15441",
-      //"zero://boot.zeronet.io#f36ca555bee6ba216b14d10f38c16f7769ff064e0e37d887603548cc2e64191d:15441",
-      "udp://tracker.coppersurfer.tk:6969",
-      "udp://tracker.leechers-paradise.org:6969",
-      "udp://9.rarbg.com:2710",
-      "http://tracker.opentrackr.org:1337/announce",
-      "http://explodie.org:6969/announce",
-      "http://tracker1.wasabii.com.tw:6969/announce"
-      //"http://localhost:25534/announce"
-    ]
-  },
-  nat: true,
   common: cm = new Common({
     debug_file: path.resolve(dir, path.join("logs", "debug.log")),
     debug_shift_file: path.resolve(dir, path.join("logs", "debug-last.log")),
@@ -191,9 +192,9 @@ const createAndSaveID = r => {
 try {
   if (fs.existsSync(idpath)) {
     const id = readJSON(idpath)
-    if ((id.created_at || 0) + config.id_expire < new Date().getTime())
-      createAndSaveID(true)
-    else
+    //if ((id.created_at || 0) + config.id_expire < new Date().getTime())
+    //  createAndSaveID(true)
+    //else
       Id.createFromJSON(id.id, liftoff)
   } else createAndSaveID()
 } catch (e) {
