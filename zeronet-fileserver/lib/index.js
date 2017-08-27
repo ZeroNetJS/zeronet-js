@@ -84,39 +84,44 @@ module.exports = function FileServer(protocol, zeronet) {
     cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
     //TODO: finish
   })
-}
 
-//TODO: rewrite
-function Defaults(protocol, zeronet) {
-  protocol.handleZN("getFile", {
-    site: "string",
-    inner_path: "string",
-    location: "number"
-  }, {
-    size: "number",
-    location: "number",
-    body: Buffer.isBuffer
-  }, (data, cb) => {
-    if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
-    cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
-    //TODO: finish
-  })
-
-  protocol.handleZN("ping", {}, {
-    body: b => b == "pong"
-  }, (data, cb) => {
-    cb(null, {
-      body: "pong"
-    })
-  })
-
-  protocol.handleZN("pex", {
-    site: "string",
-    peers: Array.isArray,
-    peers_onion: d => !d || Array.isArray(d),
-    need: "number"
-  }, {
-    peers: Array.isArray
+  protocol.handle("pex", { in: {
+      protobuf: {
+        "1": [
+          "string",
+          "site"
+        ],
+        "2": [
+          "repeated string",
+          "peers"
+        ],
+        "3": [
+          "optional repeated string",
+          "peers_onion"
+        ],
+        "4": [
+          "int32",
+          "need"
+        ]
+      },
+      strict: {
+        site: "string",
+        peers: Array.isArray,
+        peers_onion: d => !d || Array.isArray(d),
+        need: "number"
+      }
+    },
+    out: {
+      protobuf: {
+        "1": [
+          "repeated string",
+          "peers"
+        ]
+      },
+      strict: {
+        peers: Array.isArray
+      }
+    }
   }, (data, cb) => {
     if (data.peers) { //parse peers. ignore len!=6, but i think it's an encoding error instead
       let unpack = data.peers.map(p => {
@@ -133,56 +138,166 @@ function Defaults(protocol, zeronet) {
     //TODO: parse onion peers
   })
 
-  protocol.handleZN("update", {
-    site: "string",
-    inner_path: "string",
-    body: "string"
-  }, {
-    ok: "string"
+  protocol.handle("update", { in: {
+      protobuf: {
+        "1": [
+          "string",
+          "site"
+        ],
+        "2": [
+          "string",
+          "inner_path"
+        ],
+        "3": [
+          "string",
+          "body"
+        ]
+      },
+      strict: {
+        site: "string",
+        inner_path: "string",
+        body: "string"
+      }
+    },
+    out: {
+      protobuf: {
+        "1": [
+          "string",
+          "ok"
+        ]
+      },
+      strict: {
+        ok: "string"
+      }
+    }
   }, (data, cb) => {
     if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
     cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
     //TODO: finish
   })
 
-  protocol.handleZN("listModified", {
-    site: "string",
-    since: "number"
-  }, {
-    modified_files: "object"
+  protocol.handle("listModified", { in: {
+      protobuf: {
+        "1": [
+          "string",
+          "site"
+        ],
+        "2": [
+          "int64",
+          "since"
+        ]
+      },
+      strict: {
+        site: "string",
+        since: "number"
+      }
+    },
+    out: {
+      protobuf: {
+        "1": [
+          "bytes", //FIXME: need to embed (int)=val data or just use an if in the request
+          "modified_files"
+        ]
+      },
+      strict: {
+        modified_files: "object"
+      }
+    }
   }, (data, cb) => {
     if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
     cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
     //TODO: finish
   })
 
-  protocol.handleZN("getHashfield", {
-    site: "string"
-  }, {
-    hashfiled_raw: "object"
+  protocol.handle("getHashfield", { in: {
+      protobuf: {
+        "1": [
+          "string",
+          "site"
+        ]
+      },
+      strict: {
+        site: "string"
+      }
+    },
+    out: {
+      protobuf: {
+        "1": [
+          "string",
+          "hashfield_raw"
+        ]
+      },
+      strict: {
+        hashfield_raw: "string"
+      }
+    }
   }, (data, cb) => {
     if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
     cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
     //TODO: finish
   })
 
-  protocol.handleZN("setHashfield", {
-    site: "string",
-    hashfield_raw: "object"
-  }, {
-    ok: "object"
+  protocol.handle("setHashfield", { in: {
+      protobuf: {
+        "1": [
+          "string",
+          "site"
+        ],
+        "2": [
+          "string",
+          "hashfield_raw"
+        ]
+      },
+      strict: {
+        site: "string",
+        hashfield_raw: "string"
+      }
+    },
+    out: {
+      protobuf: {
+        "1": [
+          "string",
+          "ok"
+        ]
+      },
+      strict: {
+        ok: "string"
+      }
+    }
   }, (data, cb) => {
     if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
     cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
     //TODO: finish
   })
 
-  protocol.handleZN("findHashIds", {
-    site: "string",
-    hash_ids: Array.isArray //with numbers
-  }, {
-    peers: "object",
-    peers_onion: "object"
+  protocol.handle("findHashIds", { in: {
+      protobuf: {
+        "1": [
+          "string",
+          "site"
+        ],
+        "2": [
+          "bytes", //FIXME: need to embed (int)=val data or just use an if in the request
+          "hash_ids"
+        ]
+      }
+    },
+    out: {
+      protobuf: {
+        "1": [
+          "repeated string",
+          "peers"
+        ],
+        "2": [
+          "optional repeated string",
+          "peers_onion"
+        ]
+      },
+      strict: {
+        peers: Array.isArray,
+        peers_onion: d => !d || Array.isArray(d),
+      }
+    }
   }, (data, cb) => {
     if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
     cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
