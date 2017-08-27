@@ -42,7 +42,6 @@ module.exports = function FileStream(data) {
 
     function loop() {
       if (cur >= info.size) return finishLoop(!log("finished", dlpath, cur))
-      if (!peer.client) return finishLoop() //peer disconnected
       let args = {
         site: data.site,
         location: cur,
@@ -50,6 +49,7 @@ module.exports = function FileStream(data) {
       }
       if (info.size) args.file_size = info.size
       peer.cmd("getFile", args, function (err, res) {
+        //console.log("peere", peer.multiaddr, err)
         if (err) return finishLoop() //goto: next
         if (!res.body.length) {
           if (!info.size) return finishLoop()

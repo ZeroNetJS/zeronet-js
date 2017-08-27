@@ -3,6 +3,9 @@
 const NAT = require("./nat")
 const multiaddr = require("multiaddr")
 
+const crypto = require("crypto")
+const sha5 = text => crypto.createHash('sha512').update(text).digest('hex')
+
 const debug = require("debug")
 const log = debug("zeronet:swarm:zn")
 
@@ -170,7 +173,7 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
 
     log("dialing %s address(es)", addrs.length)
 
-    const job = uuid()
+    const job = addrs.length == 1 ? sha5(sha5(addrs[0].toString())).substr(0, 10) : uuid()
     const peerInfo = {
       toB58String() {
         return job

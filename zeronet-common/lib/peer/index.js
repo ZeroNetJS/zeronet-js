@@ -39,7 +39,7 @@ module.exports = function ZeroNetPeer(peerInfo, swarm) {
   assert(Peer.isPeerInfo(peerInfo), "not a peerInfo")
   const pi = self.info = peerInfo
   self.score = 0
-  let lastDial = 0
+  let lastFailDial = 0
 
   self.id = pi.id.toB58String()
   assert.equal(pi.multiaddrs._multiaddrs.length, 1, "peer must have exactly 1 address for now")
@@ -89,10 +89,10 @@ module.exports = function ZeroNetPeer(peerInfo, swarm) {
 
   function dial(cb) {
     if (self.score <= -100) return cb(new Error("Score too low"))
-    if (lastDial + 120 * 1000 > new Date().getTime()) return cb(new Error("This peer already was un-successfully dialed in the last 120s"))
-    lastDial = new Date().getTime()
+    if (lastFailDial + 120 * 1000 > new Date().getTime()) return cb(new Error("This peer already was un-successfully dialed in the last 120s"))
     swarm.dial(self.multiaddr, (err) => {
       if (err) {
+        lastFailDial = new Date().getTime()
         self.score -= 10
         return cb(err)
       }
@@ -116,7 +116,7 @@ module.exports = function ZeroNetPeer(peerInfo, swarm) {
       _cb(err, res)
     }
     setTimeout(cb, 1000, new Error("Timeout"))
-    if (!self.client && !opt.dial) return cb(new Error("Offline"))
+    //if (!self.client && !opt.dial) return cb(new Error("Offline"))
     dial(function (err) {
       if (err) return cb(err)
       swarm.dial(self.multiaddr, cmdName, data, cb)
