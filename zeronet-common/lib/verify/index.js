@@ -17,6 +17,7 @@ function debugDef(d_, ar) {
 
 function verifyProtocol(def, param) {
   //validate if "param" matches "def"
+  if (!param || typeof param != "object") throw new Error("Param is false")
   try {
     for (var p in def) {
       let dd

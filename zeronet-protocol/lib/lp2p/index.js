@@ -1,7 +1,10 @@
 "use strict"
 
-const ppb = require("pull-protocol-buffers")
+const ppb = require("pull-protocol-buffers").pull
 const pull = require("pull-stream")
+const empty = require("protocol-buffers")("message PeerCmd {required bool empty = 1;}").PeerCmd.encode({
+  empty: true
+})
 
 module.exports = function LProtocol(opt, lp2p) {
 
@@ -16,11 +19,13 @@ module.exports = function LProtocol(opt, lp2p) {
     swarm.handle("/zn/" + name + "/2.0.0", (protocol, conn) => {
       pull(
         conn,
-        ppb.decode(proto.in.proto.def),
+        ppb.decode(proto.in.proto.msg),
+        pull.take(1),
         pull.asyncMap((data, cb) => {
+          console.log("prc", data,cb)
           proto.peerRequest.handleRequest(cb, data, proto.handler)
         }),
-        ppb.encode(proto.out.proto.def),
+        ppb.encode(proto.out.proto.msg),
         conn
       )
     })
@@ -34,15 +39,22 @@ module.exports = function LProtocol(opt, lp2p) {
       proto.peerRequest.sendRequest((data, cb) => {
         pull(
           pull.values([data]),
-          ppb.encode(proto.in.def),
-          conn,
-          ppb.decode(proto.out.def),
+          ppb.encode(proto.in.proto.msg),
           pull.collect((err, data) => {
             if (err) return cb(err)
-            else {
-              if (data.length != 1) cb(new Error("Decoding failed!"))
-              return cb(null, data[0])
-            }
+            if (!data.length) data = [empty]
+            pull(
+              pull.values(data),
+              conn,
+              ppb.decode(proto.out.def),
+              pull.collect((err, data) => {
+                if (err) return cb(err)
+                else {
+                  if (data.length != 1) cb(new Error("Decoding failed! data.len != 1"))
+                  return cb(null, data[0])
+                }
+              })
+            )
           })
         )
       }, data, cb)
