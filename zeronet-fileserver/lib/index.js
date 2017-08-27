@@ -96,7 +96,7 @@ module.exports = function FileServer(protocol, zeronet) {
           "peers"
         ],
         "3": [
-          "optional repeated string",
+          "repeated string",
           "peers_onion"
         ],
         "4": [
@@ -289,7 +289,7 @@ module.exports = function FileServer(protocol, zeronet) {
           "peers"
         ],
         "2": [
-          "optional repeated string",
+          "repeated string",
           "peers_onion"
         ]
       },
