@@ -21,6 +21,12 @@
   "bugs": {
     "url": "https://github.com/ZeroNetJS/zeronet-js/issues"
   },
+  "browser": {
+    "libp2p-mdns": "./stub.js",
+    "libp2p-kad-dht": "./stub.js",
+    "nat-upnp": "./stub.js",
+    "./lib/zero/nat": "./stub.js"
+  },
   "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
   "dependencies": {
     "async": "^2.5.0",
