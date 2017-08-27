@@ -2,6 +2,8 @@
 
 const protobuf = require("protocol-buffers")
 const assert = require("assert")
+const PeerRequest = require("peer-request")
+const validate = require("zeronet-common/lib/verify").verifyProtocol
 
 function protoparse(def) {
   let r = "message PeerCmd {"
@@ -21,7 +23,7 @@ function PeerMSG(def) {
   const self = this
   self.proto = {}
   self.proto.def = protoparse(def.protobuf)
-  self.proto.msg = protobuf(self.proto.def)
+  self.proto.msg = protobuf(self.proto.def).PeerCmd
   self.strict = def.strict
 }
 
@@ -32,13 +34,15 @@ function Protocol() {
   self.handle = (name, opt, handler) => {
     assert(opt.in, "input definition missing")
     if (!opt.out) opt.out = opt.in
-    
+
     const p = protos[name] = {
       _opt: opt,
       in: new PeerMSG(opt.in),
       out: new PeerMSG(opt.out),
       handler
     }
+
+    p.peerRequest = new PeerRequest(name, p.in.strict, p.out.strict, validate)
 
     if (lp2p)
       lp2p.protocol.handle(name, p)

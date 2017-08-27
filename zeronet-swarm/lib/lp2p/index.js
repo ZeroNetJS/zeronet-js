@@ -65,6 +65,6 @@ function Libp2pSwarm(opt /*, protocol, zeronet*/ ) {
 
   self.dial = (peer, proto, cb) => lp2p.dial(peer, proto, cb)
 
-  self.proto = self.protocol = new LProtocol(self)
+  self.proto = self.protocol = new LProtocol({}, self)
 }
 module.exports = Libp2pSwarm
