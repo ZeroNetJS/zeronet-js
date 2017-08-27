@@ -29,11 +29,15 @@ function ZProtocol(opt, zeronet) {
       if (!cb) cb = (() => {})
       const c = conn.client = new HandshakeClient(conn, self, zeronet, Object.assign(opt))
       c.conn = conn.client
-      c.upgrade((err, client) => {
+      c.upgrade((err, client, upgrade) => {
         if (err) return cb(err)
-        c.upgraded = client
-        log("finished upgrade", opt)
-        return cb(null, client)
+        if (upgrade) {
+          return cb(null, null, upgrade)
+        } else {
+          c.upgraded = client
+          log("finished upgrade", opt)
+          return cb(null, client)
+        }
       })
     }
 

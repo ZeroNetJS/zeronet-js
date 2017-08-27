@@ -181,7 +181,7 @@ function ZNV2Swarm(opt, protocol, zeronet, lp2p) {
     function finishLibp2p(peer, cb) {
       lp2p.dial(peer, err => {
         if (err) return cb(err)
-        lp2p.dial(null, null, peer)
+        cb(null, null, peer)
       })
     }
 
