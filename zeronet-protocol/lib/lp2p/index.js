@@ -6,7 +6,6 @@ const empty = require("protocol-buffers")("message PeerCmd {required bool empty 
   empty: true
 })
 const once = require("once")
-const plog = () => pull.map(d => console.log(d) || d)
 
 module.exports = function LProtocol(opt, lp2p) {
 
@@ -47,7 +46,6 @@ module.exports = function LProtocol(opt, lp2p) {
             pull(
               pull.values(data),
               conn,
-              plog(),
               ppb.decode(proto.out.proto.msg),
               pull.collect((err, data) => {
                 if (err) return cb(err)
