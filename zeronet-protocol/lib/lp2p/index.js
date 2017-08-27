@@ -13,7 +13,7 @@ module.exports = function LProtocol(opt, lp2p) {
 
   self.handle = (name, proto) => {
     protos[name] = proto
-    swarm.handle("/zn/" + name + "/2.0.0/", (protocol, conn) => {
+    swarm.handle("/zn/" + name + "/2.0.0", (protocol, conn) => {
       pull(
         conn,
         ppb.decode(proto.in.proto.def),
@@ -29,7 +29,7 @@ module.exports = function LProtocol(opt, lp2p) {
   lp2p.cmd = (peer, cmd, data, cb) => {
     if (!protos[cmd]) return cb(new Error("CMD Unsupported"))
     const proto = protos[cmd]
-    lp2p.dial(peer, "/zn/" + cmd + "/2.0.0/", (err, conn) => {
+    lp2p.dial(peer, "/zn/" + cmd + "/2.0.0", (err, conn) => {
       if (err) return cb(err)
       proto.peerRequest.sendRequest((data, cb) => {
         pull(
