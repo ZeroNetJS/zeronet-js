@@ -7,12 +7,18 @@ module.exports = Bundler({
   modules: {},
   override: {
     swarm: {
+      zero: {
+        listen: [],
+        transports: []/*,
+        nat: false*/
+      },
       libp2p: {
-        transport: [
+        listen: [],
+        transports: [
           new WS()
-        ],
+        ]/*,
         mdns: false,
-        dht: false
+        dht: false*/
       }
     }
   }
