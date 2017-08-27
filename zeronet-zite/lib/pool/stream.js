@@ -6,7 +6,7 @@ const pull = require("pull-stream")
 
 const debug = require("debug")
 
-module.exports = function PeerStream(zite, zeronet) {
+module.exports = function PeerStream(zite) {
 
   const log = process.env.INTENSE_DEBUG ? debug("zeronet:zite:peer-stream:zite:" + zite.address) : () => {}
 
@@ -16,8 +16,7 @@ module.exports = function PeerStream(zite, zeronet) {
   FAQ:
     - Why cache?
       - Because otherwise we either have slow response times or we add a cache
-        Because this method would "short circuit" the streams and overload the dialer/tracker server,
-        we needed to add a maximum amount
+        The cache needs a maximum amount otherwise it will dial and request peers until something crashes
   */
 
   function PeerList() { //gets peers
@@ -85,7 +84,7 @@ module.exports = function PeerStream(zite, zeronet) {
     self.id = id
     self.dial = peer => {
       self.isFree = false
-      peer.dial(zeronet.swarm, err => {
+      peer.dial(err => {
         log("dialer:machine dialed", id, "success =", !err)
         if (!err) ee.emit("dial:ok", peer)
         self.isFree = true

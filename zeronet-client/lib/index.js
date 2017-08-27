@@ -2,8 +2,8 @@
 
 const msgstream = require("zeronet-client/lib/stream/msgpack")
 const util = require("util")
-const Bridge = require("zeronet-client/lib/stream/bridge")
-const clientDuplex = require("zeronet-client/lib/duplex")
+const Bridge = require("./stream/bridge")
+const clientDuplex = require("./duplex")
 const EE = require("events").EventEmitter
 
 const pull = require('pull-stream')
@@ -12,7 +12,7 @@ const debug = require("debug")
 
 const log = debug("zeronet:protocol:client")
 
-function Client(conn, protocol, zeronet, opt) {
+function Client(conn, protocol, opt) {
   const self = this
 
   /* Handling */
@@ -86,3 +86,4 @@ function Client(conn, protocol, zeronet, opt) {
 util.inherits(Client, EE)
 
 module.exports = Client
+module.exports.HandshakeClient = require("./handshake")

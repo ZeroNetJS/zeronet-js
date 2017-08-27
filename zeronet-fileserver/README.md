@@ -1,5 +1,5 @@
 # ZeroNet FileServer
-ZeroNet Standalone fileserver
+ZeroNet protocol definitions for the fileserver-api
 
 -----
 

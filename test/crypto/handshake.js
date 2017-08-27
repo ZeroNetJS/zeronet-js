@@ -2,7 +2,7 @@
 
 const crypto_data = {
   "secio": require("zeronet-crypto/secio"),
-  "tls-rsa": require("zeronet-crypto/tls").tls_rsa,
+  //"tls-rsa": require("zeronet-crypto/tls").tls_rsa,
   //"tls-ecc": require("zeronet-crypto/tls").tls_ecc
 }
 
@@ -23,11 +23,10 @@ cryptos.forEach(crypto => {
     node = ZeroNet({
       id: global.id,
       swarm: {
-        server: {
-          host: "127.0.0.1",
-          port: 25335
-        },
-        protocol: {
+        zero: {
+          listen: [
+            "/ip4/127.0.0.1/tcp/25335"
+          ],
           crypto: crypto.fnc
         }
       }

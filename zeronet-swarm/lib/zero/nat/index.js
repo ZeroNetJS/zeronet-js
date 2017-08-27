@@ -120,12 +120,12 @@ module.exports = function NatBroker(swarm, swarmopt) {
   }
 
   self.freePort = cb => {
-    let ports = []
-    if (swarmopt.server)
-      ports.push(swarmopt.server.port)
-    if (swarmopt.server6)
-      ports.push(swarmopt.server6.port)
-    if (ports[0] == ports[1]) ports = [ports[0]] //TODO: better dedup
+    let d = {}
+    let ports = (swarmopt.listen || []).map(ma => parseInt(ma.split("/").slice(-1)[0], 10)).filter(p => {
+      const r = !d[p]
+      d[p] = true
+      return r
+    })
     log("forwarding port(s)", ports)
     if (!ports.length) {
       log("no ports listening")

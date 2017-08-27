@@ -10,6 +10,7 @@ const uuid = require("uuid")
 const PeerPool = require("zeronet-common/lib/peer/pool")
 const TrackerManager = require("zeronet-common/lib/tracker/manager")
 const ZiteManager = require("zeronet-zite/lib/manager")
+const FileServer = require("zeronet-fileserver")
 
 const StorageWrapper = require("zeronet-common/lib/storage/wrapper") //wraps a storage into a more usable api
 const assert = require("assert")
@@ -24,9 +25,6 @@ function ZeroNetNode(options) {
 
   if (!options) options = {}
   if (!options.modules) options.modules = {}
-  if (!options.node) options.node = {
-    trackers: []
-  }
   if (!options.swarm) options.swarm = {}
 
   options.swarm.id = options.id
@@ -38,13 +36,9 @@ function ZeroNetNode(options) {
     id: options.id.toB58String(),
     storage: options.storage.constructor.name,
     common: options.common,
-    protocol: options.swarm.protocol,
-    swarm: {
-      server: options.swarm.server,
-      server6: options.swarm.server6,
-    },
+    libp2p: options.swarm.libp2p,
     uiserver: options.uiserver,
-    node: options.node
+    zero: options.swarm.zero
   })
 
   const self = this
@@ -90,9 +84,9 @@ function ZeroNetNode(options) {
 
   if (!options.swarm.protocol || !options.swarm.protocol.crypto || !options.swarm.protocol.crypto.length) logger.warn("CRYPTO DISABLED! ALL COMMUNICATION IS IN PLAINTEXT!")
 
-  const pool = self.peerPool = new PeerPool()
+  const pool = self.peerPool = new PeerPool(swarm)
   /*const trackerManager = */
-  self.trackers = new TrackerManager(options.node.trackers, self)
+  self.trackers = new TrackerManager(options.swarm.zero.trackers, self)
 
   const ziteManager = self.zitem = new ZiteManager(self)
   self.peerInfo = swarm.peerInfo
@@ -162,6 +156,9 @@ function ZeroNetNode(options) {
       storage.stop
     ], cb)
   }
+
+  FileServer(swarm.protocol, self)
+
 }
 
 module.exports = ZeroNetNode

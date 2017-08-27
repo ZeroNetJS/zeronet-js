@@ -37,7 +37,7 @@ module.exports = function PeerRequestHandler(name, _req, client, handler) {
         if (data.error) {
           let e = new Error(data.error)
           e.raw = data.error
-          e.stack = "Error: " + data.error + "\n    at PeerRequest(" + name + ")" + "\n    at ZeroNet Protocol"
+          e.stack = (data.error.startsWith("Error: ") ? "" : "Error: ") + data.error + "\n    at PeerCmd(" + name + ")" + "\n    at Peer(" + client.addr + ")" + "\n    at ZeroNet Protocol"
           return cb(e)
         } else {
           let res = {}

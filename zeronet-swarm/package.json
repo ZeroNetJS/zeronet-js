@@ -2,13 +2,14 @@
   "name": "zeronet-swarm",
   "version": "0.0.1-alpha17",
   "description": "libp2p based ZeroNet swarm",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "zeronet",
     "swarm",
+    "znv2",
     "libp2p"
   ],
   "author": "Maciej Krüger <mkg20001@gmail.com>",
@@ -28,6 +29,7 @@
     "libp2p-kad-dht": "^0.4.1",
     "libp2p-mdns": "^0.8.0",
     "libp2p-multiplex": "^0.4.4",
+    "libp2p-railing": "^0.6.1",
     "libp2p-tcp": "^0.10.2",
     "mafmt": "^2.1.8",
     "multiaddr": "^2.3.0",

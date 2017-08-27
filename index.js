@@ -6,16 +6,24 @@ module.exports = Bundler({
   name: "ZeroNetNodeJSBundle",
   modules: {
     uiserver: require("zeronet-uiserver"),
-    nat: require("zeronet-swarm/nat")
+    nat: require("zeronet-swarm/lib/zero/nat")
   },
   override: {
     swarm: {
-      libp2p: {
-        transport: [
+      zero: {
+        listen: [],
+        transports: [
           new TCP()
-        ],
-        mdns: true,
-        dht: false
+        ]/*,
+        nat: false*/
+      },
+      libp2p: {
+        listen: [],
+        transports: [
+          new TCP()
+        ]/*,
+        mdns: false,
+        dht: false*/
       }
     }
   }

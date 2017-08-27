@@ -2,25 +2,25 @@
 
 const PeerRequest = require("peer-request")
 const validate = require("zeronet-common/lib/verify").verifyProtocol
-const PeerRequestHandler = require("zeronet-protocol/lib/request/peer-request-handler")
+const PeerRequestHandler = require("./peer-request-handler")
 
 function genHandshakeData(protocol, client, zeronet) {
   let d = {
     crypt: null,
     crypt_supported: protocol.crypto ? protocol.crypto.supported() : [],
-    fileserver_port: zeronet.swarm.advertise.port || 0,
+    fileserver_port: zeronet.swarm.zero.advertise.port || 0,
     protocol: "v2",
-    port_opened: zeronet.swarm.advertise.port_open || false,
+    port_opened: zeronet.swarm.zero.advertise.port_open || false,
     rev: zeronet.rev,
     version: zeronet.version,
-    libp2p_support: zeronet.swarm.libp2p_native,
     own: true //this marks our own handshake. required for linking
   }
   if (client.isTor) {
     d.onion = 0 //TODO: add tor
   } else {
     d.peer_id = zeronet.peer_id
-    d.target_ip = zeronet.swarm.advertise.ip || "0.0.0.0"
+    d.target_ip = zeronet.swarm.zero.advertise.ip || "0.0.0.0"
+    d.libp2p = zeronet.swarm.lp2p.adv
   }
   return d
 }
@@ -54,7 +54,7 @@ function Handshake(data) {
   }
 
   addCMD("commonCrypto", () => self.crypt_supported.filter(c => self.linked.crypt_supported.indexOf(c) != -1)[0], true)
-  addCMD("hasLibp2p", () => self.libp2p_support && self.linked.libp2p_support, true)
+  addCMD("getLibp2p", () => self.libp2p && self.linked.libp2p ? self.linked.libp2p : false, true)
 }
 
 const debug = require("debug")
@@ -136,7 +136,7 @@ module.exports.def = { //Definitions are symmetric
   rev: "number",
   target_ip: "string",
   version: "string",
-  libp2p_support: [a => a === undefined, "boolean"]
+  libp2p: [a => a === undefined, Array.isArray]
 }
 
 module.exports.req = new PeerRequest("handshake", module.exports.def, module.exports.def, validate)
