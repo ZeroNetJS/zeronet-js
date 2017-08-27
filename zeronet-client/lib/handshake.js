@@ -3,9 +3,9 @@
 const msgstream = require("./stream/msgpack")
 const handshake = require("zeronet-protocol/lib/zero/handshake")
 const util = require("util")
-const Bridge = require("zeronet-client/lib/stream/bridge")
+const Bridge = require("./stream/bridge")
 const bl = require("bl")
-const clientDuplex = require("zeronet-client/lib/duplex")
+const clientDuplex = require("./duplex")
 const EE = require("events").EventEmitter
 
 const pull = require('pull-stream')

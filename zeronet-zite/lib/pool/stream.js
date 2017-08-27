@@ -16,8 +16,7 @@ module.exports = function PeerStream(zite) {
   FAQ:
     - Why cache?
       - Because otherwise we either have slow response times or we add a cache
-        Because this method would "short circuit" the streams and overload the dialer/tracker server,
-        we needed to add a maximum amount
+        The cache needs a maximum amount otherwise it will dial and request peers until something crashes
   */
 
   function PeerList() { //gets peers

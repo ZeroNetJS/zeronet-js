@@ -9,16 +9,13 @@ module.exports = Bundler({
     swarm: {
       zero: {
         listen: [],
-        transports: []/*,
-        nat: false*/
+        transports: []
       },
       libp2p: {
         listen: [],
         transports: [
           new WS()
-        ]/*,
-        mdns: false,
-        dht: false*/
+        ]
       }
     }
   }

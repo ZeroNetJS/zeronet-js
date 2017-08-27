@@ -47,7 +47,7 @@ function Protocol() {
     if (lp2p)
       lp2p.protocol.handle(name, p)
     if (zero)
-      zero.protocol.handle(name, p.in.strict, p.out.strict, handler)
+      zero.protocol.handle(name, p.out.strict, p.in.strict, handler)
   }
 
   self.setLp2p = l => lp2p = l
