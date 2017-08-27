@@ -3,6 +3,7 @@
 //basics
 const libp2p = require("libp2p")
 const series = require("async/series")
+const LProtocol = require("zeronet-protocol").Lp2p
 
 //multiformats
 const PeerInfo = require('peer-info')
@@ -20,7 +21,7 @@ const MulticastDNS = require('libp2p-mdns')
 //dht
 const DHT = require('libp2p-kad-dht')
 
-function Libp2pSwarm(opt) {
+function Libp2pSwarm(opt /*, protocol, zeronet*/ ) {
   const self = this
 
   const peerInfo = new PeerInfo(opt.id);
@@ -63,5 +64,7 @@ function Libp2pSwarm(opt) {
   self.stop = cb => lp2p.stop(cb)
 
   self.dial = (peer, proto, cb) => lp2p.dial(peer, proto, cb)
+
+  self.proto = self.protocol = new LProtocol(self)
 }
 module.exports = Libp2pSwarm

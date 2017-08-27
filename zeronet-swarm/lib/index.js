@@ -10,11 +10,12 @@ const ZeroSwarm = require("./zero")
 const Lp2pSwarm = require("./lp2p")
 const Dial = require("./dial")
 const series = require('async/series')
+const Protocol = require("zeronet-protocol")
 
 function ZeroNetSwarm(opt, zeronet) {
   const self = this
 
-  const protocol = {} //TODO: add meta-protocol for protobuf and msgpack handler creation
+  const protocol = self.protocol = new Protocol()
 
   //libp2p
   if (!opt.libp2p) opt.libp2p = {}
@@ -37,6 +38,9 @@ function ZeroNetSwarm(opt, zeronet) {
   ], cb)
 
   self.dial = Dial(zero, lp2p)
+
+  protocol.setLp2p(lp2p)
+  protocol.setZero(zero)
 }
 
 module.exports = ZeroNetSwarm

@@ -10,6 +10,7 @@ const uuid = require("uuid")
 const PeerPool = require("zeronet-common/lib/peer/pool")
 const TrackerManager = require("zeronet-common/lib/tracker/manager")
 const ZiteManager = require("zeronet-zite/lib/manager")
+const FileServer = require("zeronet-fileserver")
 
 const StorageWrapper = require("zeronet-common/lib/storage/wrapper") //wraps a storage into a more usable api
 const assert = require("assert")
@@ -155,6 +156,9 @@ function ZeroNetNode(options) {
       storage.stop
     ], cb)
   }
+
+  FileServer(swarm.protocol, self)
+
 }
 
 module.exports = ZeroNetNode

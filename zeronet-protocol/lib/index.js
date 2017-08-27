@@ -28,18 +28,30 @@ function PeerMSG(def) {
 function Protocol() {
   const self = this
   const protos = self.protos = {}
+  let lp2p, zero
   self.handle = (name, opt, handler) => {
     assert(opt.in, "input definition missing")
     if (!opt.out) opt.out = opt.in
-    protos[name] = {
+    
+    const p = protos[name] = {
       _opt: opt,
       in: new PeerMSG(opt.in),
       out: new PeerMSG(opt.out),
       handler
     }
+
+    if (lp2p)
+      lp2p.protocol.handle(name, p)
+    if (zero)
+      zero.protocol.handle(name, p.in.strict, p.out.strict, handler)
   }
+
+  self.setLp2p = l => lp2p = l
+  self.setZero = z => zero = z
+
 }
 
 module.exports = Protocol
 module.exports.PeerMSG = PeerMSG
 module.exports.Zero = require("./zero")
+module.exports.Lp2p = require("./lp2p")
