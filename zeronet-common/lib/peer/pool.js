@@ -11,7 +11,7 @@ const debug = require("debug")
 const log = debug("zeronet:peer-pool")
 log.error = debug("zeronet:peer-pool:error")
 
-module.exports = function PeerPool() {
+module.exports = function PeerPool(swarm) {
   const self = this
 
   let prev
@@ -43,7 +43,7 @@ module.exports = function PeerPool() {
       if (zite) peer.setZite(zite)
       return cb(null, peer)
     }
-    Peer.fromAddr(peerLike, (err, peer) => {
+    Peer.fromAddr(peerLike, swarm, (err, peer) => {
       if (err) return cb(err)
 
       if (isInList(peerLike)) {
@@ -83,7 +83,7 @@ module.exports = function PeerPool() {
   }
 
   function fromJSON(data, cb) {
-    map(data, Peer.fromJSON, (err, res) => {
+    map(data, Peer.fromJSON.bind(null, swarm), (err, res) => {
       if (err) return cb(err)
       peers = res
       update(true)

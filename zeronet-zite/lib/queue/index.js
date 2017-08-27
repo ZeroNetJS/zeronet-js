@@ -7,16 +7,16 @@ const pull = require("pull-stream")
 const FileStream = require("zeronet-zite/lib/file/stream")
 const PeerStream = require("zeronet-zite/lib/pool/stream")
 
-function QueueItem(zite, zeronet, info) {
+function QueueItem(zite, info) {
   info.site = zite.address
   return pull(
-    PeerStream(zite, zeronet),
+    PeerStream(zite),
     FileStream(info)
     //cache TODO: fix caching
   )
 }
 
-module.exports = function Queue(zite, zeronet) {
+module.exports = function Queue(zite) {
   const self = this
   const tree = zite.tree
 
@@ -38,7 +38,7 @@ module.exports = function Queue(zite, zeronet) {
     else url = info.path
     if (self.inQueue(url)) return cb(null, get(url))
     if (tree.exists(url) || tree.maybeValid(url)) {
-      const item = QueueItem(zite, zeronet, info)
+      const item = QueueItem(zite, info)
       queue[url] = item
       items.push(item)
       cb(null, item)

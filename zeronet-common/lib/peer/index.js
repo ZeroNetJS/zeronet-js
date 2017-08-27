@@ -34,7 +34,7 @@ function ZitePeerInfo(addr) {
   self.zite = addr
 }
 
-module.exports = function ZeroNetPeer(peerInfo) {
+module.exports = function ZeroNetPeer(peerInfo, swarm) {
   const self = this
   assert(Peer.isPeerInfo(peerInfo), "not a peerInfo")
   const pi = self.info = peerInfo
@@ -80,32 +80,26 @@ module.exports = function ZeroNetPeer(peerInfo) {
     }
   }
 
-  function disconnect() {
+  /*function disconnect() {
     self.score--
     self.connected = false
     self.conn = null
     self.clinet = null
-  }
+  }*/
 
-  function dial(swarm, cb) {
-    if (self.conn) cb(null, self.conn.client, self.conn)
-    else {
-      if (self.score <= -100) return cb(new Error("Score too low"))
-      if (lastDial + 120 * 1000 > new Date().getTime()) return cb(new Error("This peer already was un-successfully dialed in the last 120s"))
-      lastDial = new Date().getTime()
-      swarm.dialZN(peerInfo, (err, client) => {
-        if (err) {
-          self.score -= 10
-          return cb(err)
-        }
-        self.connected = true
-        self.score += 10
-        self.conn = client.conn
-        self.client = client
-        self.client.once("end", disconnect)
-        return cb()
-      })
-    }
+  function dial(cb) {
+    if (self.score <= -100) return cb(new Error("Score too low"))
+    if (lastDial + 120 * 1000 > new Date().getTime()) return cb(new Error("This peer already was un-successfully dialed in the last 120s"))
+    lastDial = new Date().getTime()
+    swarm.dial(self.multiaddr, (err) => {
+      if (err) {
+        self.score -= 10
+        return cb(err)
+      }
+      //self.connected = true
+      self.score += 10
+      return cb()
+    })
   }
 
   function cmd(cmdName, data, opt, _cb) {
@@ -123,10 +117,9 @@ module.exports = function ZeroNetPeer(peerInfo) {
     }
     setTimeout(cb, 1000, new Error("Timeout"))
     if (!self.client && !opt.dial) return cb(new Error("Offline"))
-    dial(opt.dial, function (err) {
+    dial(function (err) {
       if (err) return cb(err)
-      if (!self.client.cmd[cmdName]) return cb(new Error("Command Unsupported: " + cmdName))
-      self.client.cmd[cmdName](data, cb)
+      swarm.dial(self.multiaddr, cmdName, data, cb)
     })
   }
 
@@ -159,15 +152,15 @@ module.exports.piFromAddr = (pi, cb) => {
   } else cb(new Error("Not a valid ip:port, multiaddr or peerInfo"))
 }
 
-module.exports.fromAddr = (pi, cb) => {
+module.exports.fromAddr = (pi, swarm, cb) => {
   module.exports.piFromAddr(pi, (err, pi) => {
     if (err) return cb(err)
-    return cb(null, new module.exports(pi))
+    return cb(null, new module.exports(pi, swarm))
   })
 }
 
-module.exports.fromJSON = (data, cb) => {
-  module.exports.fromAddr(multiaddr(data.addr), (err, peer) => {
+module.exports.fromJSON = (swarm, data, cb) => {
+  module.exports.fromAddr(multiaddr(data.addr), swarm, (err, peer) => {
     if (err) return cb(err)
     data.zites.forEach(zite => peer.setZite(zite))
     if (data.score) peer.score = data.score

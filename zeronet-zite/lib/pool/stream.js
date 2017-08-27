@@ -6,7 +6,7 @@ const pull = require("pull-stream")
 
 const debug = require("debug")
 
-module.exports = function PeerStream(zite, zeronet) {
+module.exports = function PeerStream(zite) {
 
   const log = process.env.INTENSE_DEBUG ? debug("zeronet:zite:peer-stream:zite:" + zite.address) : () => {}
 
@@ -85,7 +85,7 @@ module.exports = function PeerStream(zite, zeronet) {
     self.id = id
     self.dial = peer => {
       self.isFree = false
-      peer.dial(zeronet.swarm, err => {
+      peer.dial(err => {
         log("dialer:machine dialed", id, "success =", !err)
         if (!err) ee.emit("dial:ok", peer)
         self.isFree = true
