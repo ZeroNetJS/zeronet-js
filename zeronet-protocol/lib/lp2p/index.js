@@ -5,6 +5,8 @@ const pull = require("pull-stream")
 const empty = require("protocol-buffers")("message PeerCmd {required bool empty = 1;}").PeerCmd.encode({
   empty: true
 })
+const once = require("once")
+const plog = () => pull.map(d => console.log(d) || d)
 
 module.exports = function LProtocol(opt, lp2p) {
 
@@ -18,20 +20,19 @@ module.exports = function LProtocol(opt, lp2p) {
     protos[name] = proto
     swarm.handle("/zn/" + name + "/2.0.0", (protocol, conn) => {
       pull(
-        conn,
+        conn.source,
         ppb.decode(proto.in.proto.msg),
         pull.take(1),
-        pull.asyncMap((data, cb) => {
-          console.log("prc", data,cb)
-          proto.peerRequest.handleRequest(cb, data, proto.handler)
-        }),
+        pull.asyncMap((data, cb) =>
+          proto.peerRequest.handleRequest(cb, data, proto.handler)),
         ppb.encode(proto.out.proto.msg),
-        conn
+        conn.sink
       )
     })
   }
 
-  lp2p.cmd = (peer, cmd, data, cb) => {
+  lp2p.cmd = (peer, cmd, data, _cb) => {
+    const cb = once(_cb)
     if (!protos[cmd]) return cb(new Error("CMD Unsupported"))
     const proto = protos[cmd]
     lp2p.dial(peer, "/zn/" + cmd + "/2.0.0", (err, conn) => {
@@ -42,11 +43,12 @@ module.exports = function LProtocol(opt, lp2p) {
           ppb.encode(proto.in.proto.msg),
           pull.collect((err, data) => {
             if (err) return cb(err)
-            if (!data.length) data = [empty]
+            if (!data.length || !data[0].length) data = [empty]
             pull(
               pull.values(data),
               conn,
-              ppb.decode(proto.out.def),
+              plog(),
+              ppb.decode(proto.out.proto.msg),
               pull.collect((err, data) => {
                 if (err) return cb(err)
                 else {
