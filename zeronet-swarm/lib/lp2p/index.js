@@ -4,6 +4,8 @@
 const libp2p = require("libp2p")
 const series = require("async/series")
 const LProtocol = require("zeronet-protocol").Lp2p
+const debug = require("debug")
+const log = debug("zeronet:swarm:libp2p")
 
 //multiformats
 const PeerInfo = require('peer-info')
@@ -25,12 +27,14 @@ const WSStar = require("libp2p-websocket-star")
 class WebsocketStarMulti { //listen on multiple websocket star servers without having to worry about one being down.
   // NOTE: if no servers are reachable or provided an error is thrown
   constructor(opt) {
+    this.log = debug("zeronet:swarm:websocket-star-multi")
     this.opt = opt || {}
     this.servers = opt.servers || []
     this.ws = new WSStar(this.opt)
     this.discovery = this.ws.discovery
   }
   dial(ma, opt, cb) {
+    this.log("dial", ma)
     return this.ws.dial(ma, opt, cb)
   }
   createListener(options, handler) {
@@ -51,6 +55,7 @@ class WebsocketStarMulti { //listen on multiple websocket star servers without h
 
     listener.listen = (ma, cb) => {
       const id = ma.toString().split("ipfs/").pop()
+      this.log("listen on %s servers with id %s", this.servers.length, id)
       parallel(this.servers.map(url => listener.servers[url]).map(server =>
         cb => {
           server.listen(multiaddr(server.url).encapsulate("ipfs/" + id), err => {
@@ -96,6 +101,8 @@ const DHT = require('libp2p-kad-dht')
 
 function Libp2pSwarm(opt /*, protocol, zeronet*/ ) {
   const self = this
+
+  log("creating libp2p swarm")
 
   const peerInfo = new PeerInfo(opt.id);
   (opt.listen || []).forEach(addr => peerInfo.multiaddrs.add(multiaddr(addr)))
