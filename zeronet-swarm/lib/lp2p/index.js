@@ -113,7 +113,7 @@ function Libp2pSwarm(opt /*, protocol, zeronet*/ ) {
   if (opt.custom_dht) dht = opt.custom_dht
   if (opt.wstar) { //wstar is an array with servers for wstar multi
     const wsm = new WebsocketStarMulti({
-      server: opt.wstar,
+      servers: opt.wstar,
       id: opt.id
     })
     peerInfo.multiaddrs.add(multiaddr("/libp2p-webrtc-star"))

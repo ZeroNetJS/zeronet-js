@@ -34,9 +34,7 @@ module.exports = function ZeroNetBundler(opt) {
           //"http://localhost:25534/announce"
         ]
       },
-      libp2p: {
-        transport: []
-      }
+      libp2p: {}
     },
     modules: {},
     storage: MEM
