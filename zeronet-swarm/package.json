@@ -37,7 +37,7 @@
     "libp2p-multiplex": "^0.4.4",
     "libp2p-railing": "^0.6.1",
     "libp2p-tcp": "^0.10.2",
-    "libp2p-websocket-star": "^0.2.3",
+    "libp2p-websocket-star": "^0.2.4",
     "mafmt": "^2.1.8",
     "multiaddr": "^2.3.0",
     "multiplex": "github:mkg20001/multiplex",

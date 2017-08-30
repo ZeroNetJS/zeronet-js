@@ -49,13 +49,13 @@ class WebsocketStarMulti { //listen on multiple websocket star servers without h
     this.servers.forEach(ser => {
       const s = this.ws.createListener(options, handler)
       s.once("error", () => {})
-      s.url = s
+      s.url = ser
       listener.servers[ser] = s
     })
 
     listener.listen = (ma, cb) => {
       const id = ma.toString().split("ipfs/").pop()
-      this.log("listen on %s servers with id %s", this.servers.length, id)
+      this.log("listen on %s server(s) with id %s", this.servers.length, id)
       parallel(this.servers.map(url => listener.servers[url]).map(server =>
         cb => {
           server.listen(multiaddr(server.url).encapsulate("ipfs/" + id), err => {
@@ -88,7 +88,10 @@ class WebsocketStarMulti { //listen on multiple websocket star servers without h
   }
 
   filter(ma) {
-    if (ma.toString().startsWith("/libp2p-webrtc-star")) return true //we essentially use all the addresses of webrtc-star
+    if (!Array.isArray(ma)) ma = [ma]
+    return ma.filter(ma => {
+      if (ma.toString().startsWith("/libp2p-webrtc-star")) return true //we essentially use all the addresses of webrtc-star
+    })
   }
 }
 
@@ -114,10 +117,17 @@ function Libp2pSwarm(opt /*, protocol, zeronet*/ ) {
 
   let transport = opt.transports || []
 
-  if (opt.bootstrap && opt.bootstrap.length) discovery.push(new Railing(opt.bootstrap))
-  if (opt.mdns) discovery.push(new MulticastDNS(peerInfo, "zeronet"))
+  if (opt.bootstrap && opt.bootstrap.length) {
+    discovery.push(new Railing(opt.bootstrap))
+    log("enabled bootstrap with %s peer(s)", opt.bootstrap.length)
+  }
+  if (opt.mdns) {
+    discovery.push(new MulticastDNS(peerInfo, "zeronet"))
+    log("enabled multicast-dns")
+  }
   if (opt.dht) dht = DHT
   if (opt.custom_dht) dht = opt.custom_dht
+  if (dht) log("enabled dht")
   if (opt.wstar) { //wstar is an array with servers for wstar multi
     const wsm = new WebsocketStarMulti({
       servers: opt.wstar,
@@ -126,6 +136,7 @@ function Libp2pSwarm(opt /*, protocol, zeronet*/ ) {
     peerInfo.multiaddrs.add(multiaddr("/libp2p-webrtc-star"))
     transport.push(wsm)
     discovery.push(wsm.discovery)
+    log("enabled websocket-star-multi with %s server(s)", opt.wstar.length)
   }
 
   const modules = {
