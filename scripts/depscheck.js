@@ -1,6 +1,6 @@
 "use strict"
 
-const re = /require\(["'](.+)["']\)/gmi
+const re = /require\(["']([a-z0-9/.-]+)["']\)/gmi
 
 let internal = ['assert',
   'buffer',
