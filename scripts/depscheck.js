@@ -66,8 +66,11 @@ function getPkgDir(file) {
 
 let reqbymod = {}
 let missing_mod = {}
+let visited = {}
 
 function checkDeps(file, modname, from) {
+  if (visited[file]) return
+  visited[file] = true
   let pkg = getPkgDir(file)
   let pjson = require(path.join(pkg, "package.json"))
   let node_modules = path.join(pkg, "node_modules")
@@ -102,16 +105,15 @@ function checkDeps(file, modname, from) {
       }
     }
     if (d.zero) {
-      if (d.fullpath.indexOf(modname + "/node_modules") != -1)
-        d.fullpath = path.join(path.dirname(path.dirname(path.dirname(d.fullpath))), "node_modules", d.mod, d.path)
-      if (!d.path) {
-        d.path = require(path.join(getPkgDir(d.fullpath), "package.json")).main
-        d.fullpath = path.join(d.fullpath, d.path)
-      }
-      d.fullpath = d.fullpath.replace(/node_modules\/node_modules\//g, "")
+      d.fullpath = d.fullpath.replace(/\/node_modules/g, "").replace(/zeronet-js\/zeronet-[a-z-]+\/(zeronet-[a-z-]+)/, "zeronet-js/$1")
+      if (!d.path)
+        d.path = require(path.join(d.fullpath, "package.json")).main
+      d.fullpath = path.join(d.fullpath, d.path)
       if (!fs.existsSync(d.fullpath) && fs.existsSync(d.fullpath + ".js")) d.fullpath += ".js"
-      if (!d.fullpath.endsWith(".js") && fs.existsSync(path.join(d.fullpath, "index.js"))) d.fullpath = path.join(d.fullpath, "index.js")
-      //if (!d.fullpath.endsWith(".js") && fs.existsSync(path.join(d.fullpath, "lib", "index.js"))) d.fullpath = path.join(d.fullpath, "lib", "index.js")
+      if (fs.lstatSync(d.fullpath).isDirectory()) {
+        d.path += "/index.js"
+        d.fullpath += "/index.js"
+      }
     }
     if (d.local) {
       if (!fs.existsSync(d.fullpath) && fs.existsSync(d.fullpath + ".js")) d.fullpath += ".js"
