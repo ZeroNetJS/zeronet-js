@@ -10,6 +10,7 @@
   "browser": "browser.js",
   "dependencies": {
     "colors": "^1.1.2",
+    "libp2p-tcp": "^0.10.2",
     "merge-recursive": "0.0.3",
     "mkdirp": "^0.5.1",
     "mockery": "^2.1.0",

@@ -61,16 +61,17 @@ const defaults = {
     libp2p: {
       listen: [
         "/ip4/0.0.0.0/tcp/15542",
-        //"/ip6/::/tcp/15542"
+        "/ip6/::1/tcp/15542",
+        "/libp2p-webrtc-star"
       ],
       transports: [
         new TCP()
       ],
-      bootstrap: [
-        //"/dns4/zn.mkg20001.sytes.net/" //TODO: write this and create this peer
-      ],
+      bootstrap: require("./bootstrappers").libp2p,
       mdns: true,
-      dht: false
+      dht: false,
+      wstar: require("./bootstrappers").wstar,
+      wstar_ignore: true
     }
   },
   uiserver: {
