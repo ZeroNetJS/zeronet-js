@@ -28,6 +28,23 @@ function OrderObject(unordered) {
   return ordered
 }
 
+function padWithLeadingZeros(string) {
+  return new Array(5 - string.length).join("0") + string;
+}
+
+function unicodeCharEscape(charCode) {
+  return "\\u" + padWithLeadingZeros(charCode.toString(16));
+}
+
+function unicodeEscape(string) {
+  return string.split("")
+    .map(function (char) {
+      const charCode = char.charCodeAt(0)
+      return charCode > 127 ? unicodeCharEscape(charCode) : char
+    })
+    .join("")
+}
+
 /**
   JSON Dumper
   * @param {} data
@@ -36,10 +53,12 @@ function OrderObject(unordered) {
   */
 function JSOND(data) {
   switch (typeof data) {
-  case "string":
   case "number":
   case "boolean":
     return JSON.stringify(data) //hand off primitives to JSON.stringify
+    break;
+  case "string":
+    return unicodeEscape(JSON.stringify(data)) //strings are special because unicode
     break;
   case "object":
     if (Array.isArray(data)) {

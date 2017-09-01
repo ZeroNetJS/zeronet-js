@@ -26,7 +26,7 @@ const bl = require("bl")
 
 describe("json", () => {
   for (let sample in samples) {
-    it("should stringify the " + sample + " like python", done => {
+    it("should stringify the " + sample + " sample like python", done => {
       const s = samples[sample]
       const p = cp.spawn("python2", [__dirname + "/json_convert.py"], {
         stdio: ["pipe", "pipe", "inherit"]
