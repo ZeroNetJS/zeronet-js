@@ -10,7 +10,23 @@ const samples = {
       "test"
     ]
   },
-  zero_hello: require("./zh.json")
+  zero_hello: require("./zh.json"),
+  object_with_arrays: {
+    test: [
+      "thats",
+      1,
+      "nice",
+      " Array ~~"
+    ],
+    test2: [
+      "other",
+      "array"
+    ]
+  },
+  null_type: [
+    null,
+    undefined
+  ]
 }
 
 global.python.ex `

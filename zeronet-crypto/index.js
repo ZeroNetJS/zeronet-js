@@ -21,7 +21,7 @@ function VerifySig(address, data, sig) {
   */
 function OrderObject(unordered) {
   const ordered = {}
-  if (typeof unordered != "object") return unordered
+  if (typeof unordered != "object" || unordered == null || Array.isArray(unordered)) return unordered
   Object.keys(unordered).sort().forEach(function (key) {
     ordered[key] = ((typeof unordered[key] == "object") && !Array.isArray(unordered[key])) ? OrderObject(unordered[key]) : unordered[key]
   })
@@ -52,6 +52,7 @@ function unicodeEscape(string) {
   * @private
   */
 function JSOND(data) {
+  if (data == null) return "null" //python gives a fuck about "undefined"
   switch (typeof data) {
   case "number":
   case "boolean":
@@ -67,6 +68,9 @@ function JSOND(data) {
       return "{" + Object.keys(data).map(key =>
         '"' + key + '": ' + JSOND(data[key])).join(", ") + "}"
     }
+    break;
+  default:
+    throw new Error("Cannot handle unknown type " + typeof data + "! Report as ZeroNetJS Bug!")
   }
 }
 
