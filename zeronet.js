@@ -28,7 +28,7 @@ let cm
 const TCP = require('libp2p-tcp')
 
 const defaults = {
-  //id_expire: 1000 * 60 * 60 * 24 * 7, //approx 1 week
+  id_expire: 1000 * 60 * 60 * 24 * 7, //approx 1 week
   modules: {
     uiserver: require("zeronet-uiserver"),
     nat: require("zeronet-swarm/lib/zero/nat")
@@ -193,10 +193,10 @@ const createAndSaveID = r => {
 try {
   if (fs.existsSync(idpath)) {
     const id = readJSON(idpath)
-    //if ((id.created_at || 0) + config.id_expire < new Date().getTime())
-    //  createAndSaveID(true)
-    //else
-    Id.createFromJSON(id.id, liftoff)
+    if ((id.created_at || 0) + config.id_expire < new Date().getTime())
+      createAndSaveID(true)
+    else
+      Id.createFromJSON(id.id, liftoff)
   } else createAndSaveID()
 } catch (e) {
   liftoff(e)
