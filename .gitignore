@@ -8,6 +8,7 @@ zeronet-win*
 config.json
 .pkg
 py
+*.pyc
 coverage
 .nyc_output
 *.tar.gz

@@ -4,6 +4,10 @@ const path = require("path")
 require("app-module-path").addPath(path.join(__dirname, ".."))
 
 const PeerId = require("peer-id")
+const pythonBridge = require('python-bridge')
+global.python = pythonBridge({
+  python: "python2"
+})
 
 //const sinon = require("sinon")
 //const chai = require("chai")

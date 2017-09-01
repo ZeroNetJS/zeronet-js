@@ -21,10 +21,34 @@ function VerifySig(address, data, sig) {
   */
 function OrderObject(unordered) {
   const ordered = {}
+  if (typeof unordered != "object") return unordered
   Object.keys(unordered).sort().forEach(function (key) {
     ordered[key] = ((typeof unordered[key] == "object") && !Array.isArray(unordered[key])) ? OrderObject(unordered[key]) : unordered[key]
   })
   return ordered
+}
+
+/**
+  JSON Dumper
+  * @param {} data
+  * @return {string}
+  * @private
+  */
+function JSOND(data) {
+  switch (typeof data) {
+  case "string":
+  case "number":
+  case "boolean":
+    return JSON.stringify(data) //hand off primitives to JSON.stringify
+    break;
+  case "object":
+    if (Array.isArray(data)) {
+      return "[" + data.map(JSOND).join(", ") + "]"
+    } else {
+      return "{" + Object.keys(data).map(key =>
+        '"' + key + '": ' + JSOND(data[key])).join(", ") + "}"
+    }
+  }
 }
 
 /**
@@ -35,7 +59,7 @@ function OrderObject(unordered) {
   * @return {string} - Stringified JSON
   */
 function PythonJSONDump(data) {
-  return JSON.stringify(OrderObject(data), null, 1).replace(/\n/g, "").replace(/  +/g, " ").replace(/([\{\[]) /g, "$1").replace(/ ([\}\]])/g, "$1")
+  return JSOND(OrderObject(data))
 }
 
 /**

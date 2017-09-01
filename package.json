@@ -9,7 +9,9 @@
   },
   "browser": "browser.js",
   "dependencies": {
+    "bl": "^1.2.1",
     "colors": "^1.1.2",
+    "dirty-chai": "^2.0.1",
     "libp2p-tcp": "^0.10.2",
     "merge-recursive": "0.0.3",
     "mkdirp": "^0.5.1",
@@ -18,6 +20,7 @@
     "node-bash-title": "0.0.2",
     "peer-id": "^0.9.0",
     "pkg-fetch-mkg": "^2.3.83",
+    "python-bridge": "^1.0.3",
     "zeronet-client": "file:zeronet-client",
     "zeronet-common": "file:zeronet-common",
     "zeronet-crypto": "file:zeronet-crypto",
@@ -33,7 +36,7 @@
   },
   "devDependencies": {
     "app-module-path": "^2.2.0",
-    "chai": "^4.1.1",
+    "chai": "^4.1.2",
     "extract-comments": "^0.10.1",
     "jsdoc-to-markdown": "^3.0.0",
     "gene-rator": "0.0.1-pre",
