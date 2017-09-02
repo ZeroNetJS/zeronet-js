@@ -25,6 +25,7 @@
   "dependencies": {
     "async": "^2.5.0",
     "jsonfile": "^3.0.1",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "stream-to-pull-stream": "^1.7.2"
   }
 }

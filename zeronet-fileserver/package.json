@@ -20,5 +20,7 @@
     "url": "https://github.com/ZeroNetJS/zeronet-js/issues"
   },
   "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
-  "dependencies": {}
+  "dependencies": {
+    "zeronet-protocol": "file:../zeronet-protocol"
+  }
 }

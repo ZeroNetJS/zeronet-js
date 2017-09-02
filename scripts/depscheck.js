@@ -159,6 +159,10 @@ checkDeps(fs.realpathSync("zeronet.js"), "zeronet", "__ENTRY");
     if (!Object.keys(d[k]).length) delete d[k]
 })
 
+for (let kk in reqbymod.zeronet)
+  if (kk.startsWith("zeronet-"))
+    delete reqbymod.zeronet[kk]
+
 console.log("unused deps\n", reqbymod)
 console.log("missing deps\n", missing_mod);
 
@@ -168,6 +172,6 @@ console.log("missing deps\n", missing_mod);
 ].forEach(p => {
   for (var pkg in p[0]) {
     let d = p[0][pkg]
-    console.error("cd " + pkg + " && npm " + p[1] + " --save " + Object.keys(d).join(" ") + " && cd ..")
+    if (Object.keys(d).length) console.error("cd " + pkg + " && npm " + p[1] + " --save " + Object.keys(d).join(" ") + " && cd ..")
   }
 })

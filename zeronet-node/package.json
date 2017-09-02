@@ -23,6 +23,10 @@
   "dependencies": {
     "async": "^2.5.0",
     "clone": "^2.1.1",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "zeronet-common": "file:../zeronet-common",
+    "zeronet-fileserver": "file:../zeronet-fileserver",
+    "zeronet-swarm": "file:../zeronet-swarm",
+    "zeronet-zite": "file:../zeronet-zite"
   }
 }

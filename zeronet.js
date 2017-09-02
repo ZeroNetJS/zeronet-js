@@ -16,7 +16,7 @@ const ZeroNet = require("zeronet-node")
 
 const FS = require("zeronet-storage-fs")
 
-const Common = require("zeronet-common/index.js")
+const Common = require("./lib/common")
 
 let dir = require("./lib/storage-dir")()
 
