@@ -39,7 +39,7 @@
     "libp2p-secio": "^0.7.1",
     "libp2p-spdy": "^0.10.6",
     "libp2p-swarm": "^0.31.2",
-    "libp2p-websocket-star-multi": "^0.1.0",
+    "libp2p-websocket-star-multi": "^0.1.1",
     "mafmt": "^2.1.8",
     "multiaddr": "^2.3.0",
     "multiplex": "github:mkg20001/multiplex",
