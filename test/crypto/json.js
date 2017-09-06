@@ -29,12 +29,6 @@ const samples = {
   ]
 }
 
-global.python.ex `
-  import json
-  def jsonTest(j):
-    return json.dumps(json.loads(j), sort_keys=True)
-`
-
 const assert = require("assert")
 const crypto = require("zeronet-crypto")
 const cp = require("child_process")
