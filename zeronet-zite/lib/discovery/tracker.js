@@ -8,7 +8,7 @@ module.exports = function Tracker(zite, node, discovery) {
   self.start = cb => {
     if (self.tracker) return cb() //already on
     self.tracker = node.trackers.create(zite.address)
-    self.tracker.on("peer", p => discovery.emit("peer", p))
+    self.tracker.on("peer", p => discovery.peer(p))
     cb()
   }
   self.stop = cb => {

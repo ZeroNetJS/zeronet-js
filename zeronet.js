@@ -62,7 +62,7 @@ const defaults = {
       listen: [
         "/ip4/0.0.0.0/tcp/15542",
         "/ip6/::1/tcp/15542",
-        "/libp2p-webrtc-star"
+        "/p2p-websocket-star"
       ],
       transports: [
         new TCP()

@@ -102,7 +102,9 @@ class MainPool extends Pool {
     return peer
   }
   add(pi) {
-    if (isInPool(this.cache, pi)) return false
+    let p = isInPool(this.cache, pi)
+    if (p.length > 1) throw new Error("Multiple peers found!")
+    if (p.length) return p.pop()
 
     if (PeerInfo.isPeerInfo(pi))
       return this.push(new Peer.Lp2pPeer(pi))
