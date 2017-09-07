@@ -72,6 +72,17 @@ module.exports = function ZeroNetPeer(peerInfo, swarm) {
     return zites_id[zite]
   }
 
+  function discoverZite(zite, cb) {
+    if (hasZite(zite)) return cb(true)
+    if (!self.isLibp2p) return cb(false)
+    cmd("hasZite", {
+      zite
+    }, (err, res) => {
+      if (err) return cb(false)
+      return cb(res.has)
+    })
+  }
+
   function toJSON() {
     return {
       addr: self.multiaddr,
@@ -125,6 +136,7 @@ module.exports = function ZeroNetPeer(peerInfo, swarm) {
 
   self.setZite = setZite
   self.hasZite = hasZite
+  self.discoverZite = discoverZite
 
   self.toJSON = toJSON
   self.dial = dial

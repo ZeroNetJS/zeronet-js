@@ -44,9 +44,9 @@ function Protocol() {
 
     p.peerRequest = new PeerRequest(name, p.in.strict, p.out.strict, validate)
 
-    if (lp2p)
+    if (lp2p && !opt.zero_only)
       lp2p.protocol.handle(name, p)
-    if (zero)
+    if (zero && !opt.lp2p_only)
       zero.protocol.handle(name, p.out.strict, p.in.strict, handler)
   }
 
