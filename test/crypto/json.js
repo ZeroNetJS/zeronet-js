@@ -33,12 +33,13 @@ const assert = require("assert")
 const crypto = require("zeronet-crypto")
 const cp = require("child_process")
 const bl = require("bl")
+const path = require("path")
 
 describe("json", () => {
   for (let sample in samples) {
-    it("should stringify the " + sample + " sample like python", done => {
+    it.python("should stringify the " + sample + " sample like python", done => {
       const s = samples[sample]
-      const p = cp.spawn("python2", [__dirname + "/json_convert.py"], {
+      const p = cp.spawn("python2", [path.join(__dirname, "json_convert.py")], {
         stdio: ["pipe", "pipe", "inherit"]
       })
       p.stdin.write(JSON.stringify(s))
