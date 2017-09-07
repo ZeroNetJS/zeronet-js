@@ -39,7 +39,7 @@ describe("json", () => {
   for (let sample in samples) {
     it.python("should stringify the " + sample + " sample like python", done => {
       const s = samples[sample]
-      const p = cp.spawn("python2", [path.join(__dirname, "json_convert.py")], {
+      const p = cp.spawn(it.py, [path.join(__dirname, "json_convert.py")], {
         stdio: ["pipe", "pipe", "inherit"]
       })
       p.stdin.write(JSON.stringify(s))
