@@ -29,7 +29,7 @@ module.exports = function PeerStream(zite) {
       log("peer:list:out read")
       function getLoop() {
         if (getter.peers) {
-          if (!getter.peers) zite.discovery.discover(() => {}) //low peers
+          if (!getter.peers) zite.discovery.discover() //low peers
           const peer_ = getter.getSync()
           const peer = peer_.pop()
           const type = peer_.pop()
@@ -38,7 +38,7 @@ module.exports = function PeerStream(zite) {
         } else {
           if (dgetter.peers) {
             log("peer:list:out discovery method")
-            zite.discovery.discover(() => {}) //get non-discovery peers
+            zite.discovery.discover() //get non-discovery peers
             const peer = dgetter.getSync()[0]
             peer.discoverZite(zite.address, res => {
               if (res) {
@@ -50,7 +50,7 @@ module.exports = function PeerStream(zite) {
             })
           } else {
             log("peer:list:out drained. discover")
-            zite.discovery.discover(() => {
+            zite.discovery.discoverCB(() => {
               process.nextTick(getLoop)
             })
           }

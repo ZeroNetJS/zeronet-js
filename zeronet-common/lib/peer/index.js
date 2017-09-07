@@ -6,6 +6,8 @@ const multi2ip = ip2multi.reverse4
 const PeerInfo = require("peer-info")
 const Id = require("peer-id")
 const multiaddr = require("multiaddr")
+const debug = require("debug")
+const log = process.env.INTENSE_DEBUG ? debug("zeronet:peer") : () => {}
 
 const crypto = require("crypto")
 const sha5 = text => crypto.createHash('sha512').update(text).digest('hex')
@@ -45,11 +47,13 @@ class Peer extends EventEmitter {
       addrs.map(addr => multiaddr.isMultiaddr(addr) ? addr : multiaddr(addr)).forEach(addr => this.pi.multiaddrs.add(addr))
     }
     this.addrs = this.pi.multiaddrs.toArray().map(a => a.toString())
+    log("created peer %s with address(es) %s", this.id, this.addrs.join(", "))
     this.zites = {}
     this.score = 0
   }
   seed(zite) {
     if (!this.zites[zite]) {
+      log("peer %s (%s) now seeds %s", this.id, this.addrs.join(", "), zite)
       this.zites[zite] = new ZiteInfo(zite)
       this.emit("seed", zite)
     }
@@ -95,8 +99,10 @@ function fromJSON(data) {
   data.zites.forEach(zite_ => {
     let zite = new ZiteInfo(zite_.addr)
     //TODO: hashfield
-    peer.zites[zite_] = zite
+    peer.zites[zite.addr] = zite
   })
+  log("peer %s seeds %s", peer.id, data.zites.map(z => z.addr).join(", "))
+  return peer
 }
 
 module.exports = {

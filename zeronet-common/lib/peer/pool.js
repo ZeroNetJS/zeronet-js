@@ -7,6 +7,8 @@ const PeerInfo = require("peer-info")
 const Id = require("peer-id")
 const multiaddr = require("multiaddr")
 const ip2multi = require("zeronet-common/lib/network/ip2multi")
+const debug = require("debug")
+const log = process.env.INTENSE_DEBUG ? debug("zeronet:pool") : () => {}
 
 function isInPool(cache, pi) {
   if (PeerInfo.isPeerInfo(pi))

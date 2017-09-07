@@ -22,14 +22,16 @@ function Discovery(zite, node, types) {
   let isRunning = self.isRunning = false
   self.start = cb => isRunning ? cb(new Error("Already running")) : each(self.methods, (t, cb) => t.start(cb), err => err ? cb(err) : cb(null, isRunning = true))
   self.stop = cb => !isRunning ? cb(new Error("Not running")) : each(self.methods, (t, cb) => t.stop(cb), err => err ? cb(err) : cb(null, isRunning = false))
-  self.discover = () => {
-    if (!isRunning) throw new Error("Not running")
-    if (discovering) return (queuedDiscover = true) && log("queued discover")
-    if (lastDiscover + 10 * 1000 > new Date().getTime()) {
-      discovering = true
-      log("paused discover for %s ms", lastDiscover + 10 * 1000 - new Date().getTime())
-      setTimeout(self.discover, lastDiscover + 10 * 1000 - new Date().getTime())
-      return
+  self.discover = force => {
+    if (!force) {
+      if (!isRunning) throw new Error("Not running")
+      if (discovering) return (queuedDiscover = true) && log("queued discover")
+      if (lastDiscover + 10 * 1000 > new Date().getTime()) {
+        discovering = true
+        log("paused discover for %s ms", lastDiscover + 10 * 1000 - new Date().getTime())
+        setTimeout(self.discover, lastDiscover + 10 * 1000 - new Date().getTime(), true)
+        return
+      }
     }
     log("discovery")
     discovering = true
@@ -37,12 +39,18 @@ function Discovery(zite, node, types) {
       if (err) log(err)
       discovering = false
       lastDiscover = new Date().getTime()
+      log("discover done")
+      self.emit("discover", err)
       if (queuedDiscover) {
         queuedDiscover = false
         log("executing queued discovery")
         self.discover()
       }
     })
+  }
+  self.discoverCB = cb => {
+    self.discover()
+    self.once("discover", cb)
   }
   self.peer = addr => {
     const peer = node.peerPool.add(addr)
