@@ -1,6 +1,6 @@
 "use strict"
 
-const protobuf = require("protocol-buffers")
+const protobuf = require("protons")
 const assert = require("assert")
 const PeerRequest = require("peer-request")
 const validate = require("zeronet-common/lib/verify").verifyProtocol

@@ -16,7 +16,7 @@
     "mockery": "^2.1.0",
     "moment": "^2.18.1",
     "node-bash-title": "0.0.2",
-    "peer-id": "^0.10.0",
+    "peer-id": "^0.10.1",
     "zeronet-client": "file:zeronet-client",
     "zeronet-common": "file:zeronet-common",
     "zeronet-crypto": "file:zeronet-crypto",
