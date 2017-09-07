@@ -35,14 +35,14 @@ class Peer extends EventEmitter {
       this.id = id.toB58String()
       this._id = id
     } else {
-      this.id = id
       this._id = new Id(Buffer.from(id))
+      this.id = this._id.toB58String()
     }
     if (PeerInfo.isPeerInfo(addrs)) {
       this.pi = addrs
     } else {
       this.pi = new PeerInfo(this._id)
-      addrs.map(addr => multiaddr.isMultiaddr(addr) ? addr : multiaddr(addr)).forEach(addr => this.pi.multiaddrs.addSafe(addr))
+      addrs.map(addr => multiaddr.isMultiaddr(addr) ? addr : multiaddr(addr)).forEach(addr => this.pi.multiaddrs.add(addr))
     }
     this.addrs = this.pi.multiaddrs.toArray().map(a => a.toString())
     this.zites = {}
@@ -61,6 +61,7 @@ class Peer extends EventEmitter {
     return {
       addrs: this.addrs,
       id: this.id,
+      ip: this.ip,
       score: this.score,
       zites: Object.keys(this.zites).map(zite => this.zites[zite].toJSON())
     }
@@ -69,7 +70,7 @@ class Peer extends EventEmitter {
 
 class ZeroPeer extends Peer {
   constructor(addr) {
-    super([addr], sha5(sha5(addr)))
+    super([addr], sha5(sha5(addr)).substr(0, 20))
     this.ip = multi2ip(addr)
   }
 }
@@ -80,7 +81,26 @@ class Lp2pPeer extends Peer {
   }
 }
 
+function fromJSON(data) {
+  if (!data.id) return
+  let peer
+  if (data.ip) {
+    peer = new ZeroPeer(data.addrs[0])
+  } else {
+    const id = Id.createFromB58String(data.id)
+    const pi = new PeerInfo(id)
+    data.addrs.forEach(a => pi.multiaddrs.addSafe(a))
+    peer = new Lp2pPeer(pi)
+  }
+  data.zites.forEach(zite_ => {
+    let zite = new ZiteInfo(zite_.addr)
+    //TODO: hashfield
+    peer.zites[zite_] = zite
+  })
+}
+
 module.exports = {
   ZeroPeer,
-  Lp2pPeer
+  Lp2pPeer,
+  fromJSON
 }

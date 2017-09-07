@@ -6,6 +6,8 @@ const pull = require("pull-stream")
 
 const debug = require("debug")
 
+const Getters = require("zeronet-common/lib/peer/pool-getters")
+
 module.exports = function PeerStream(zite) {
 
   const log = process.env.INTENSE_DEBUG ? debug("zeronet:zite:peer-stream:zite:" + zite.address) : () => {}
@@ -20,24 +22,38 @@ module.exports = function PeerStream(zite) {
   */
 
   function PeerList() { //gets peers
-    let height = 0
+    const getter = new Getters.MetaGetter([new Getters.OnlineGetter(zite.pool), new Getters.OfflineGetter(zite.pool)])
+    const dgetter = new Getters.MetaGetter([new Getters.DiscoveryCandidateGetter(zite.pool, zite.address)])
     return function (end, cb) {
       if (end) return cb(end)
       log("peer:list:out read")
-      let list
-
       function getLoop() {
-        list = zite.pool.getAll().slice(height) //get all unused
-        if (list.length) {
-          log("peer:list:out got", list.length)
-          if (!list[5]) zite.discovery.discover(() => {}) //low peers
-          height++
-          return cb(null, list[0])
+        if (getter.peers) {
+          if (!getter.peers) zite.discovery.discover(() => {}) //low peers
+          const peer_ = getter.getSync()
+          const peer = peer_.pop()
+          const type = peer_.pop()
+          log("peer:list:out got a %s peer", type)
+          cb(null, peer)
         } else {
-          log("peer:list:out drained. discover")
-          zite.discovery.discover(() => {
-            process.nextTick(getLoop)
-          })
+          if (dgetter.peers) {
+            log("peer:list:out discovery method")
+            zite.discovery.discover(() => {}) //get non-discovery peers
+            const peer = dgetter.getSync()[0]
+            peer.discoverZite(zite.address, res => {
+              if (res) {
+                return cb(null, peer)
+              } else {
+                log("peer:list:out discovery method fail")
+                return getLoop()
+              }
+            })
+          } else {
+            log("peer:list:out drained. discover")
+            zite.discovery.discover(() => {
+              process.nextTick(getLoop)
+            })
+          }
         }
       }
       getLoop()

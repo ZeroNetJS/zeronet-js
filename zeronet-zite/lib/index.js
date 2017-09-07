@@ -5,7 +5,7 @@ const pull = require("pull-stream")
 const verify = require("zeronet-common/lib/verify")
 const Nonces = require("zeronet-common/lib/nonce")
 
-const Pool = require("zeronet-zite/lib/pool")
+const Pool = require("zeronet-common/lib/peer/pool").ZitePool
 const Queue = require("zeronet-zite/lib/queue")
 const Tree = require("zeronet-zite/lib/tree")
 
@@ -52,7 +52,7 @@ module.exports = function Zite(config, node) { //describes a single zite
     Dpex,
     Ddht
   ])
-  self.pool = new Pool(self, node)
+  self.pool = new Pool(node.peerPool, address)
   const tree = self.tree = new Tree(self, config.tree)
   const queue = self.queue = new Queue(self, node)
   tree.attach(node.storage)

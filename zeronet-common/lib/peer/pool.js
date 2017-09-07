@@ -2,7 +2,7 @@
 
 const EventEmitter = require("events").EventEmitter
 const hypercache = require("hypercache")
-const Peer = require("./peer-new.js")
+const Peer = require("./")
 const PeerInfo = require("peer-info")
 const Id = require("peer-id")
 const multiaddr = require("multiaddr")
@@ -30,27 +30,6 @@ function isInPool(cache, pi) {
   throw new Error("Invalid type supplied to isInPool. Please report!")
 }
 
-class Getter extends EventEmitter {
-  constructor(pool) {
-    super()
-    this.peers = []
-    this.pool = pool
-    pool.registerGetter(this)
-  }
-  push(peer) {
-    this.peers.push(peer)
-    this.emit("peer", peer)
-  }
-  get(cb) {
-    if (this.peers.length) {
-      return cb(null, this.peers.shift())
-    } else {
-      this.pool.discover()
-      this.once("peer", () => cb(null, this.peers.shift()))
-    }
-  }
-}
-
 class Pool extends EventEmitter {
   constructor() {
     super()
@@ -65,6 +44,10 @@ class Pool extends EventEmitter {
   }
   toJSON() {
     return this.peers.map(p => p.toJSON())
+  }
+  fromJSON(data, cb) {
+    data.map(d => Peer.fromJSON(d)).filter(e => !!e).forEach(peer => this.push(peer))
+    cb()
   }
   registerGetter(get) {
     this.peers.forEach(p => get.push(p))
@@ -92,55 +75,71 @@ class MainPool extends Pool {
     this.cache = new hypercache(null, {
       manual: true,
       keys: ["id", "ip"],
-      sets: ["addrs"]
+      sets: ["addrs"],
+      name: "peers"
     })
+    this.cache.update([])
   }
-  push(peer) {
+  push(peer, lazy) {
     this._push(peer)
     peer.on("seed", zite => this.emit("seed." + zite, peer))
-    this.cache.update(this.peers)
+    if (!lazy) this.cache.update(this.peers)
     return peer
   }
-  add(pi) {
+  add(pi, lazy) {
     let p = isInPool(this.cache, pi)
     if (p.length > 1) throw new Error("Multiple peers found!")
     if (p.length) return p.pop()
 
     if (PeerInfo.isPeerInfo(pi))
-      return this.push(new Peer.Lp2pPeer(pi))
+      return this.push(new Peer.Lp2pPeer(pi), lazy)
 
     if (ip2multi.isIp(pi))
-      return this.push(new Peer.ZeroPeer(ip2multi(pi)))
+      return this.push(new Peer.ZeroPeer(ip2multi(pi)), lazy)
 
     if (multiaddr.isMultiaddr(pi)) {
       if (pi.toString().indexOf("ipfs") != -1) {
         const id = Id.createFromB58String(pi.toString().split("ipfs/").pop())
         const _pi = new PeerInfo(id)
         _pi.multiaddrs.addSafe(pi)
-        return this.push(new Peer.Lp2pPeer(_pi))
+        return this.push(new Peer.Lp2pPeer(_pi), lazy)
       } else {
-        return this.push(new Peer.ZeroPeer(pi.toString()))
+        return this.push(new Peer.ZeroPeer(pi.toString()), lazy)
       }
     }
 
     if (typeof pi == "string") {
       if (pi.match(/\/.+\/.+\/.+\/.+\//) || pi.match(/\/.+\/.+\/.+\/.+/))
-        return this.push(new Peer.ZeroPeer(pi))
+        return this.push(new Peer.ZeroPeer(pi), lazy)
 
       if (pi.match(/\/.+\/.+\/.+\/.+\/.+\/.+\//) || pi.match(/\/.+\/.+\/.+\/.+\/.+\/.+/)) {
         const id = Id.createFromB58String(pi.split("ipfs/").pop())
         const _pi = new PeerInfo(id)
         _pi.multiaddrs.addSafe(pi)
-        return this.push(new Peer.Lp2pPeer(_pi))
+        return this.push(new Peer.Lp2pPeer(_pi), lazy)
       }
     }
 
     return false
   }
+  addMany(list, zite) {
+    if (zite && zite.address) zite = zite.address
+    let u = {}
+    list.filter(d => u[d] ? false : (u[d] = true)).forEach(p => {
+      const peer = this.add(p, true)
+      if (zite)
+        if (!peer.isSeeding(zite)) peer.seed(zite)
+    })
+    if (list.length) this.cache.update(this.peers)
+  }
+  fromJSON(data, cb) {
+    data.map(d => Peer.fromJSON(d)).filter(e => !!e).forEach(peer => this.push(peer, true))
+    this.cache.update(this.peers)
+    cb()
+  }
 }
 
 module.exports = {
   MainPool,
-  ZitePool,
-  Getter
+  ZitePool
 }

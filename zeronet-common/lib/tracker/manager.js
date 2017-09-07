@@ -43,6 +43,7 @@ module.exports = function TrackerManager(tracker_server, zeronet) {
           plist = null
         })
       }
+      if (addr.endsWith(":0")) return
       plist.push(addr)
     })
 

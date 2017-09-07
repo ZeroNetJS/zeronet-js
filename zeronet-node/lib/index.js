@@ -7,7 +7,7 @@ const log = debug("zeronet:node")
 const series = require('async/series')
 const uuid = require("uuid")
 
-const PeerPool = require("zeronet-common/lib/peer/pool")
+const PeerPool = require("zeronet-common/lib/peer/pool").MainPool
 const TrackerManager = require("zeronet-common/lib/tracker/manager")
 const ZiteManager = require("zeronet-zite/lib/manager")
 const FileServer = require("zeronet-fileserver")

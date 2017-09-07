@@ -29,11 +29,14 @@ function Discovery(zite, node, types) {
       discovering = true
       log("paused discover for %s ms", lastDiscover + 10 * 1000 - new Date().getTime())
       setTimeout(self.discover, lastDiscover + 10 * 1000 - new Date().getTime())
+      return
     }
     log("discovery")
+    discovering = true
     each(self.methods, (t, cb) => t.discover(cb), err => {
       if (err) log(err)
       discovering = false
+      lastDiscover = new Date().getTime()
       if (queuedDiscover) {
         queuedDiscover = false
         log("executing queued discovery")

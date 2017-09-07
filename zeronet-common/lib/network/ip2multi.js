@@ -5,7 +5,7 @@ const assert = require("assert")
 
 function ip2multi(ip, proto) {
   ip = ip2multi.split(ip)
-  return "/ip" + ip.v + "/" + ip.ip + "/" + proto + "/" + ip.port + "/"
+  return "/ip" + ip.v + "/" + ip.ip + "/" + (proto || "tcp") + "/" + ip.port
 }
 
 ip2multi.split = ipHost => {
