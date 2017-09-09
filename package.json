@@ -16,7 +16,7 @@
     "mockery": "^2.1.0",
     "moment": "^2.18.1",
     "node-bash-title": "0.0.2",
-    "peer-id": "^0.10.0",
+    "peer-id": "^0.10.1",
     "zeronet-client": "file:zeronet-client",
     "zeronet-common": "file:zeronet-common",
     "zeronet-crypto": "file:zeronet-crypto",
@@ -41,8 +41,9 @@
     "mocha": "^3.5.0",
     "mock-fs": "^4.4.1",
     "nyc": "^11.2.1",
+    "pkg": "^4.2.4",
     "pkg-fetch-mkg": "^2.3.83",
-    "pkg-mkg": "^4.2.4",
+    "pkg-natives": "^0.1.0",
     "sinon": "^3.2.1",
     "sinon-chai": "^2.13.0"
   },
@@ -72,7 +73,8 @@
     ],
     "assets": [
       "node_modules/zeronet-uiserver/ui/**",
-      "node_modules/zeronet-crypto/cert.conf"
+      "node_modules/zeronet-crypto/cert.conf",
+      "natives/**"
     ]
   },
   "author": "Maciej Krüger <mkg20001@gmail.com>",

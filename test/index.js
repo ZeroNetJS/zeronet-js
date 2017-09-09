@@ -31,6 +31,33 @@ before(function (cb) {
 
 const fs = require("fs")
 const files = fs.readdirSync(__dirname + "/").filter(file => fs.lstatSync(__dirname + "/" + file).isDirectory()).sort()
+const cp = require("child_process")
+
+let pythonAvailable = false
+let pythonPath = false
+
+const py = ["python2", "python"].filter(py => {
+  try {
+    cp.execSync(py + " " + path.join(__dirname, "py_test.py"))
+    return true
+  } catch (e) {
+    return false
+  }
+})
+
+if (py.length) {
+  pythonPath = py[0]
+  pythonAvailable = true
+  console.log("Python found as", pythonPath)
+} else {
+  console.error("WARN: Python2 is not available or not in your path. Python tests will be skipped.")
+  console.error("WARN: It is recommended you fix this")
+}
+
+it.python = (name, fnc) => {
+  (pythonAvailable ? it : it.skip)(name, fnc)
+}
+it.py = pythonPath
 
 describe("zeronet", function () {
   files.forEach(file => {

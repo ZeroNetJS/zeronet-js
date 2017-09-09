@@ -50,7 +50,10 @@ module.exports = function FileStream(data) {
       if (info.size) args.file_size = info.size
       peer.cmd("getFile", args, function (err, res) {
         //console.log("peere", peer.multiaddr, err)
-        if (err) return finishLoop() //goto: next
+        if (err) {
+          peer.score -= 20
+          return finishLoop() //goto: next
+        }
         if (!res.body.length) {
           if (!info.size) return finishLoop()
           othersize++

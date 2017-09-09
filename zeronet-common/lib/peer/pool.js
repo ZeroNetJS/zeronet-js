@@ -1,108 +1,151 @@
 "use strict"
 
+const EventEmitter = require("events").EventEmitter
 const hypercache = require("hypercache")
-
-const Peer = require("zeronet-common/lib/peer")
-
-const each = require("async/each")
-const map = require("async/map")
-
+const Peer = require("./")
+const PeerInfo = require("peer-info")
+const Id = require("peer-id")
+const multiaddr = require("multiaddr")
+const ip2multi = require("zeronet-common/lib/network/ip2multi")
 const debug = require("debug")
-const log = debug("zeronet:peer-pool")
-log.error = debug("zeronet:peer-pool:error")
+const log = process.env.INTENSE_DEBUG ? debug("zeronet:pool") : () => {}
 
-module.exports = function PeerPool(swarm) {
-  const self = this
+function isInPool(cache, pi) {
+  if (PeerInfo.isPeerInfo(pi))
+    return cache.search(pi.id.toB58String())
+  //return pi.multiaddrs.toArray().map(a => a.toString()).filter(a => !!cache.searchSets(a))[0]
 
-  let prev
+  if (ip2multi.isIp(pi))
+    return cache.search(pi)
 
-  const cache = new hypercache(null, {
-    name: "peers",
-    keys: ["addr", "id", "multiaddr"],
-    sets: ["zites"],
-    manual: true
-  })
+  if (multiaddr.isMultiaddr(pi))
+    return cache.searchSets(pi.toString())
 
-  let peers = []
+  if (typeof pi == "string") {
+    if (pi.match(/\/.+\/.+\/.+\/.+\//) || pi.match(/\/.+\/.+\/.+\/.+/))
+      return isInPool(cache, multiaddr(pi))
 
-  function isInList(peerLike) {
-    return cache.search(peerLike.toString())[0]
+    if (pi.match(/\/.+\/.+\/.+\/.+\/.+\/.+\//) || pi.match(/\/.+\/.+\/.+\/.+\/.+\/.+/))
+      return isInPool(cache, multiaddr(pi))
   }
 
-  function update(f) {
-    if (prev == peers.length && !f) return log("skip updating cache. length unchanged", prev)
-    log("update cache")
-    cache.update(peers)
-    prev = peers.length
-  }
+  throw new Error("Invalid type supplied to isInPool. Please report!")
+}
 
-  function add(peerLike, zite, cb, lazy) {
-    if (peerLike.toString().endsWith(":0") || peerLike.toString().endsWith("/0")) return cb(lazy ? null : new Error("ignore " + peerLike.toString()))
-    if (isInList(peerLike)) {
-      const peer = isInList(peerLike)
-      if (zite) peer.setZite(zite)
-      return cb(null, peer)
+class Pool extends EventEmitter {
+  constructor() {
+    super()
+    this.peers = []
+  }
+  discover() {
+    this.emit("discover")
+  }
+  _push(peer) {
+    this.peers.push(peer)
+    this.emit("peer", peer)
+  }
+  toJSON() {
+    return this.peers.map(p => p.toJSON())
+  }
+  fromJSON(data, cb) {
+    data.map(d => Peer.fromJSON(d)).filter(e => !!e).forEach(peer => this.push(peer))
+    cb()
+  }
+  registerGetter(get) {
+    this.peers.forEach(p => get.push(p))
+    this.on("peer", p => get.push(p))
+  }
+}
+
+class ZitePool extends Pool {
+  constructor(main, addr) {
+    super()
+    this.main = main
+    main.on("seed." + addr, peer => this.push(peer))
+    this.zite = addr
+    main.registerGetter(this)
+  }
+  push(peer) {
+    if (peer.isSeeding(this.zite)) {
+      log("adding %s to zitepool:%s", peer.id, this.zite)
+      this._push(peer)
     }
-    Peer.fromAddr(peerLike, swarm, (err, peer) => {
-      if (err) return cb(err)
+  }
+}
 
-      if (isInList(peerLike)) {
-        log.error("race for %s: already added", peerLike)
-        return add(peerLike, zite, cb) //will add the zite and call cb
+class MainPool extends Pool {
+  constructor(swarm) {
+    super()
+    this.cache = new hypercache(null, {
+      manual: true,
+      keys: ["id", "ip"],
+      sets: ["addrs"],
+      name: "peers"
+    })
+    this.swarm = swarm
+    this.cache.update([])
+  }
+  push(peer, lazy) {
+    this._push(peer)
+    peer.swarm = this.swarm
+    peer.on("seed", zite => this.emit("seed." + zite, peer))
+    if (!lazy) this.cache.update(this.peers)
+    return peer
+  }
+  add(pi, lazy) {
+    let p = isInPool(this.cache, pi)
+    if (p.length > 1) throw new Error("Multiple peers found!")
+    if (p.length) return p.pop()
+
+    if (PeerInfo.isPeerInfo(pi))
+      return this.push(new Peer.Lp2pPeer(pi), lazy)
+
+    if (ip2multi.isIp(pi))
+      return this.push(new Peer.ZeroPeer(ip2multi(pi)), lazy)
+
+    if (multiaddr.isMultiaddr(pi)) {
+      if (pi.toString().indexOf("ipfs") != -1) {
+        const id = Id.createFromB58String(pi.toString().split("ipfs/").pop())
+        const _pi = new PeerInfo(id)
+        _pi.multiaddrs.addSafe(pi)
+        return this.push(new Peer.Lp2pPeer(_pi), lazy)
+      } else {
+        return this.push(new Peer.ZeroPeer(pi.toString()), lazy)
       }
+    }
 
-      peers.push(peer)
-      if (zite) peer.setZite(zite)
+    if (typeof pi == "string") {
+      if (pi.match(/\/.+\/.+\/.+\/.+\//) || pi.match(/\/.+\/.+\/.+\/.+/))
+        return this.push(new Peer.ZeroPeer(pi), lazy)
 
-      log("added", peer.multiaddr)
-      if (!lazy) update()
-      return cb()
+      if (pi.match(/\/.+\/.+\/.+\/.+\/.+\/.+\//) || pi.match(/\/.+\/.+\/.+\/.+\/.+\/.+/)) {
+        const id = Id.createFromB58String(pi.split("ipfs/").pop())
+        const _pi = new PeerInfo(id)
+        _pi.multiaddrs.addSafe(pi)
+        return this.push(new Peer.Lp2pPeer(_pi), lazy)
+      }
+    }
+
+    return false
+  }
+  addMany(list, zite) {
+    if (zite && zite.address) zite = zite.address
+    let u = {}
+    list.filter(d => u[d] ? false : (u[d] = true)).forEach(p => {
+      const peer = this.add(p, true)
+      if (zite)
+        if (!peer.isSeeding(zite)) peer.seed(zite)
     })
+    if (list.length) this.cache.update(this.peers)
   }
-
-  function addMany(list, zite, cb) {
-    if (!Array.isArray(list)) list = [list]
-    log("adding", list.length)
-    each(list, (addr, next) => {
-      add(addr, zite, err => {
-        if (err) log.error(err)
-        return next()
-      }, true)
-    }, () => {
-      update()
-      if (cb) cb()
-    })
+  fromJSON(data, cb) {
+    data.map(d => Peer.fromJSON(d)).filter(e => !!e).forEach(peer => this.push(peer, true))
+    this.cache.update(this.peers)
+    cb()
   }
+}
 
-  function getAll() {
-    return cache.getAll()
-  }
-
-  function getZite(zite) {
-    return cache.getSet("zites", zite)
-  }
-
-  function fromJSON(data, cb) {
-    map(data, Peer.fromJSON.bind(null, swarm), (err, res) => {
-      if (err) return cb(err)
-      peers = res
-      update(true)
-      return cb()
-    })
-  }
-
-  function toJSON() {
-    return cache.getAll().map(p => p.toJSON())
-  }
-
-  update()
-
-  self.add = add
-  self.addMany = addMany
-  self.getAll = getAll
-  self.getZite = getZite
-  self.cache = cache
-
-  self.fromJSON = fromJSON
-  self.toJSON = toJSON
+module.exports = {
+  MainPool,
+  ZitePool
 }

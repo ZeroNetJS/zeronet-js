@@ -85,6 +85,35 @@ module.exports = function FileServer(protocol, zeronet) {
     //TODO: finish
   })
 
+  protocol.handle("hasZite", { in: {
+      protobuf: {
+        "1": [
+          "string",
+          "zite"
+        ]
+      },
+      strict: {
+        "zite": "string"
+      }
+    },
+    out: {
+      protobuf: {
+        "1": [
+          "bool",
+          "has"
+        ]
+      },
+      strict: {
+        "has": "boolean"
+      }
+    },
+    lp2p_only: true
+  }, (data, cb) => {
+    return cb({
+      has: !!zeronet.zites[data.zite]
+    })
+  })
+
   protocol.handle("pex", { in: {
       protobuf: {
         "1": [

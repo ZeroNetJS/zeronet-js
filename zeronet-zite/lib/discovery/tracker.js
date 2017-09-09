@@ -1,6 +1,6 @@
 "use strict"
 
-module.exports = function Tracker(zite, node, discovery) {
+module.exports = function Tracker(zite, node) {
   const self = this
 
   self.isAvailable = !!node.trackers.servers.length
@@ -8,7 +8,6 @@ module.exports = function Tracker(zite, node, discovery) {
   self.start = cb => {
     if (self.tracker) return cb() //already on
     self.tracker = node.trackers.create(zite.address)
-    self.tracker.on("peer", p => discovery.emit("peer", p))
     cb()
   }
   self.stop = cb => {

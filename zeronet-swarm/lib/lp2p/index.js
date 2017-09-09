@@ -58,7 +58,7 @@ function Libp2pSwarm(opt /*, protocol, zeronet*/ ) {
       ignore_no_online: opt.wstar_ignore,
       id: opt.id
     })
-    peerInfo.multiaddrs.add(multiaddr("/libp2p-webrtc-star"))
+    peerInfo.multiaddrs.add(multiaddr("/p2p-websocket-star"))
     transport.push(wsm)
     discovery.push(wsm.discovery)
     log("enabled websocket-star-multi with %s server(s) (ignore if unreachable %s)", opt.wstar.length, opt.wstar_ignore || false)

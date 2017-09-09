@@ -7,7 +7,7 @@ const log = debug("zeronet:node")
 const series = require('async/series')
 const uuid = require("uuid")
 
-const PeerPool = require("zeronet-common/lib/peer/pool")
+const PeerPool = require("zeronet-common/lib/peer/pool").MainPool
 const TrackerManager = require("zeronet-common/lib/tracker/manager")
 const ZiteManager = require("zeronet-zite/lib/manager")
 const FileServer = require("zeronet-fileserver")
@@ -85,7 +85,6 @@ function ZeroNetNode(options) {
   if (!options.swarm.protocol || !options.swarm.protocol.crypto || !options.swarm.protocol.crypto.length) logger.warn("CRYPTO DISABLED! ALL COMMUNICATION IS IN PLAINTEXT!")
 
   const pool = self.peerPool = new PeerPool(swarm)
-  /*const trackerManager = */
   self.trackers = new TrackerManager(options.swarm.zero.trackers, self)
 
   const ziteManager = self.zitem = new ZiteManager(self)
