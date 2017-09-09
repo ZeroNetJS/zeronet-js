@@ -9,8 +9,7 @@ module.exports = Bundler({
     swarm: {
       zero: {
         listen: [],
-        transports: [],
-        trackers: false
+        transports: []
       },
       libp2p: {
         listen: [],
