@@ -30,6 +30,8 @@ if node -v | grep "^v8" > /dev/null; then
   done
   ../node_modules/.bin/pkg -t $targets .
   RUNINCWD=1 TESTOK=1 ./zeronet-linux && rm -rf .zeronet
+  ../node_modules/.bin/pkg-natives
+  RUNINCWD=1 TESTOK=1 ./zeronet && rm -rf .zeronet
 else
   echo "Please use node v8+ to build"
 fi
