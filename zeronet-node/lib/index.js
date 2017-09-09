@@ -82,7 +82,7 @@ function ZeroNetNode(options) {
 
   logger("ZeroNet v[alpha] with peer_id %s", self.peer_id)
 
-  if (!options.swarm.protocol || !options.swarm.protocol.crypto || !options.swarm.protocol.crypto.length) logger.warn("CRYPTO DISABLED! ALL COMMUNICATION IS IN PLAINTEXT!")
+  if (!options.swarm.zero || !options.swarm.zero.crypto || !options.swarm.zero.crypto.length) logger.warn("CRYPTO DISABLED! ALL COMMUNICATION IS IN PLAINTEXT!")
 
   const pool = self.peerPool = new PeerPool(swarm)
   self.trackers = new TrackerManager(options.swarm.zero.trackers, self)

@@ -3,6 +3,9 @@
 const pack = require("zeronet-protocol/lib/zero/pack")
 const debug = require("debug")
 const log = debug("zeronet:fileserver")
+const pull = require("pull-stream")
+//const queue = require("pull-queue")
+const FILE_CHUNK = 1024 * 512
 
 /*
 opt_def
@@ -81,8 +84,69 @@ module.exports = function FileServer(protocol, zeronet) {
     }
   }, (data, cb) => {
     if (!zeronet.zites[data.site]) return cb(new Error("Unknown site"))
-    cb("Hello. This ZeroNetJS client does not have this function implented yet. Please kindly ignore this peer.")
-    //TODO: finish
+    //FIXME: tmp hack. can be easily abused for force-seeding
+    const zite = zeronet.zites[data.site]
+    const fs = zite.fs
+    //if (data.location % FILE_CHUNK) return cb(new Error("Currently supports only full chunks (" + FILE_CHUNK + ")"))
+    //const chunkid = data.location / FILE_CHUNK
+    fs.getFile(data.inner_path, (err, stream) => {
+      if (err) return cb(err)
+      //let leftover = Buffer.from("")
+      //let size = 0
+      pull(
+        stream,
+        pull.collect((err, chunks) => {
+          if (err) return cb(err)
+          const file = Buffer.concat(chunks)
+          if (file.length < data.location) return cb(new Error("Oversize"))
+          return cb(null, {
+            body: file.slice(data.location, data.location + FILE_CHUNK),
+            location: data.location + file.slice(data.location, data.location + FILE_CHUNK).length,
+            size: file.length
+          })
+        })
+        /*queue((end, data, cb) => {
+          console.log(data, leftover)
+          const rt = () => {
+            let send = []
+            data = Buffer.concat([leftover, data])
+            if (data.length < FILE_CHUNK) return send
+            if (data.length == FILE_CHUNK) {
+              send.push(data)
+              leftover = Buffer.from("")
+              return send
+            }
+            while (data.length >= FILE_CHUNK) {
+              send.push(data.slice(0, FILE_CHUNK))
+              data = data.slice(FILE_CHUNK + 1)
+            }
+            leftover = data
+            return send
+          }
+          if (end && leftover.length) {
+            cb(null, [leftover])
+            leftover = null
+          } else if (end) {
+            cb(end)
+          } else {
+            size += data.length
+            cb(null, rt())
+          }
+        }, {
+          sendMultiple: true
+        }),
+        pull.collect((err, chunks) => {
+          if (err) return cb(err)
+          if (chunkid * FILE_CHUNK > size) return cb(new Error("Oversize"))
+          console.log(chunks[chunkid], chunks)
+          return cb(null, {
+            body: chunks[chunkid],
+            location: data.location + chunks[chunkid].length,
+            size
+          })
+        })*/
+      )
+    })
   })
 
   protocol.handle("hasZite", { in: {

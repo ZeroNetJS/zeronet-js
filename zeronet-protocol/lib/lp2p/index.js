@@ -81,7 +81,7 @@ module.exports = function LProtocol(opt, lp2p) {
               pull.collect((err, data) => {
                 if (err) return cb(err)
                 else {
-                  if (data.length != 1) cb(new Error("Decoding failed! data.len != 1"))
+                  if (data.length != 1 || !data[0]) cb(new Error("Decoding failed! data.len != 1"))
                   const res = data[0]
                   plog("got  response", cmd, objectInspect(res))
                   if (res.error) return cb(new Error(res.error))

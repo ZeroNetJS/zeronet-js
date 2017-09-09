@@ -20,7 +20,7 @@ module.exports = function ZeroNetStorageFS() {
   self.file = {
     exists: (zite, version, inner_path, cb) => fs.exists(getPath(zite, inner_path), res => cb(null, res)),
     read: (zite, version, inner_path, cb) => fs.readFile(getPath(zite, inner_path), cb),
-    write: (zite, version, inner_path, cb) => fs.readFile(getPath(zite, inner_path), cb),
+    write: (zite, version, inner_path, data, cb) => fs.writeFile(getPath(zite, inner_path), data, cb),
     remove: (zite, version, inner_path, cb) => fs.unlink(getPath(zite, inner_path), cb)
   }
 
