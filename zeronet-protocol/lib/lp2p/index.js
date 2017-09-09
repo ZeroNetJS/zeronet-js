@@ -44,13 +44,13 @@ module.exports = function LProtocol(opt, lp2p) {
         pull.asyncMap((data, cb) => {
           plog("got   request", name, objectInspect(data))
           proto.peerRequest.handleRequest((err, res) => {
-            plog("sent response", name, err ? err.toString() : objectInspect(res))
             if (err) {
               res = {
                 error: err.toString().split("\n").shift()
               }
               err = null
             }
+            plog("sent response", name, objectInspect(res))
             cb(err, res)
           }, data, proto.handler)
         }),
