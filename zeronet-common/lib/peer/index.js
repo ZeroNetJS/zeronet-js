@@ -140,7 +140,10 @@ class Lp2pPeer extends Peer {
     }, (err, res) => {
       log(err, res)
       if (err) return cb(false)
-      else return cb(res.has)
+      else {
+        if (res.has) this.seed(zite)
+        return cb(res.has)
+      }
     })
   }
 }

@@ -90,7 +90,9 @@ class MainPool extends Pool {
     peer.swarm = this.swarm
     const self = this
     peer.on("emit", function () {
-      self.emit.apply(this, arguments)
+      const a = [...arguments]
+      a.push(peer)
+      self.emit.apply(self, a)
     })
     if (!lazy) this.cache.update(this.peers)
     return peer
