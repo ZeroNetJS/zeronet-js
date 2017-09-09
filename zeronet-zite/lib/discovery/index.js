@@ -19,6 +19,7 @@ function Discovery(zite, node, types) {
   let lastDiscover = 0
 
   self.methods = types.map(t => new t(zite, node, self)).filter(t => t.isAvailable)
+  log("creating discovery with %s available method(s)", self.methods.length)
   let isRunning = self.isRunning = false
   self.start = cb => isRunning ? cb(new Error("Already running")) : each(self.methods, (t, cb) => t.start(cb), err => err ? cb(err) : cb(null, isRunning = true))
   self.stop = cb => !isRunning ? cb(new Error("Not running")) : each(self.methods, (t, cb) => t.stop(cb), err => err ? cb(err) : cb(null, isRunning = false))
