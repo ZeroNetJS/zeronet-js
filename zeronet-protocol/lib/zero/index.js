@@ -55,8 +55,6 @@ function ZProtocol(opt, zeronet) {
     handlers[name] = cb
   }
 
-  self.applyDefaults = () => console.warn(".applyDefaults does not exist anymore")
-
   if (opt.crypto) {
     Crypto(self)
     if (!Array.isArray(opt.crypto)) opt.crypto = [opt.crypto]

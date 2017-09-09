@@ -5,11 +5,17 @@ const assert = require("assert")
 const PeerRequest = require("peer-request")
 const validate = require("zeronet-common/lib/verify").verifyProtocol
 
-function protoparse(def) {
+function protoparse(def, isout) {
   let r = "message PeerCmd {"
   if (def._) {
     r += def._
     delete def._
+  }
+  if (isout) {
+    Object.keys(def).map(i => parseInt(i, 10)).reverse().forEach(i => {
+      def[i + 1] = def[i]
+    })
+    def["1"] = ["string", "error"]
   }
   for (var i in def) {
     const v = def[i]
@@ -19,10 +25,10 @@ function protoparse(def) {
   return r
 }
 
-function PeerMSG(def) {
+function PeerMSG(def, isout) {
   const self = this
   self.proto = {}
-  self.proto.def = protoparse(def.protobuf)
+  self.proto.def = protoparse(def.protobuf, isout)
   self.proto.msg = protobuf(self.proto.def).PeerCmd
   self.strict = def.strict
 }
@@ -38,7 +44,7 @@ function Protocol() {
     const p = protos[name] = {
       _opt: opt,
       in: new PeerMSG(opt.in),
-      out: new PeerMSG(opt.out),
+      out: new PeerMSG(opt.out, true),
       handler
     }
 

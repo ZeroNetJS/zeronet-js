@@ -45,6 +45,12 @@ module.exports = function LProtocol(opt, lp2p) {
           plog("got   request", name, objectInspect(data))
           proto.peerRequest.handleRequest((err, res) => {
             plog("sent response", name, err ? err.toString() : objectInspect(res))
+            if (err) {
+              res = {
+                error: err.toString().split("\n").shift()
+              }
+              err = null
+            }
             cb(err, res)
           }, data, proto.handler)
         }),
@@ -76,8 +82,10 @@ module.exports = function LProtocol(opt, lp2p) {
                 if (err) return cb(err)
                 else {
                   if (data.length != 1) cb(new Error("Decoding failed! data.len != 1"))
-                  plog("got  response", cmd, objectInspect(data))
-                  return cb(null, data[0])
+                  const res = data[0]
+                  plog("got  response", cmd, objectInspect(res))
+                  if (res.error) return cb(new Error(res.error))
+                  return cb(null, res)
                 }
               })
             )
