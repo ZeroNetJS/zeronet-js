@@ -65,6 +65,7 @@ class DiscoveryCandidateGetter extends Getter {
     super(pool)
     this.tag = "discovery"
     this.zite = addr
+    this.pool.on("online", peer => this.push(peer))
     this.register()
   }
   push(peer) {

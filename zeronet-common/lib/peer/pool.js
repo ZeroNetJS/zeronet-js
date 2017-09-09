@@ -88,7 +88,10 @@ class MainPool extends Pool {
   push(peer, lazy) {
     this._push(peer)
     peer.swarm = this.swarm
-    peer.on("seed", zite => this.emit("seed." + zite, peer))
+    const self = this
+    peer.on("emit", function () {
+      self.emit.apply(this, arguments)
+    })
     if (!lazy) this.cache.update(this.peers)
     return peer
   }

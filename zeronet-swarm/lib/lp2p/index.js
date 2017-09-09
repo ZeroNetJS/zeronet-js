@@ -26,7 +26,7 @@ const MulticastDNS = require('libp2p-mdns')
 //dht
 const DHT = require('libp2p-kad-dht')
 
-function Libp2pSwarm(opt /*, protocol, zeronet*/ ) {
+function Libp2pSwarm(opt, protocol, zeronet) {
   const self = this
 
   log("creating libp2p swarm")
@@ -78,6 +78,16 @@ function Libp2pSwarm(opt /*, protocol, zeronet*/ ) {
   }
 
   const lp2p = self.lp2p = self.libp2p = new libp2p(modules, peerInfo /*, peerBook*/ )
+  const swarm = lp2p
+  swarm.on("peer:discovery", pi => {
+    const next = () => swarm.dial(pi, () => {})
+    if (swarm.isStarted()) next()
+    else swarm.once("start", next)
+  })
+  swarm.on("peer:connect", peer => {
+    const npeer = zeronet.peerPool.add(peer)
+    npeer.dial(() => {})
+  })
 
   self.start = cb => series([
     cb => lp2p.start(cb),

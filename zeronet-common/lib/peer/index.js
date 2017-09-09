@@ -33,6 +33,13 @@ class ZiteInfo {
 class Peer extends EventEmitter {
   constructor(addrs, id) {
     super()
+    const oe = this.emit.bind(this)
+    this.emit = function () {
+      const a = [...arguments]
+      oe.apply(null, a)
+      a.unshift("emit")
+      oe.apply(null, a)
+    }
     if (Id.isPeerId(id)) {
       this.id = id.toB58String()
       this._id = id
@@ -58,6 +65,7 @@ class Peer extends EventEmitter {
       log("peer %s (%s) now seeds %s", this.id, this.addrs.join(", "), zite)
       this.zites[zite] = new ZiteInfo(zite)
       this.emit("seed", zite)
+      this.emit("seed." + zite)
     }
   }
   isSeeding(zite) {
@@ -72,6 +80,8 @@ class Peer extends EventEmitter {
         this.lfailedd = new Date().getTime()
       } else {
         this.score += 5
+        this.isOnline = true
+        this.emit("online")
       }
       cb(err)
     })

@@ -25,3 +25,6 @@ stage
 *.tar.bz2
 *.snap
 snap/.snapcraft
+
+#bundle
+/is-buffer
