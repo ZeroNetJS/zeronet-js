@@ -82,11 +82,13 @@ function Libp2pSwarm(opt, protocol, zeronet) {
   swarm.on("peer:discovery", pi => {
     const next = () => swarm.dial(pi, () => {})
     if (swarm.isStarted()) next()
-    else swarm.once("start", next)
+    else swarm.once("start", () => process.nextTick(next))
   })
   swarm.on("peer:connect", peer => {
     const npeer = zeronet.peerPool.add(peer)
-    npeer.dial(() => {})
+    const next = () => npeer.dial(() => {})
+    if (swarm.isStarted()) next()
+    else swarm.once("start", () => process.nextTick(next))
   })
 
   self.start = cb => series([
