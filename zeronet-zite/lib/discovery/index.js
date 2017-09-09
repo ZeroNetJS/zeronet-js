@@ -35,10 +35,10 @@ function Discovery(zite, node, types) {
     }
     log("discovery")
     discovering = true
+    lastDiscover = new Date().getTime()
     each(self.methods, (t, cb) => t.discover(cb), err => {
       if (err) log(err)
       discovering = false
-      lastDiscover = new Date().getTime()
       log("discover done")
       self.emit("discover", err)
       if (queuedDiscover) {

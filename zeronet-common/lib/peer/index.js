@@ -47,9 +47,11 @@ class Peer extends EventEmitter {
       addrs.map(addr => multiaddr.isMultiaddr(addr) ? addr : multiaddr(addr)).forEach(addr => this.pi.multiaddrs.add(addr))
     }
     this.addrs = this.pi.multiaddrs.toArray().map(a => a.toString())
+    this.multiaddr = this.addrs[0]
     log("created peer %s with address(es) %s", this.id, this.addrs.join(", "))
     this.zites = {}
     this.score = 0
+    this.lfailedd = 0 //last failed dial time
   }
   seed(zite) {
     if (!this.zites[zite]) {
@@ -60,6 +62,33 @@ class Peer extends EventEmitter {
   }
   isSeeding(zite) {
     return !!this.zites[zite]
+  }
+  dial(cb) {
+    if (this.score <= -100) return cb(new Error("Score too low"))
+    if (this.isOnline) return cb()
+    this.swarm.dial(this.dialable, err => {
+      if (err) {
+        this.score -= 10
+        this.lfailedd = new Date().getTime()
+      } else {
+        this.score += 5
+      }
+      cb(err)
+    })
+  }
+  cmd(cmd, data, cb) {
+    this.dial(err => {
+      if (err) return cb(err)
+      this.swarm.dial(this.dialable, cmd, data, (err, res) => {
+        if (err) {
+          this.score -= 5
+          this.isOnline = true
+        } else {
+          this.score += 5
+        }
+        cb(err, res)
+      })
+    })
   }
   toJSON() {
     return {
@@ -76,12 +105,14 @@ class ZeroPeer extends Peer {
   constructor(addr) {
     super([addr], sha5(sha5(addr)).substr(0, 20))
     this.ip = multi2ip(addr)
+    this.dialable = multiaddr(addr)
   }
 }
 
 class Lp2pPeer extends Peer {
   constructor(peer) {
     super(peer, peer.id)
+    this.dialable = peer
   }
 }
 

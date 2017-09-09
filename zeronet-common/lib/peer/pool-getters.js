@@ -1,6 +1,8 @@
 "use strict"
 
 const EventEmitter = require("events").EventEmitter
+const debug = require("debug")
+const log = process.env.INTENSE_DEBUG ? debug("zeronet:pool:getters") : () => {}
 
 class Getter extends EventEmitter {
   constructor(pool) {
@@ -8,12 +10,14 @@ class Getter extends EventEmitter {
     this.peers = []
     this.pool = pool
     this.register = () => {
+      log("register %s to %s", this.id || this.tag || "<unknown>", pool.zite || "<main>")
       pool.registerGetter(this)
       delete this.register
     }
   }
   _push(peer) {
     this.peers.push(peer)
+    log("adding peer %s to getter:%s", peer.id, this.id || this.tag || "<unknown>")
     this.emit("peer", peer)
   }
   get(cb) {
@@ -50,7 +54,7 @@ class OfflineGetter extends Getter {
     this.register()
   }
   push(peer) {
-    if (peer.isOnline) {
+    if (!peer.isOnline) {
       this._push(peer)
     }
   }

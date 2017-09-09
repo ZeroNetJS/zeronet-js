@@ -63,16 +63,18 @@ class ZitePool extends Pool {
     this.main = main
     main.on("seed." + addr, peer => this.push(peer))
     this.zite = addr
+    main.registerGetter(this)
   }
   push(peer) {
     if (peer.isSeeding(this.zite)) {
+      log("adding %s to zitepool:%s", peer.id, this.zite)
       this._push(peer)
     }
   }
 }
 
 class MainPool extends Pool {
-  constructor() {
+  constructor(swarm) {
     super()
     this.cache = new hypercache(null, {
       manual: true,
@@ -80,10 +82,12 @@ class MainPool extends Pool {
       sets: ["addrs"],
       name: "peers"
     })
+    this.swarm = swarm
     this.cache.update([])
   }
   push(peer, lazy) {
     this._push(peer)
+    peer.swarm = this.swarm
     peer.on("seed", zite => this.emit("seed." + zite, peer))
     if (!lazy) this.cache.update(this.peers)
     return peer
