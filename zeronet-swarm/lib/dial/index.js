@@ -81,6 +81,8 @@ module.exports = function Dial(zero, lp2p) { //dynamic dialer that switches betw
       t[ntype].dial(peer, cb)
     }
 
+    if (!st) return cb(new Error("Dial failure. Please check the arguments!"))
+
     log("dialing %s as %s (over %s)", peer.toString(), st, ntype)
   })
 }

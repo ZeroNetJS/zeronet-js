@@ -6,6 +6,7 @@ const multi2ip = ip2multi.reverse4
 const PeerInfo = require("peer-info")
 const Id = require("peer-id")
 const multiaddr = require("multiaddr")
+const once = require("once")
 const debug = require("debug")
 const log = process.env.INTENSE_DEBUG ? debug("zeronet:peer") : () => {}
 
@@ -74,7 +75,7 @@ class Peer extends EventEmitter {
   dial(cb) {
     if (this.score <= -100) return cb(new Error("Score too low"))
     if (this.isOnline) return cb()
-    this.swarm.dial(this.dialable, err => {
+    const ncb = once(err => {
       if (err) {
         this.score -= 10
         this.lfailedd = new Date().getTime()
@@ -85,11 +86,13 @@ class Peer extends EventEmitter {
       }
       cb(err)
     })
+    this.swarm.dial(this.dialable, ncb)
+    setTimeout(ncb, 10 * 1000, new Error("Timeout"))
   }
   cmd(cmd, data, cb) {
     this.dial(err => {
       if (err) return cb(err)
-      this.swarm.dial(this.dialable, cmd, data, (err, res) => {
+      const ncb = once((err, res) => {
         if (err) {
           this.score -= 5
           this.isOnline = true
@@ -98,6 +101,8 @@ class Peer extends EventEmitter {
         }
         cb(err, res)
       })
+      this.swarm.dial(this.dialable, cmd, data, ncb)
+      setTimeout(ncb, 10 * 1000, new Error("Timeout"))
     })
   }
   toJSON() {
@@ -117,12 +122,26 @@ class ZeroPeer extends Peer {
     this.ip = multi2ip(addr)
     this.dialable = multiaddr(addr)
   }
+  discoverZite(zite, cb) {
+    if (this.isSeeding(zite)) return cb(true)
+    cb(false)
+  }
 }
 
 class Lp2pPeer extends Peer {
   constructor(peer) {
     super(peer, peer.id)
     this.dialable = peer
+  }
+  discoverZite(zite, cb) {
+    if (this.isSeeding(zite)) return cb(true)
+    this.cmd("hasZite", {
+      zite
+    }, (err, res) => {
+      log(err, res)
+      if (err) return cb(false)
+      else return cb(res.has)
+    })
   }
 }
 
