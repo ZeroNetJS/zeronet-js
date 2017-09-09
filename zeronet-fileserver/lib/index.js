@@ -109,7 +109,7 @@ module.exports = function FileServer(protocol, zeronet) {
     },
     lp2p_only: true
   }, (data, cb) => {
-    return cb({
+    return cb(null, {
       has: !!zeronet.zites[data.zite]
     })
   })
