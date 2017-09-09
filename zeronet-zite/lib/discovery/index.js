@@ -50,8 +50,8 @@ function Discovery(zite, node, types) {
     })
   }
   self.discoverCB = cb => {
-    self.discover()
     self.once("discover", cb)
+    self.discover()
   }
   self.peer = addr => {
     const peer = node.peerPool.add(addr)
