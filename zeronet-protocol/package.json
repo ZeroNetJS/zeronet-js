@@ -33,7 +33,7 @@
     "pull-catch": "^1.0.0",
     "pull-protocol-buffers": "^0.1.1",
     "pull-queue": "^0.1.3",
-    "pull-stream": "^3.6.0",
+    "pull-stream": "^3.6.1",
     "zeronet-client": "file:../zeronet-client",
     "zeronet-common": "file:../zeronet-common",
     "zeronet-crypto": "file:../zeronet-crypto"
