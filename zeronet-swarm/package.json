@@ -1,6 +1,6 @@
 {
   "name": "zeronet-swarm",
-  "version": "0.0.1-alpha17",
+  "version": "0.0.1-alpha18",
   "description": "libp2p based ZeroNet swarm",
   "main": "lib/index.js",
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "zeronet-client",
-  "version": "0.0.1-alpha17",
+  "version": "0.0.1-alpha18",
   "description": "ZeroNet protocol client",
   "main": "lib/index.js",
   "scripts": {

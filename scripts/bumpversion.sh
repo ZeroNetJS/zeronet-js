@@ -24,8 +24,10 @@ git add snap/snapcraft.yaml
 for dir in $files; do
   cd $dir
     for f in package.json package-lock.json; do
-      sed -r 's|^(  "version" *: *").*"|\1'$newver'"|' -i $f
-      git add $f
+      if [ -e $f ]; then
+        sed -r 's|^(  "version" *: *").*"|\1'$newver'"|' -i $f
+        git add $f
+      fi
     done
   cd $op
 done
