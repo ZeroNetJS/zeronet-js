@@ -26,6 +26,7 @@ mkdirp.sync(path.join(dir, "logs"))
 let cm
 
 const TCP = require('libp2p-tcp')
+const WS = require("libp2p-websockets")
 
 const defaults = {
   id_expire: 1000 * 60 * 60 * 24 * 7, //approx 1 week
@@ -39,7 +40,8 @@ const defaults = {
         "/ip4/0.0.0.0/tcp/15543"
       ],
       transports: [
-        new TCP()
+        new TCP(),
+        new WS()
       ],
       trackers: [
         //"zero://boot3rdez4rzn36x.onion:15441",
@@ -61,8 +63,10 @@ const defaults = {
     libp2p: {
       listen: [
         "/ip4/0.0.0.0/tcp/15542",
-        "/ip6/::1/tcp/15542",
-        "/p2p-websocket-star"
+        "/ip6/::/tcp/15542",
+        "/p2p-websocket-star",
+        "/ip4/0.0.0.0/tcp/15541/ws",
+        "/ip6/::/tcp/15541/ws"
       ],
       transports: [
         new TCP()

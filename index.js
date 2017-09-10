@@ -2,6 +2,7 @@
 
 const Bundler = require("./bundle")
 const TCP = require('libp2p-tcp')
+const WS = require("libp2p-websockets")
 module.exports = Bundler({
   name: "ZeroNetNodeJSBundle",
   modules: {
@@ -31,9 +32,10 @@ module.exports = Bundler({
       libp2p: {
         listen: [],
         transports: [
-          new TCP()
-        ]/*,
-        mdns: false,
+          new TCP(),
+          new WS()
+        ],
+        mdns: true/*,
         dht: false*/
       }
     }
