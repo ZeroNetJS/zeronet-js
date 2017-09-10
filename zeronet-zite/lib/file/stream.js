@@ -19,7 +19,6 @@ module.exports = function FileStream(data) {
 
   let dlpath = data.path + "@" + data.site
   let othersize = 0
-  //let fullchunk = []
 
   log("init", dlpath, info)
 
@@ -35,13 +34,11 @@ module.exports = function FileStream(data) {
     let chunks = []
 
     function finishLoop(err) {
-      if (chunks.length && err) sendErr = err
-      if (chunks.length) return cb(null, chunks)
-      return cb(err)
+      return cb(err, chunks)
     }
 
     function loop() {
-      if (cur >= info.size) return finishLoop(!log("finished", dlpath, cur))
+      if (cur >= info.size) return finishLoop(true, log("finished", dlpath, cur))
       let args = {
         site: data.site,
         location: cur,
@@ -49,7 +46,6 @@ module.exports = function FileStream(data) {
       }
       if (info.size) args.file_size = info.size
       peer.cmd("getFile", args, function (err, res) {
-        //console.log("peere", peer.multiaddr, err)
         if (err) {
           peer.score -= 20
           return finishLoop() //goto: next
@@ -58,7 +54,6 @@ module.exports = function FileStream(data) {
           if (!info.size) return finishLoop()
           othersize++
           if (othersize == 2) {
-            //require("fs").writeFileSync("/tmp/site-failed-download",Buffer.concat(fullchunk))
             return finishLoop(new Error("Other size"))
           }
           return finishLoop()
@@ -66,7 +61,6 @@ module.exports = function FileStream(data) {
         if (!info.size) info.size = res.size
         cur += res.body.length
         log("downloaded", dlpath, cur, info.size)
-        //fullchunk.push(res.body)
         chunks.push(res.body)
         return loop()
       })

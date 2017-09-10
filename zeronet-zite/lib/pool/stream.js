@@ -24,11 +24,17 @@ module.exports = function PeerStream(zite) {
   function PeerList() { //gets peers
     const getter = new Getters.MetaGetter([new Getters.OnlineGetter(zite.pool), new Getters.OfflineGetter(zite.pool)])
     const dgetter = new Getters.MetaGetter([new Getters.DiscoveryCandidateGetter(zite.pool.main, zite.address)])
+    let last0 = false
+    let failedDiscovery = 0
     return function (end, cb) {
       if (end) return cb(end)
       log("peer:list:out read")
 
+      if (!last0) failedDiscovery = 0
+      last0 = false
+
       function getLoop() {
+        if (failedDiscovery >= 3) return cb(new Error("PeerList drained"))
         if (getter.peers) {
           if (getter.peers <= 5) zite.discovery.discover() //low peers
           const peer_ = getter.getSync()
@@ -46,12 +52,16 @@ module.exports = function PeerStream(zite) {
                 log("peer:list:out discovered a peer")
                 return cb(null, peer)
               } else {
-                log("peer:list:out discovery method fail")
+                last0 = true
+                failedDiscovery += 0.1
+                log("peer:list:out discovery method fail (f = %s)", failedDiscovery)
                 return getLoop()
               }
             })
           } else {
-            log("peer:list:out drained. discover")
+            log("peer:list:out drained. discover (f = %s)", failedDiscovery)
+            last0 = true
+            failedDiscovery += 1
             zite.discovery.discoverCB(() => {
               process.nextTick(getLoop)
             })

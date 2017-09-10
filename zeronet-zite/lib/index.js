@@ -96,7 +96,7 @@ module.exports = function Zite(config, node) { //describes a single zite
             i.version = i.authority.version
             node.logger("node")("Downloaded %s", i.path)
           }),
-          tree.storage.writeStream(tree.zite.address, 0, i.path)
+          tree.storage.writeStream(tree.zite.address, 0, i.path.replace(/^\//, ""))
         )
       })
     }, err => err ? console.error(err) : null)
