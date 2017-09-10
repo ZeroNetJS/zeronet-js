@@ -268,6 +268,9 @@ class FileTreeRoot extends FileTreeBranchObject {
     this.json = json
     this.updateTree()
   }
+  maybeValid( /*path*/ ) {
+    return false //TODO: add
+  }
   getRuleBook(path, data) {
     let valid_signers = []
     if (path == "content.json") {

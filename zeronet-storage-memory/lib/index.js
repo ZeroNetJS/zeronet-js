@@ -18,7 +18,7 @@ module.exports = function ZeroNetStorageFS() {
   const getPath = (a, b) => a + "/" + b
 
   self.file = {
-    exists: (zite, version, inner_path, cb) => fs.exists(getPath(zite, inner_path), res => cb(null, res)),
+    exists: (zite, version, inner_path, cb) => fs.exists(getPath(zite, inner_path), cb),
     read: (zite, version, inner_path, cb) => fs.readFile(getPath(zite, inner_path), cb),
     write: (zite, version, inner_path, data, cb) => fs.writeFile(getPath(zite, inner_path), data, cb),
     remove: (zite, version, inner_path, cb) => fs.unlink(getPath(zite, inner_path), cb)
@@ -35,7 +35,13 @@ module.exports = function ZeroNetStorageFS() {
     json = {}
     jfs = new FSMock(json)
     file = {}
-    fs = new FSMock(json)
+    fs = new FSMock(file)
+    self.mocks = {
+      fs,
+      jfs,
+      json,
+      file
+    }
     cb()
   }
 
@@ -44,6 +50,7 @@ module.exports = function ZeroNetStorageFS() {
     jfs = null
     file = null
     fs = null
+    self.mocks = null
     cb()
   }
 

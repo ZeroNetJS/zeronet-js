@@ -80,11 +80,13 @@ function Libp2pSwarm(opt, protocol, zeronet) {
   const lp2p = self.lp2p = self.libp2p = new libp2p(modules, peerInfo /*, peerBook*/ )
   const swarm = lp2p
   swarm.on("peer:discovery", pi => {
+    if (pi.id.toB58String() == peerInfo.id.toB58String()) return
     const next = () => swarm.dial(pi, () => {})
     if (swarm.isStarted()) next()
     else swarm.once("start", () => process.nextTick(next))
   })
   swarm.on("peer:connect", peer => {
+    if (peer.id.toB58String() == peerInfo.id.toB58String()) return
     const npeer = zeronet.peerPool.add(peer)
     const next = () => npeer.dial(() => {})
     if (swarm.isStarted()) next()

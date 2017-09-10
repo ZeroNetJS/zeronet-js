@@ -1,11 +1,11 @@
 "use strict"
 
 const pull = require("pull-stream")
-const queue = require("pull-queue")
 const defer = require("pull-defer")
 
 module.exports = function StorageWrapper(storage) {
   const self = this
+  self.storage = storage
 
   /* start/stop */
 
@@ -32,40 +32,31 @@ module.exports = function StorageWrapper(storage) {
     if (storage.file.readStream) {
       const d = defer.source()
       storage.file.readStream(zite, v, path, (err, stream) => {
-        if (err) throw err
+        if (err) return d.resolve(pull.error(err))
         d.resolve(stream)
       })
       return d
     } else {
-      return pull(
-        pull.values(Array.isArray(path) ? path : [path]),
-        queue(function (end, file, cb) {
-          if (end) return cb(end)
-          storage.file.read(zite, v, path, cb)
-        })
-      )
+      const d = defer.source()
+      storage.file.read(zite, v, path, (err, res) => {
+        if (err) d.resolve(pull.error(err))
+        else d.resolve(pull.values([res]))
+      })
+      return d
     }
   }
   self.writeStream = (zite, v, path) => {
     if (storage.file.writeStream) {
       const d = defer.sink()
       storage.file.writeStream(zite, v, path, (err, stream) => {
-        if (err) throw err
+        if (err) d.resolve(pull.error(err))
         d.resolve(stream)
       })
       return d
     } else {
-      let d = []
-      return queue(function (end, data, cb) {
-        if (end) {
-          if (typeof end == "boolean")
-            storage.file.write(zite, v, path, Buffer.concat(d), err => cb(err || end))
-          else
-            cb(end)
-        } else {
-          d.push(data)
-          return cb(null, data)
-        }
+      return pull.collect((err, chunks) => {
+        if (err) return console.error(err)
+        storage.file.write(zite, v, path, Buffer.concat(chunks), () => {})
       })
     }
   }
