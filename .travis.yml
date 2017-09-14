@@ -1,17 +1,19 @@
-language:       node_js
+language:         node_js
 services:
   - docker
+os:
+  - linux
+  - osx
 matrix:
   allow_failures:
-    - node_js:  "node"
-    - node_js:  "6"
+    - node_js:    "node"
   include:
-    - node_js:  "node"
-      env:      NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/nightly/
-    - node_js:  "8"
-      env:      COV=true PKG=true
-    - node_js:  "6"
-dist:           trusty
+    - node_js:    "node"
+      env:        NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/nightly/
+    - node_js:    "8"
+      env:        COV=true PKG=true
+    - node_js:    "6"
+dist:             trusty
 before_install:
 - bash scripts/tarball.sh
 - pip install --user codecov
@@ -26,11 +28,11 @@ script:
 after_success:
 - '[ -z "$COV" ] || npm run report-coverage'
 deploy:
-  provider:     releases
+  provider:       releases
   api_key:
-    secure:     Th9XqkYVqVjDfa6sOlwSIRYvt0dtZ5Byx5SYFnSxLvLAQMjcXsZUQMceEjlfwGfSa11IudNIiPkKOeKK6dAgNGVuYDqCj2yG3dJMbxFmnRBiOnRTCE8FIAvmFqiW6px/XSkLwlhaXyoQ1ZF0/lLwcnm9k9iDxtm1AMv4ZBeZbAT+B6XofeQY8GDm85inCJz8ObbVw2wQwck5HxS3A8i4ip/IC5dMgBjQh+iuhYmZ7dFIihfOevXrQQ9Ts8+UqS1GvTUyvRYe45RJ1ESsGKQqP829UiRdKCx3RdxM7KT6069E83Akub3wGgMqp69ltYy6qALF0AElz/olMz50mujavik8DYFQVw03LUONtKFKRuG1JqvddDERxck1LyovAbSizl7C6erXJsCiP9Ii3a5SAUiQiOUNcGFtcGZP0kFXv59Upi6HEAx0240d/7sEt+aYmRevBdRbyuFXCDah1LmeEpa0Ri0AjVDLJR8K+lQs7q2a8xcz1h2/JO3Pk/JTnt9d7tuniw/ds9xRBww+0k3WkpX0vgQ04m9TU0wrJ06L0aaBFojFNuC8TBVMjAgi92kzXxegqTmrcpiXae35tNvIex+iVEi9OIBhDZvE1vDp3gWl+RKhGRR+xrhbnJpcE5VAkBtnmgqdEqs9DkEY9Z3DWiKf10b8r+LB7aVv8FVP8eM=
-  file_glob:    true
-  file:         ".pkg/zeronet-*"
+    secure:       Th9XqkYVqVjDfa6sOlwSIRYvt0dtZ5Byx5SYFnSxLvLAQMjcXsZUQMceEjlfwGfSa11IudNIiPkKOeKK6dAgNGVuYDqCj2yG3dJMbxFmnRBiOnRTCE8FIAvmFqiW6px/XSkLwlhaXyoQ1ZF0/lLwcnm9k9iDxtm1AMv4ZBeZbAT+B6XofeQY8GDm85inCJz8ObbVw2wQwck5HxS3A8i4ip/IC5dMgBjQh+iuhYmZ7dFIihfOevXrQQ9Ts8+UqS1GvTUyvRYe45RJ1ESsGKQqP829UiRdKCx3RdxM7KT6069E83Akub3wGgMqp69ltYy6qALF0AElz/olMz50mujavik8DYFQVw03LUONtKFKRuG1JqvddDERxck1LyovAbSizl7C6erXJsCiP9Ii3a5SAUiQiOUNcGFtcGZP0kFXv59Upi6HEAx0240d/7sEt+aYmRevBdRbyuFXCDah1LmeEpa0Ri0AjVDLJR8K+lQs7q2a8xcz1h2/JO3Pk/JTnt9d7tuniw/ds9xRBww+0k3WkpX0vgQ04m9TU0wrJ06L0aaBFojFNuC8TBVMjAgi92kzXxegqTmrcpiXae35tNvIex+iVEi9OIBhDZvE1vDp3gWl+RKhGRR+xrhbnJpcE5VAkBtnmgqdEqs9DkEY9Z3DWiKf10b8r+LB7aVv8FVP8eM=
+  file_glob:      true
+  file:           ".pkg/zeronet-*"
   on:
-    tags:       true
-  skip_cleanup: true
+    tags:         true
+  skip_cleanup:   true
