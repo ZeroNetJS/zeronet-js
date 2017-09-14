@@ -18,7 +18,7 @@ before_install:
 - bash scripts/tarball.sh
 - pip install --user codecov
 - docker pull mkg20001/zeronet-docker
-- [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$(node -v)" == ^v8 ] && COV=true && PKG=true
+- '[ "$TRAVIS_OS_NAME" == "linux" ] && [ "$(node -v)" == ^v8 ] && COV=true && PKG=true'
 install:
 - bash scripts/install.sh
 script:
