@@ -7,7 +7,7 @@ const multiaddr = require("multiaddr")
 let node
 
 describe("handshake", () => {
-  it("should handshake and ping", (cb) => {
+  before(done => {
     node = ZeroNet({
       id: global.id,
       swarm: {
@@ -24,14 +24,19 @@ describe("handshake", () => {
         }
       }
     })
-    node.start(err => {
-      if (err) return cb(err)
-      node.swarm.dial(multiaddr("/ip4/127.0.0.1/tcp/25335"), "ping", {}, cb)
-    })
+    node.start(done)
   })
 
-  afterEach(function (cb) {
+  it("should handshake and ping", (cb) => {
+    node.swarm.dial(node.swarm.lp2p.lp2p.peerInfo, "ping", {}, cb)
+  })
+
+  it("should upgrade, handshake and ping", (cb) => {
+    node.swarm.dial(multiaddr("/ip4/127.0.0.1/tcp/25335"), "ping", {}, cb)
+  })
+
+  after(function (done) {
     this.timeout(5000)
-    node.stop(() => cb())
+    node.stop(done)
   })
 })
