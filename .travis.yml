@@ -17,17 +17,17 @@ dist:             trusty
 before_install:
 - bash scripts/tarball.sh
 - pip install --user codecov
-- docker pull mkg20001/zeronet-docker
-- '([ -e /etc/lsb-release ] && node -v | grep "^v8" > /dev/null && COV=true && PKG=true) || echo "Skipping coverage & pkg"'
+- '(docker pull mkg20001/zeronet-docker && touch .do_interop ) || echo "Skipping interop tests"'
+- '([ -e /etc/lsb-release ] && node -v | grep "^v8" > /dev/null && touch .do_cov && touch .do_pkg) || echo "Skipping coverage & pkg"'
 install:
 - bash scripts/install.sh
 script:
 - npm test
-- bash scripts/interop-test.sh
+- '[ ! -e .do_interop ] || bash scripts/interop-test.sh'
 #- npm run docs
-- '[ -z "$PKG" ] || bash scripts/pkg.sh'
+- '[ ! -e .do_pkg ] || bash scripts/pkg.sh'
 after_success:
-- '[ -z "$COV" ] || npm run report-coverage'
+- '[ ! -e .do_cov ] || npm run report-coverage'
 deploy:
   provider:       releases
   api_key:
