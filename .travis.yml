@@ -18,7 +18,7 @@ before_install:
 - bash scripts/tarball.sh
 - pip install --user codecov
 - docker pull mkg20001/zeronet-docker
-- '[ -e /etc/lsb-release ] && node -v | grep "^v8" > /dev/null && COV=true && PKG=true || echo "Skipping coverage & pkg"'
+- '([ -e /etc/lsb-release ] && node -v | grep "^v8" > /dev/null && COV=true && PKG=true) || echo "Skipping coverage & pkg"'
 install:
 - bash scripts/install.sh
 script:
