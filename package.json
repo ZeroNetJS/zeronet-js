@@ -39,7 +39,7 @@
     "extract-comments": "^0.10.1",
     "jsdoc-to-markdown": "^3.0.0",
     "gene-rator": "0.0.1-pre",
-    "mocha": "^3.5.1",
+    "mocha": "^3.5.3",
     "mock-fs": "^4.4.1",
     "nyc": "^11.2.1",
     "pkg": "^4.2.4",

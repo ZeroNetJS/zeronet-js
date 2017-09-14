@@ -102,7 +102,7 @@ class MainPool extends Pool {
     if (p.length > 1) throw new Error("Multiple peers found!")
     if (p.length) return p.pop()
 
-    if (PeerInfo.isPeerInfo(pi))
+    if (PeerInfo.isPeerInfo(pi) && pi.id.toB58String())
       return this.push(new Peer.Lp2pPeer(pi), lazy)
 
     if (ip2multi.isIp(pi))

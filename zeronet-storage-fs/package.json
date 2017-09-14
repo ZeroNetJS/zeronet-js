@@ -24,7 +24,7 @@
   "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
   "dependencies": {
     "async": "^2.5.0",
-    "jsonfile": "^3.0.1",
+    "jsonfile": "^4.0.0",
     "mkdirp": "^0.5.1",
     "stream-to-pull-stream": "^1.7.2"
   }
