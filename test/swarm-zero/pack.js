@@ -2,6 +2,7 @@
 
 const pack = require("zeronet-protocol/lib/zero/pack")
 const assert = require("assert")
+const crypto = require("zeronet-crypto")
 
 const map = {
   "\x01\x02\x03\x047\x00": "1.2.3.4:55",
@@ -10,7 +11,7 @@ const map = {
 }
 describe("pack", () => {
   Object.keys(map).forEach(packed => {
-    it("should unpack " + JSON.stringify(packed) + " as " + map[packed], () => assert.equal(pack.v4.unpack(packed), map[packed]))
-    it("should pack " + map[packed] + " as " + JSON.stringify(packed), () => assert.equal(pack.v4.pack(map[packed]), packed))
+    it("should unpack " + crypto.PythonJSONDump(packed) + " as " + map[packed], () => assert.equal(pack.v4.unpack(packed), map[packed]))
+    it("should pack " + map[packed] + " as " + crypto.PythonJSONDump(packed), () => assert.equal(pack.v4.pack(map[packed]), packed))
   })
 })

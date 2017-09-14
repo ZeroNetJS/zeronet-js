@@ -24,7 +24,7 @@ module.exports = function ContentJSON(zite, inner_path, data) {
     /*
     data is an object.
     we need to get the signing data from the object and remove the signs
-    it's keys need to be sorted alphapetically and then stringified without withespace
+    it's keys need to be sorted alphapetically and then stringified without whitespace
     */
     const {
       signs,
