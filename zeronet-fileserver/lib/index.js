@@ -19,27 +19,6 @@ in/out ->
 */
 
 module.exports = function FileServer(protocol, zeronet) {
-  protocol.handle("ping", { in: {
-      protobuf: {},
-      strict: {}
-    },
-    out: {
-      protobuf: {
-        "1": [
-          "string",
-          "body"
-        ]
-      },
-      strict: {
-        "body": [
-          b => b == "Pong!"
-        ]
-      }
-    }
-  }, (data, cb) => cb(null, {
-    body: "pong"
-  }))
-
   protocol.handle("getFile", { in: {
       protobuf: {
         "1": [

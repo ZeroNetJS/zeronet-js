@@ -31,7 +31,24 @@ function getPeerIdType(pi) {
   return false
 }
 
+function disabledThing(type) {
+  return function () {
+    const a = [...arguments]
+    const f = a.filter(f => typeof f == "function")[0]
+    if (f) {
+      return f(new Error(type + " swarm disabled!"))
+    }
+  }
+}
+
 module.exports = function Dial(zero, lp2p) { //dynamic dialer that switches between streams
+  if (!zero) zero = {
+    dial: disabledThing("zero")
+  }
+  if (!lp2p) lp2p = {
+    dial: disabledThing("libp2p"),
+    cmd: disabledThing("libp2p")
+  }
   const t = {
     zero,
     lp2p

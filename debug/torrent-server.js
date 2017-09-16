@@ -1,4 +1,4 @@
-var Server = require('zeronet-common/node_modules/bittorrent-tracker').Server
+var Server = require('bittorrent-tracker').Server
 
 var server = new Server({
   udp: true, // enable udp server? [default=true]
