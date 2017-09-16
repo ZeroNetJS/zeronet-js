@@ -8,7 +8,7 @@ const assert = global.assert
 const testdata = ["testdata", 1, 2, 3]
 
 function jbuf(o) {
-  return new Buffer(JSON.stringify(o))
+  return Buffer.from(JSON.stringify(o))
 }
 
 let s
@@ -16,7 +16,7 @@ let s
 describe("json", () => {
   it("should recover broken json", cb => {
     fs({
-      "/json/peers": new Buffer("@¥¤€Ł"),
+      "/json/peers": Buffer.from("@¥¤€Ł"),
       "/json/peers.bak": jbuf(testdata)
     })
     s = new store("/")
