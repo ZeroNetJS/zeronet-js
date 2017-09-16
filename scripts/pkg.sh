@@ -23,15 +23,24 @@ if node -v | grep "^v8" > /dev/null; then
   for f in package*; do sed -r 's|"([a-z-]+)": "file:(.*)"|"\1": "file:../\2.tar.gz"|g' -i $f; done
   npm i --production
   v="8.3.0" #Change with every new node version if that version gets available in pkg
-  targets="node$v-linux-x64,node$v-macos-x64,node$v-win-x64"
-  for t in $(echo "$targets" | sed "s|,| |g"); do
-    tt=$(echo "$t" | sed "s|-| |g")
-    PKG_REPO=zeit/pkg-fetch ../node_modules/.bin/pkg-fetch $tt f || ../node_modules/.bin/pkg-fetch $tt f
+  t=$(node -e 'switch(process.platform){case"win32":"win";break;case"darwin":"macos";break;default:process.platform}' -p)
+  target="node$v-$t-x64"
+  tt=$(echo "$target" | sed "s|-| |g")
+  PKG_REPO=zeit/pkg-fetch ../node_modules/.bin/pkg-fetch $tt f || ../node_modules/.bin/pkg-fetch $tt f
+  bin=$(node -e 'switch(process.platform){case"win32":"win.exe";break;case"darwin":"macos";break;default:process.platform}' -p)
+  bin="zeronet-$bin"
+  PKG_TARGET="$target" ../node_modules/.bin/pkg-natives
+  if [ -e zeronet.exe ]; then
+    mv zeronet.exe $bin
+  else
+    mv zeronet $bin
+  fi
+  for f in $(dir -w 0); do
+    [ "$f" == "$bin" ] || rm -rfv $f
   done
-  ../node_modules/.bin/pkg -t $targets .
-  RUNINCWD=1 TESTOK=1 ./zeronet-linux && rm -rf .zeronet
-  ../node_modules/.bin/pkg-natives
-  RUNINCWD=1 TESTOK=1 ./zeronet && rm -rf .zeronet
+  RUNINCWD=1 TESTOK=1 ./$bin
+  rm -rf .zeronet
+  echo "Created $bin!"
 else
   echo "Please use node v8+ to build"
 fi

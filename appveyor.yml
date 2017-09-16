@@ -21,6 +21,20 @@ test_script:
   - npm --version
   # run tests
   - npm test
+  - cmd /C .\scripts\pkg.cmd
 
 # Don't actually build.
 build: off
+
+deploy:
+  release: v$(appveyor_build_version)
+  description: v$(appveyor_build_version)
+  provider: GitHub
+  auth_token:
+    secure: 8n7Luu7L7xQcYdhmWEyevOpIsQuyzHn+0FMLoqE7ahj9vuQSOMINU0dNMcW0Pkvq
+  artifact: /\.pkg\\zeronet-*/     # upload pkg
+  draft: false
+  prerelease: true
+  on:
+    branch: master                 # release from master branch only
+    appveyor_repo_tag: true        # deploy on tag push only

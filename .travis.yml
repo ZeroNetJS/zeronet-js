@@ -18,7 +18,8 @@ before_install:
 - bash scripts/tarball.sh
 - pip install --user codecov
 - '(docker pull mkg20001/zeronet-docker && touch .do_interop ) || echo "Skipping interop tests"'
-- '([ -e /etc/lsb-release ] && node -v | grep "^v8" > /dev/null && touch .do_cov && touch .do_pkg) || echo "Skipping coverage & pkg"'
+- '(node -v | grep "^v8" > /dev/null && touch .do_cov) || echo "Skipping coverage"'
+- '([ -e /etc/lsb-release ] && node -v | grep "^v8" > /dev/null && touch .do_pkg) || echo "Skipping pkg"'
 install:
 - bash scripts/install.sh
 script:
