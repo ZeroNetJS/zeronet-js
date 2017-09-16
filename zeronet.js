@@ -40,8 +40,7 @@ const defaults = {
         "/ip4/0.0.0.0/tcp/15543"
       ],
       transports: [
-        new TCP(),
-        new WS()
+        new TCP()
       ],
       trackers: [
         //"zero://boot3rdez4rzn36x.onion:15441",
@@ -65,11 +64,12 @@ const defaults = {
         "/ip4/0.0.0.0/tcp/15542",
         "/ip6/::/tcp/15542",
         "/p2p-websocket-star",
-        "/ip4/0.0.0.0/tcp/15541/ws",
-        "/ip6/::/tcp/15541/ws"
+        "/ip4/0.0.0.0/tcp/15540/ws",
+        "/ip6/::/tcp/15540/ws"
       ],
       transports: [
-        new TCP()
+        new TCP(),
+        new WS()
       ],
       bootstrap: require("./bootstrappers").libp2p,
       mdns: true,
