@@ -11,16 +11,21 @@ module.exports = function StreamHandler(zite, _ttl) {
 
   function updatePeerStream() {
     if (!peerStream || ttl < new Date().getTime()) {
+      if (cacheStream) cacheStream.stop(true)
       peerStream = PeerStream(zite)
       cacheStream = PartStream.cache()
-      cacheStream.sink(peerStream.source)
-      reusableStream.setSource(cacheStream.source)
+      cacheStream.sink(peerStream)
+      reusableStream.setSource(cacheStream.source())
       ttl = new Date().getTime() + (60 * 1000 || _ttl)
     }
   }
 
   zite.peerStream = () => {
     updatePeerStream()
-    return multiplexerStream()
+    const m = multiplexerStream()
+    return function (end, cb) {
+      updatePeerStream() //"heartbeat"
+      return m(end, cb)
+    }
   }
 }

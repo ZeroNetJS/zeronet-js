@@ -36,11 +36,11 @@ function DataCache(requestFnc, cancelFnc) {
         else if (err) { //this is called after the data is sent so new getters don't skip the data
           return cb(err)
         } else {
-          ee.emit("get." + getter.height)
           ee.once("got." + getter.height, (e, r) => {
             getter.height++
               return cb(e, r)
           })
+          ee.emit("get." + getter.height)
         }
       }
       getter.id = uuid()
@@ -49,7 +49,6 @@ function DataCache(requestFnc, cancelFnc) {
     },
     stop: e => {
       eerr = e
-
     }
   }
 }
