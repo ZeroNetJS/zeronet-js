@@ -4,7 +4,7 @@ if node -v | grep "^v8" > /dev/null; then
 
   set -e
 
-  if [ -e /etc ]; then
+  if [[ "$(uname -s)" == Linux* ]]; then
     op="$PWD"
     t="/tmp/libstdcfix/"
     rm -rf $t
