@@ -16,6 +16,7 @@ if node -v | grep "^v8" > /dev/null; then
     export LD_LIBRARY_PATH=$p:$LD_LIBRARY_PATH
     cd $op
   fi
+
   rm -rf .pkg
   mkdir .pkg
   for f in package* bootstrappers.js zeronet.js lib; do cp -r $f .pkg; done
@@ -37,7 +38,7 @@ if node -v | grep "^v8" > /dev/null; then
     mv zeronet $bin
   fi
   for f in $(dir -w 0); do
-    [ "$f" == "$bin" ] || rm -rfv $f
+    [ "$f" == "$bin" ] || rm -rf $f
   done
   RUNINCWD=1 TESTOK=1 ./$bin
   rm -rf .zeronet

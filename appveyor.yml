@@ -4,8 +4,7 @@ environment:
     - nodejs_version: "8"
     - nodejs_version: "6"
 
-init:
-  # fix for .cmd
+init: # fix for .cmd
   - git config --global core.autocrlf true
 
 # Install scripts. (runs after repo cloning)
@@ -27,7 +26,7 @@ test_script:
   # pkg
   - cmd /C .\scripts\pkg.cmd
 
-# Don't actually build.
+# [You can't compile if you are using js.meme]
 build: off
 
 deploy:
