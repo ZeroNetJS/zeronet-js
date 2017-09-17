@@ -16,11 +16,14 @@ install:
 
 # Post-install test scripts.
 test_script:
+  # tarball
+  - cmd /C .\scripts\tarball.cmd
   # Output useful info for debugging.
   - node --version
   - npm --version
   # run tests
   - npm test
+  # pkg
   - cmd /C .\scripts\pkg.cmd
 
 # Don't actually build.
