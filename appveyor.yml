@@ -27,8 +27,7 @@ test_script:
 build: off
 
 deploy:
-  release: v$(appveyor_build_version)
-  description: v$(appveyor_build_version)
+  description: '_changelog to be added for $(appveyor_build_version)_'
   provider: GitHub
   auth_token:
     secure: 8n7Luu7L7xQcYdhmWEyevOpIsQuyzHn+0FMLoqE7ahj9vuQSOMINU0dNMcW0Pkvq

@@ -4,17 +4,18 @@ if node -v | grep "^v8" > /dev/null; then
 
   set -e
 
-  op="$PWD"
-  t="/tmp/libstdcfix/"
-  rm -rf $t
-  mkdir -p $t
-  cd $t
-  wget -qq -O $t/libstdc++6.deb http://archive.ubuntu.com/ubuntu/pool/main/g/gcc-5/libstdc%2B%2B6_5.4.0-6ubuntu1~16.04.4_amd64.deb
-  dpkg -x $t/*.deb $t
-  p=$(dirname "$(find $t -iname libstdc++.so.6)")
-  export LD_LIBRARY_PATH=$p:$LD_LIBRARY_PATH
-  cd $op
-
+  if [ -e /etc ]; then
+    op="$PWD"
+    t="/tmp/libstdcfix/"
+    rm -rf $t
+    mkdir -p $t
+    cd $t
+    wget -qq -O $t/libstdc++6.deb http://archive.ubuntu.com/ubuntu/pool/main/g/gcc-5/libstdc%2B%2B6_5.4.0-6ubuntu1~16.04.4_amd64.deb
+    dpkg -x $t/*.deb $t
+    p=$(dirname "$(find $t -iname libstdc++.so.6)")
+    export LD_LIBRARY_PATH=$p:$LD_LIBRARY_PATH
+    cd $op
+  fi
   rm -rf .pkg
   mkdir .pkg
   for f in package* bootstrappers.js zeronet.js lib; do cp -r $f .pkg; done
