@@ -4,8 +4,11 @@ environment:
     - nodejs_version: "8"
     - nodejs_version: "6"
 
-init: #fix for .cmd
+init:
+  # fix for .cmd
   - git config --global core.autocrlf true
+  # tarball
+  - cmd /C .\scripts\tarball.cmd
 
 # Install scripts. (runs after repo cloning)
 install:
@@ -16,8 +19,6 @@ install:
 
 # Post-install test scripts.
 test_script:
-  # tarball
-  - cmd /C .\scripts\tarball.cmd
   # Output useful info for debugging.
   - node --version
   - npm --version
