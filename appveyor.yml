@@ -7,11 +7,11 @@ environment:
 init:
   # fix for .cmd
   - git config --global core.autocrlf true
-  # tarball
-  - cmd /C .\scripts\tarball.cmd
 
 # Install scripts. (runs after repo cloning)
 install:
+  # tarball
+  - cmd /C .\scripts\tarball.cmd
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
   # install modules
