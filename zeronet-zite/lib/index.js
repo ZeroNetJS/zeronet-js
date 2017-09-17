@@ -8,6 +8,7 @@ const Nonces = require("zeronet-common/lib/nonce")
 const Pool = require("zeronet-common/lib/peer/pool").ZitePool
 const Queue = require("zeronet-zite/lib/queue")
 const Tree = require("zeronet-zite/lib/tree")
+const StreamHandler = require("zeronet-zite/lib/pool/stream-handler")
 
 const series = require("async/series")
 const each = require("async/each")
@@ -57,6 +58,7 @@ module.exports = function Zite(config, node) { //describes a single zite
   const queue = self.queue = new Queue(self, node)
   tree.attach(node.storage)
   const fs = self.fs = tree.fs
+  StreamHandler(self)
 
   /* App */
 

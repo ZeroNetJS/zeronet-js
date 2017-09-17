@@ -4,14 +4,20 @@ const EE = require("events").EventEmitter
 const uuid = require("uuid")
 const defer = require('pull-defer/source')
 
-function DataCache(requestFnc) {
+function DataCache(requestFnc, cancelFnc) {
   const ee = new EE()
   let q = []
-  let err
+  let err, eerr
   let h = 0
 
   function gloop() {
     ee.once("get." + h, () => {
+      if (eerr) {
+        ee.emit("got." + h, eerr)
+        err = eerr
+        h++
+        return cancelFnc(eerr)
+      }
       requestFnc((e, r) => {
         ee.emit("got." + h, e, r)
         err = e
@@ -40,6 +46,10 @@ function DataCache(requestFnc) {
       getter.id = uuid()
       getter.height = 0
       return getter
+    },
+    stop: e => {
+      eerr = e
+
     }
   }
 }
@@ -50,7 +60,7 @@ module.exports.cache = function Cache() {
   const ee = new EE()
   return {
     sink: function (read) {
-      cache = DataCache(cb => read(null, cb))
+      cache = DataCache(cb => read(null, cb), err => read(err, () => {}))
       ee.emit("cache.ready")
     },
     source: function createSource() {
@@ -66,7 +76,8 @@ module.exports.cache = function Cache() {
       if (cache) gloop()
       else ee.once("cache.ready", gloop)
       return defsrc
-    }
+    },
+    stop: e => cache.stop(e)
   }
 }
 
@@ -84,6 +95,28 @@ module.exports.reattach = function Reattachable() {
     setSource: s => {
       src = s
       ee.emit("source.change")
+    }
+  }
+}
+
+module.exports.multiplexer = function Multiplexer(read) {
+  const ee = new EE()
+
+  function gloop() {
+    ee.once("get", () => {
+      read(null, (e, r) => {
+        ee.emit("got", e, r)
+        gloop()
+      })
+    })
+  }
+  gloop()
+
+  return function createSource() {
+    return function (end, cb) {
+      if (end) return cb(end)
+      ee.once("got", cb)
+      ee.emit("get")
     }
   }
 }
