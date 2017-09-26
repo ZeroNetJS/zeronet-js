@@ -45,7 +45,7 @@
     "pkg": "^4.2.4",
     "pkg-fetch-mkg": "^2.3.83",
     "pkg-natives": "^0.1.1",
-    "sinon": "^3.2.1",
+    "sinon": "^4.0.0",
     "sinon-chai": "^2.13.0"
   },
   "scripts": {

@@ -39,7 +39,7 @@
     "libp2p-secio": "^0.8.1",
     "libp2p-spdy": "^0.11.0",
     "libp2p-swarm": "^0.32.4",
-    "libp2p-websocket-star-multi": "github:mkg20001/js-libp2p-websocket-star-multi",
+    "libp2p-websocket-star-multi": "^0.2.0",
     "mafmt": "^3.0.1",
     "multiaddr": "^3.0.1",
     "multiplex": "github:mkg20001/multiplex",
@@ -47,7 +47,7 @@
     "once": "^1.4.0",
     "peer-id": "^0.10.1",
     "peer-info": "^0.11.0",
-    "request": "^2.81.0",
+    "request": "^2.82.0",
     "uuid": "^3.1.0",
     "zeronet-common": "file:../zeronet-common",
     "zeronet-protocol": "file:../zeronet-protocol"
