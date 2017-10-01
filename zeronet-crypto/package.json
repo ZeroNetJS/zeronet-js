@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
   "dependencies": {
-    "bitcoinjs-message": "^1.0.1",
+    "bitcoinjs-message": "^2.0.0",
     "data-queue": "0.0.2",
     "interface-connection": "^0.3.2",
     "libp2p-secio": "^0.8.1",

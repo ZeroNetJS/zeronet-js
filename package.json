@@ -46,7 +46,7 @@
     "pkg-fetch-mkg": "^2.3.83",
     "pkg-natives": "^0.1.1",
     "sinon": "^4.0.0",
-    "sinon-chai": "^2.13.0"
+    "sinon-chai": "^2.14.0"
   },
   "scripts": {
     "test": "nyc mocha",
