@@ -10,7 +10,7 @@ const btcMessage = require("bitcoinjs-message")
   * @return {boolean} - Returns wether the signature was valid and signed with the key
   */
 function VerifySig(address, data, sig) {
-  return btcMessage.verify(data, "\x18Bitcoin Signed Message:\n", address, sig)
+  return btcMessage.verify(data, address, sig, "\x18Bitcoin Signed Message:\n")
 }
 
 /**

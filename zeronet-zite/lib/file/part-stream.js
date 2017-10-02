@@ -80,12 +80,16 @@ module.exports.cache = function Cache() {
   }
 }
 
+const once = require("once")
+
 module.exports.reattach = function Reattachable() {
   const ee = new EE()
   let src
   return {
     source: function src_(end, cb) {
+      cb = once(cb)
       function gloop() {
+        ee.once("source.change", gloop)
         src(end, cb)
       }
       if (src) gloop()
