@@ -39,13 +39,13 @@
     "extract-comments": "^0.10.1",
     "jsdoc-to-markdown": "^3.0.0",
     "gene-rator": "0.0.1-pre",
-    "mocha": "^3.5.3",
+    "mocha": "^4.0.1",
     "mock-fs": "^4.4.1",
     "nyc": "^11.2.1",
-    "pkg": "^4.2.4",
+    "pkg": "^4.2.5",
     "pkg-fetch-mkg": "^2.3.83",
     "pkg-natives": "^0.1.1",
-    "sinon": "^4.0.0",
+    "sinon": "^4.0.1",
     "sinon-chai": "^2.14.0"
   },
   "scripts": {
