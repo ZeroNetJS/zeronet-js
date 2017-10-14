@@ -30,7 +30,7 @@
     "ip": "^1.1.5",
     "merge-recursive": "0.0.3",
     "multiaddr": "^3.0.1",
-    "peer-id": "^0.10.1",
+    "peer-id": "^0.10.2",
     "peer-info": "^0.11.0",
     "pull-defer": "^0.2.2",
     "pull-queue": "^0.1.4",

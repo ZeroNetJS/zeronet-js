@@ -45,7 +45,7 @@
     "multiplex": "github:mkg20001/multiplex",
     "nat-upnp": "^1.1.0",
     "once": "^1.4.0",
-    "peer-id": "^0.10.1",
+    "peer-id": "^0.10.2",
     "peer-info": "^0.11.0",
     "request": "^2.83.0",
     "uuid": "^3.1.0",
