@@ -16,17 +16,17 @@ function Logger(config) {
     self.logger = log
     log.level(0)
 
-    function ccb(type) {
+    function createFunction(type) {
       self[type] = log[type].bind(log)
     }
 
-    ccb("info")
+    createFunction("info")
     self.log = self.info
-    ccb("warn")
-    ccb("error")
-    ccb("debug")
-    ccb("trace")
-    ccb("fatal")
+    createFunction("warn")
+    createFunction("error")
+    createFunction("debug")
+    createFunction("trace")
+    createFunction("fatal")
     return self
   }
 }
