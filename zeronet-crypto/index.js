@@ -87,7 +87,7 @@ function PythonJSONDump(data) {
 
 /**
   Gets the valid signers for a file based on it's path and address
-  To be deperacted
+  Will be soon deperacted
   * @param {string} address - The address of the zie
   * @param {string} inner_path - The path of the content.json file
   * @param {object} data - The content.json contents as object
@@ -114,44 +114,8 @@ function GetSigners(vs, sr) {
   return sr + ":" + vs.join(",")
 }
 
-function VerifyContentJSON(address, inner_path, data) {
-  /*
-  data is an object.
-  we need to get the signing data from the object and remove the signs
-  it's keys need to be sorted alphapetically and then stringified without withespace
-  */
-  const {
-    signs,
-    signs_required,
-    signers_sign
-  } = data
-
-  delete data.sign
-  delete data.signs
-
-  const real = PythonJSONDump(data) //the data that was actually signed
-  const sigsig = signers_sign //signers_sign
-  const vs = GetValidSigners(address, inner_path, data) //valid signers
-  const sigsigdata = GetSigners(vs, signs_required) //signers_sign data
-
-  if (!VerifySig(address, sigsigdata, sigsig)) throw new Error("Invalid signers_sign or signers")
-
-  let vss = 0 //valid signs found
-
-  vs.forEach(addr => {
-    if (vss < signs_required)
-      if (VerifySig(addr, real, signs[addr])) vss++
-  })
-
-  if (vss < signs_required) throw new Error("Found " + vss + " vaild sign(s) but " + signs_required + " is/are needed")
-
-  return true
-
-}
-
 module.exports = {
   OrderObject,
-  VerifyContentJSON,
   VerifySig,
   PythonJSONDump,
   GetValidSigners,
