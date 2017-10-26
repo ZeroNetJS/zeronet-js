@@ -11,7 +11,7 @@
   "dependencies": {
     "colors": "^1.1.2",
     "libp2p-tcp": "^0.11.1",
-    "libp2p-websockets": "^0.10.2",
+    "libp2p-websockets": "^0.10.4",
     "merge-recursive": "0.0.3",
     "mkdirp": "^0.5.1",
     "mockery": "^2.1.0",
@@ -45,7 +45,7 @@
     "pkg": "^4.2.5",
     "pkg-fetch-mkg": "^2.3.83",
     "pkg-natives": "^0.1.1",
-    "sinon": "^4.0.1",
+    "sinon": "^4.0.2",
     "sinon-chai": "^2.14.0"
   },
   "scripts": {
