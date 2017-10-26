@@ -48,7 +48,7 @@ it("should handshake with tls-rsa as server", (cb) => {
     if (c.handshakeData.commonCrypto() != "tls-rsa") return cb(new Error("Failing: Wrong crypto used " + c.handshakeData.commonCrypto() + " != tls-rsa"))
   })
   it.zero(["peerCmd", it.zhost, "25335", "ping"])
-})
+}).timeout(10000)
 
 after(function (cb) {
   this.timeout(5000)
