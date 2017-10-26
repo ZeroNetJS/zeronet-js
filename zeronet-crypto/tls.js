@@ -1,10 +1,8 @@
 "use strict"
 
 const tls = require("tls")
-const net = require("net")
 
 const toPull = require("stream-to-pull-stream")
-const toStream = require("pull-stream-to-stream")
 const Connection = require("interface-connection").Connection
 const sslConfig = require('ssl-config')('modern')
 
@@ -12,6 +10,8 @@ const gen = require("zeronet-crypto/gen")
 
 const debug = require("debug")
 const log = debug("zeronet:crypto:tls")
+
+const toSocket = require("pull-stream-to-net-socket")
 
 function basicCrypto(type, protocol, handler) {
   let cert, certq = []
@@ -24,77 +24,54 @@ function basicCrypto(type, protocol, handler) {
 
   protocol.crypto.add("tls-" + type, (conn, opt, cb) => {
     log("tls init", type, opt)
+    const final = (err, client) => {
+      log("tls success?", err ? true : err)
+      if (err) return cb(err)
+      cb(null, new Connection(toPull.duplex(client), conn))
+    }
     if (opt.isServer) {
       const next = () => {
-        log("tls %s [server] prepare", type)
-        const s = handler.server(cert, socket => {
-          cb(null, new Connection(toPull.duplex(socket), conn))
-        })
-        s.on("error", cb)
-        s.listen(e => {
-          if (e) return cb(e)
-          log("tls %s [server] start", type)
-          log("tls %s [server] client.connecting", type)
-          const client = net.connect(s.address(), e => {
-            if (e) return cb(e)
-            let stream = toStream(conn)
-            stream.pipe(client).pipe(stream)
-            log("tls %s [server] client.ready", type)
-          })
-          client.on("error", cb)
-        })
+        toSocket(conn, {
+          createServer: () => handler.server(cert),
+          inverse: true,
+          prefire: true
+        }, final)
       }
       if (cert) next()
       else certq.push(next)
     } else {
-      log("tls %s [client] server.prepare", type)
-      const s = net.createServer(socket => {
-        let stream = toStream(conn)
-        stream.pipe(socket).pipe(stream)
-        s.close()
-      })
-      s.on("error", cb)
-      s.listen(e => {
-        if (e) return cb(e)
-        log("tls %s [client] server.ready", type)
-        log("tls %s [client] connect", type)
-        const client = handler.client(s.address().host, s.address().port)
-        client.on("error", cb)
-        client.on("secureConnect", () => cb(null, new Connection(toPull.duplex(client), conn)))
-      })
+      toSocket(conn, {
+        createClient: dest => handler.client(dest),
+        prefire: true
+      }, final)
     }
   })
 }
 
 module.exports = function TLSSupport(protocol) {
-  //module.exports.tls_ecc(protocol)
   module.exports.tls_rsa(protocol)
+  // module.exports.tls_ecc(protocol)
 }
 
 module.exports.tls_rsa = (protocol) => {
   basicCrypto("rsa", protocol, {
-    server: (cert, onConnect) => {
-      return tls.createServer({
-        key: cert.key,
-        cert: cert.cert,
-        ciphers: sslConfig.ciphers,
-        honorCipherOrder: true,
-        secureOptions: sslConfig.minimumTLSVersion
-      }, onConnect)
-    },
-    client: (host, port) => {
-      return tls.connect({
-        host,
-        port,
-        requestCert: true,
-        rejectUnauthorized: false,
-        ciphers: sslConfig.ciphers,
-        honorCipherOrder: true,
-        secureOptions: sslConfig.minimumTLSVersion
-      })
-    }
+    server: (cert) => tls.createServer({
+      key: cert.key,
+      cert: cert.cert,
+      ciphers: sslConfig.ciphers,
+      honorCipherOrder: true,
+      secureOptions: sslConfig.minimumTLSVersion
+    }),
+    client: (dest) => tls.connect(Object.assign(dest, {
+      requestCert: true,
+      rejectUnauthorized: false,
+      ciphers: sslConfig.ciphers,
+      honorCipherOrder: true,
+      secureOptions: sslConfig.minimumTLSVersion
+    }))
   })
 }
+
 /* TODO: fix and rewrite
 module.exports.tls_ecc = (protocol) => {
   basicCrypto("ecc", protocol, (opt, host, port, cert, ready, cb) => {
