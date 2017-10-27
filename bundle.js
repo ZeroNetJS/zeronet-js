@@ -23,7 +23,15 @@ module.exports = function ZeroNetBundler(opt) {
           require("zeronet-crypto/secio")
         ]
       },
-      libp2p: {}
+      libp2p: {
+        relay: {
+          enabled: true,
+          hop: {
+            enabled: true,
+            active: false // passive
+          }
+        }
+      }
     },
     modules: {},
     storage: MEM
