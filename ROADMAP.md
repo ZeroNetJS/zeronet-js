@@ -27,7 +27,7 @@
 ### Big bugs:
  - [x] Streams are buggy ([#5](https://github.com/ZeroNetJS/zeronet-js/issues/5))
  - [x] New libp2p peer-id is slowing down startup ([#30](https://github.com/ZeroNetJS/zeronet-js/issues/30))
- - [ ] TLS server => client is broken ([#1](https://github.com/ZeroNetJS/zeronet-js/issues/1))
+ - [x] TLS server => client is broken ([#1](https://github.com/ZeroNetJS/zeronet-js/issues/1))
  - [ ] Pex command issues ([#31](https://github.com/ZeroNetJS/zeronet-js/issues/31))
  - [ ] Msgpack encoding issues ([#39](https://github.com/ZeroNetJS/zeronet-js/issues/39))
  - [x] TLS RSA (segfaults - [#54](https://github.com/ZeroNetJS/zeronet-js/issues/54))
