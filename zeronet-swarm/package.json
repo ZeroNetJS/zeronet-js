@@ -38,7 +38,7 @@
     "libp2p-railing": "^0.7.1",
     "libp2p-secio": "^0.8.1",
     "libp2p-spdy": "^0.11.0",
-    "libp2p-swarm": "^0.33.0",
+    "libp2p-swarm": "^0.33.1",
     "libp2p-websocket-star-multi": "^0.2.0",
     "mafmt": "^3.0.2",
     "multiaddr": "^3.0.1",

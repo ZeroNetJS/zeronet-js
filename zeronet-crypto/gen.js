@@ -81,8 +81,8 @@ function rsa() { //x509 2k rsa cert
   var pem = pki.certificateToPem(cert)
 
   return {
-    cert: new Buffer(pem),
-    privkey: new Buffer(pki.privateKeyToPem(keys.privateKey))
+    cert: new Buffer(pem).toString("hex"),
+    key: new Buffer(pki.privateKeyToPem(keys.privateKey)).toString("hex")
   }
 }
 
@@ -133,6 +133,8 @@ function doTask(t) {
             w.once("message", m => {
               log("work finished")
               if (m.r) {
+                for (var p in m.r)
+                  m.r[p] = Buffer.from(m.r[p], "hex")
                 d.cb(null, m.r)
               } else if (m.err) {
                 const e = new Error("Keygen failed")
