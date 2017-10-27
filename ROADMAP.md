@@ -22,7 +22,7 @@
  - [ ] UPNP ([#58](https://github.com/ZeroNetJS/zeronet-js/issues/58))
  - [ ] ZeroFrame ([#59](https://github.com/ZeroNetJS/zeronet-js/issues/59))
  - [ ] Plugin API ([#60](https://github.com/ZeroNetJS/zeronet-js/issues/60))
- - [ ] Connection encryption (ZeroNetJS 2 ZeroNetJS already works via libp2p-secio - [#54](https://github.com/ZeroNetJS/zeronet-js/issues/54))
+ - [x] Connection encryption (ZeroNetJS 2 ZeroNetJS already works via libp2p-secio - [#54](https://github.com/ZeroNetJS/zeronet-js/issues/54))
 
 ### Big bugs:
  - [x] Streams are buggy ([#5](https://github.com/ZeroNetJS/zeronet-js/issues/5))
@@ -30,7 +30,7 @@
  - [ ] TLS server => client is broken ([#1](https://github.com/ZeroNetJS/zeronet-js/issues/1))
  - [ ] Pex command issues ([#31](https://github.com/ZeroNetJS/zeronet-js/issues/31))
  - [ ] Msgpack encoding issues ([#39](https://github.com/ZeroNetJS/zeronet-js/issues/39))
- - [ ] TLS RSA (segfaults - [#54](https://github.com/ZeroNetJS/zeronet-js/issues/54))
+ - [x] TLS RSA (segfaults - [#54](https://github.com/ZeroNetJS/zeronet-js/issues/54))
  - [ ] Lower the peers score by 20 every time an error response is returned ([#46](https://github.com/ZeroNetJS/zeronet-js/issues/46))
 
 # Stage 2
