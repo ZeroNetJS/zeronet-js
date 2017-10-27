@@ -55,7 +55,7 @@ const defaults = {
       ],
       crypto: [
         require("zeronet-crypto/secio"),
-        //require("zeronet-crypto/tls").tls_rsa
+        require("zeronet-crypto/tls").tls_rsa
       ],
       nat: true
     },
