@@ -4,6 +4,7 @@ const forge = require("node-forge")
 const debug = require("debug")
 const log = debug("zeronet-crypto:gen")
 const pki = forge.pki
+const openssl = require("./openssl")
 
 const attrs = [{
   name: 'commonName',
@@ -58,11 +59,21 @@ const certSet = [{
   name: 'subjectKeyIdentifier'
 }]
 
+function validate(what, fields) {
+  if (!what) throw new Error("Invalid! Value is false!")
+  fields.forEach(field => {
+    const v = what[field]
+    if (!v || !v.trim()) throw new Error("Invalid! Field " + field + " is empty!")
+    if (typeof v != "string") throw new Error("Invalid! Field " + field + " is not a string!")
+  })
+  return what
+}
+
 function rsa() { //x509 2k rsa cert
   // generate a keypair and create an X.509v3 certificate
   var keys = pki.rsa.generateKeyPair(2048)
   var cert = pki.createCertificate()
-  cert.publicKey = keys.publicKey;
+  cert.publicKey = keys.publicKey
   // NOTE: serialNumber is the hex encoded value of an ASN.1 INTEGER.
   // Conforming CAs should ensure serialNumber is:
   // - no more than 20 octets
@@ -80,9 +91,23 @@ function rsa() { //x509 2k rsa cert
   // convert a Forge certificate to PEM
   var pem = pki.certificateToPem(cert)
 
-  return {
+  return validate({
     cert: new Buffer(pem).toString("hex"),
     key: new Buffer(pki.privateKeyToPem(keys.privateKey)).toString("hex")
+  }, ["cert", "key"])
+}
+
+function rsa_fast() { //openssl is A LOT faster
+  try {
+    return validate(openssl.x509(), ["cert", "key"])
+  } catch (e) {
+    log("rsa_fast fail, use default")
+    log(e)
+    try {
+      return rsa()
+    } catch (en) {
+      throw e
+    }
   }
 }
 
@@ -93,11 +118,11 @@ const Queue = require("data-queue")
 
 function spawnWorker(cb) {
   log("spawning worker")
+  const env = Object.assign({}, process.env)
+  env.IS_TLS_GEN_WORKER = 1
   w = cp.fork(__filename, {
-    env: {
-      "IS_TLS_GEN_WORKER": "1",
-      "DEBUG": process.env.DEBUG
-    }
+    env,
+    stdio: "inherit"
   })
   w.once("message", m => cb(!m.ready))
 }
@@ -167,7 +192,10 @@ function doTask(t) {
 if (!process.env.IS_TLS_GEN_WORKER) {
   module.exports.rsa = doTask("rsa")
 } else {
-  const types = {
+  const types = openssl.supported() ? {
+    rsa,
+    rsa_fast
+  } : {
     rsa
   }
   process.send({
@@ -178,6 +206,7 @@ if (!process.env.IS_TLS_GEN_WORKER) {
       log("worker: exiting")
       process.exit(0)
     } else if (msg.type == "gen") {
+      if (types[msg.key + "_fast"]) msg.key += "_fast"
       log("worker: doing work %s", msg.key)
       try {
         process.send({
