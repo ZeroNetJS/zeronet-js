@@ -57,6 +57,7 @@ function Client(conn, protocol, opt) {
     cmd[name] = handlers[name].send.bind(handlers[name])
 
   function disconnect(e) {
+    if (d.ended()) return
     d.end()
     self.emit("end", e)
     self.write = () => {
