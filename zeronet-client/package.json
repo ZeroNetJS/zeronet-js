@@ -25,7 +25,7 @@
     "bl": "^1.2.1",
     "clone": "^2.1.1",
     "data-queue": "0.0.2",
-    "msgpack5": "^3.5.1",
+    "msgpack5": "^3.6.0",
     "pull-queue": "^0.1.4",
     "pull-stream": "^3.6.1",
     "zeronet-client": "file:../zeronet-client"

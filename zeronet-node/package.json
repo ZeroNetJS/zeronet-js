@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
   "dependencies": {
-    "async": "^2.5.0",
+    "async": "^2.6.0",
     "clone": "^2.1.1",
     "uuid": "^3.1.0",
     "zeronet-common": "file:../zeronet-common",

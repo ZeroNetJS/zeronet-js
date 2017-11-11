@@ -26,7 +26,7 @@
     "ip": "^1.1.5",
     "libp2p-secio": "^0.8.1",
     "libp2p-spdy": "^0.11.0",
-    "msgpack5": "^3.5.1",
+    "msgpack5": "^3.6.0",
     "once": "^1.4.0",
     "peer-request": "^0.1.2",
     "protons": "^1.0.0",

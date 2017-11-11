@@ -39,10 +39,14 @@ function clientDuplex(addrs, handleIn, handleResponse, disconnect) {
   const ee = new EE()
   let ended = true
 
-  return {
+  const fnc = {
     sink: function (read) {
       read(null, function next(end, data) {
-        if (!data || typeof data != "object" || !data.cmd) return read(null, next)
+        if (end) {
+          ee.emit("end_recv", end)
+          disconnect(end)
+        }
+        if (!data || typeof data != "object" || !data.cmd) return read(ended, next)
         try {
           if (data.cmd == "response") {
             plog("got  response", addrs, data.to, objectInspect(data, "resp"))
@@ -77,7 +81,10 @@ function clientDuplex(addrs, handleIn, handleResponse, disconnect) {
     },
     end: e => {
       ended = e || true
-    }
+    },
+    on: (ev, handler) => ee.on(ev, handler),
+    once: (ev, handler) => ee.once(ev, handler)
   }
+  return fnc
 }
 module.exports = clientDuplex

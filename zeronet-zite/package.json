@@ -24,7 +24,7 @@
     "lib": "lib"
   },
   "dependencies": {
-    "async": "^2.5.0",
+    "async": "^2.6.0",
     "pull-cache": "0.0.0",
     "pull-defer": "^0.2.2",
     "pull-queue": "^0.1.4",
