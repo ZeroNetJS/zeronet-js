@@ -3,20 +3,14 @@
 const EE = require("events").EventEmitter
 
 const pull = require("pull-stream")
-const paramap = require("pull-paramap")
 const cache = require("pull-cache")
-const Pushable = require("pull-pushable")
-const Queue = require("data-queue")
-const once = require("once")
 
 const debug = require("debug")
 
 const sourceStream = require("./source-stream")
-const {
-  map
-} = require("async")
+const stream = require("./util")
 
-const stream = module.exports = class PeerStream {
+module.exports = class PeerStream {
   constructor(zite) {
     this.address = zite.address
     this.zite = zite
@@ -30,7 +24,7 @@ const stream = module.exports = class PeerStream {
 
   createSourceStream(hasGetter) {
     return pull(
-      sourceStream(this.zite, this.log),
+      sourceStream(this.zite),
       stream.dialStream(),
       hasGetter ? stream.getStream(5) : pull.map(d => d)
     )
@@ -51,7 +45,7 @@ const stream = module.exports = class PeerStream {
     /*return pull( //TODO: fix structure and add this
       stream.roundRobin(1000, this.getCachedSource(), this.createSourceStream())
     )*/
-    this.cachedSourceStream()
+    return this.cachedSourceStream()
   }
 }
 
@@ -71,61 +65,3 @@ const stream = module.exports = class PeerStream {
       - sourceStream: See roundRobin -> filterCacheStream -> getStream
 
 */
-
-module.exports.dialStream = w => pull(
-  paramap((peer, cb) => peer.dial(err => cb(err ? false : peer)), w || 5, false),
-  pull.filter(val => !!val)
-)
-
-module.exports.isOnlineFilter = () => pull.filter(peer => peer.isOnline)
-
-module.exports.roundRobin = (timeout, ...sources) => {
-  const src = [...sources].map(src => (end, cb) => {
-    cb = once(cb)
-    setTimeout(() => cb(new Error("Timeout")), timeout || 1000)
-    return src(end, cb)
-  }).reverse()
-
-  return (end, cb) => {
-    if (end) return map(src, (s, cb) => s(end, () => cb()), cb)
-    let tries = 0
-    let s_
-    const loop = (cb) => {
-      const s = s_.pop()
-      if (!s) return cb(new Error("Nothing found"))
-      s(end, (err, data) => {
-        if (err) return loop(cb)
-        return cb(err, data)
-      })
-    }
-
-    const outerLoop = () => {
-      tries++
-      if (tries === 3) return cb(new Error("Round robin failed"))
-      s_ = src.slice(0)
-      loop((err, data) => {
-        if (err) return outerLoop()
-        return cb(err, data)
-      })
-    }
-  }
-}
-
-module.exports.getStream = (min) => {
-  const q = Queue()
-  const e = new EE()
-  return {
-    sink: read => read(null, function next(end, data) {
-      if (end) return q.error(end)
-      const err = q.append(data)
-      const n = () => err ? read(err, null) : read(null, next)
-      if (q.height() < min) n()
-      else e.once("get", n)
-    }),
-    source: (end, cb) => {
-      if (end) return q.error(end)
-      e.emit("get")
-      q.get(cb)
-    }
-  }
-}

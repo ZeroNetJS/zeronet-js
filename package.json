@@ -37,7 +37,7 @@
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
     "extract-comments": "^0.10.1",
-    "jsdoc-to-markdown": "^3.0.1",
+    "jsdoc-to-markdown": "^3.0.2",
     "gene-rator": "0.0.1-pre",
     "mocha": "^4.0.1",
     "mock-fs": "^4.4.2",
