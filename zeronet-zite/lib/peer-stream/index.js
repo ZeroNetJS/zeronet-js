@@ -1,7 +1,7 @@
 "use strict"
 
 const pull = require("pull-stream")
-const cache = require("pull-cache")
+const cache = require("../file/part-stream").multiplexer
 
 const debug = require("debug")
 
@@ -29,25 +29,24 @@ module.exports = class PeerStream {
   }
 
   cachedSourceStream() {
-    const cacher = pull(
-      this.cachedSource ? this.cachedSource : (this.cachedSource = this.createSourceStream(true)),
-      cache
-    )
+    const cacher = cache(
+      this.cachedSource ? this.cachedSource : (this.cachedSource = this.createSourceStream(true)))
     return () => pull(
       cacher(),
       stream.isOnlineFilter()
     )
   }
 
+  getStream() {
+    this.cache = this.cache ? this.cache : (this.cache = this.cachedSourceStream())
+    return this.cache()
+  }
+
   peerStream() {
     /*return pull( //TODO: fix structure and add this
       stream.roundRobin(1000, this.getCachedSource(), this.createSourceStream())
     )*/
-    pull( //TODO: debug
-      this.createSourceStream(),
-      pull.log()
-    )
-    return pull.values([])
+    return this.getStream()
   }
 }
 

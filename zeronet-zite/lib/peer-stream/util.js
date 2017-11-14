@@ -9,7 +9,7 @@ const once = require("once")
 const map = require("async/map")
 
 module.exports.dialStream = w => pull(
-  paramap((peer, cb) => peer.dial(err => cb(err ? false : peer)), w || 5, false),
+  paramap((peer, cb) => peer.dial(err => cb(null, err ? false : peer)), w || 5, false),
   pull.filter(val => !!val)
 )
 

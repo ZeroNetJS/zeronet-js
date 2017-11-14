@@ -89,7 +89,8 @@ class Peer extends EventEmitter {
         this.isOnline = true
         this.emit("online")
         if (this.type == "zero") {
-
+          if (conn) conn.once("end", offline)
+          else offline() //Peer was upgraded. This one is now offline
         } else if (this.type == "lp2p") {
           pull(
             conn,
@@ -100,7 +101,7 @@ class Peer extends EventEmitter {
       cb(err)
     })
     if (this.type == "zero") {
-
+      this.swarm.dial(this.dialable, ncb)
     } else if (this.type == "lp2p") {
       this.swarm.dial(this.dialable, "/isOnline/1.0.0", ncb)
     }
