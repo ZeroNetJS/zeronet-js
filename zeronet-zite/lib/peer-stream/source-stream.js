@@ -19,9 +19,9 @@ const getter2stream = getters => {
 }
 
 const discoveryCandidateGetter = zite => getter2stream([new Getters.DiscoveryCandidateGetter(zite.pool.main, zite.address)])
-const offlineGetter = zite => getter2stream([new Getters.DiscoveryCandidateGetter(zite.pool)])
+const offlineGetter = zite => getter2stream([new Getters.OfflineGetter(zite.pool)])
 const onlineGetter = zite => pull(
-  getter2stream([new Getters.DiscoveryCandidateGetter(zite.pool)]),
+  getter2stream([new Getters.OnlineGetter(zite.pool)]),
   stream.isOnlineFilter()
 )
 
@@ -38,5 +38,7 @@ const discovery = zite => pull(
 const onlinePeers = zite => onlineGetter(zite)
 const offlinePeers = zite => stream.roundRobin(100, offlineGetter(zite), discovery(zite))
 
-module.exports = zite =>
-  stream.roundRobin(100, onlinePeers(zite), offlinePeers(zite))
+module.exports = zite => {
+  zite.discovery.discover()
+  return stream.roundRobin(100, onlinePeers(zite), offlinePeers(zite), () => zite.discovery.discover())
+}

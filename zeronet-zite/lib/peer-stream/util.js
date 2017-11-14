@@ -22,6 +22,8 @@ module.exports.roundRobin = (timeout, ...sources) => {
     return src(end, cb)
   }).reverse()
 
+  if (!src.length) throw new Error("Empty round robin stream!")
+
   return (end, cb) => {
     if (end) return map(src, (s, cb) => s(end, () => cb()), cb)
     let tries = 0
@@ -40,10 +42,12 @@ module.exports.roundRobin = (timeout, ...sources) => {
       if (tries === 3) return cb(new Error("Round robin failed"))
       s_ = src.slice(0)
       loop((err, data) => {
-        if (err) return outerLoop()
+        if (err) return setTimeout(outerLoop, 1000)
         return cb(err, data)
       })
     }
+
+    outerLoop()
   }
 }
 

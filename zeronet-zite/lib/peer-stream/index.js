@@ -1,7 +1,5 @@
 "use strict"
 
-const EE = require("events").EventEmitter
-
 const pull = require("pull-stream")
 const cache = require("pull-cache")
 
@@ -45,7 +43,11 @@ module.exports = class PeerStream {
     /*return pull( //TODO: fix structure and add this
       stream.roundRobin(1000, this.getCachedSource(), this.createSourceStream())
     )*/
-    return this.cachedSourceStream()
+    pull( //TODO: debug
+      this.createSourceStream(),
+      pull.log()
+    )
+    return pull.values([])
   }
 }
 
