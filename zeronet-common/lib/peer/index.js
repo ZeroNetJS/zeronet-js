@@ -9,6 +9,7 @@ const multiaddr = require("multiaddr")
 const once = require("once")
 const debug = require("debug")
 const log = process.env.INTENSE_DEBUG ? debug("zeronet:peer") : () => {}
+const pull = require("pull-stream")
 
 const crypto = require("crypto")
 const sha5 = text => crypto.createHash('sha512').update(text).digest('hex')
@@ -75,7 +76,11 @@ class Peer extends EventEmitter {
   dial(cb) {
     if (this.score <= -100) return cb(new Error("Score too low"))
     if (this.isOnline) return cb()
-    const ncb = once(err => {
+    const offline = once(() => {
+      this.isOnline = false
+      this.emit("offline")
+    })
+    const ncb = once((err, conn) => {
       if (err) {
         this.score -= 10
         this.lfailedd = new Date().getTime()
@@ -83,10 +88,22 @@ class Peer extends EventEmitter {
         this.score += 5
         this.isOnline = true
         this.emit("online")
+        if (this.type == "zero") {
+
+        } else if (this.type == "lp2p") {
+          pull(
+            conn,
+            pull.onEnd(offline)
+          )
+        }
       }
       cb(err)
     })
-    this.swarm.dial(this.dialable, ncb)
+    if (this.type == "zero") {
+
+    } else if (this.type == "lp2p") {
+      this.swarm.dial(this.dialable, "/isOnline/1.0.0", ncb)
+    }
     setTimeout(ncb, 10 * 1000, new Error("Timeout"))
   }
   cmd(cmd, data, cb) {
@@ -119,6 +136,7 @@ class Peer extends EventEmitter {
 class ZeroPeer extends Peer {
   constructor(addr) {
     super([addr], sha5(sha5(addr)).substr(0, 20))
+    this.type = "zero"
     this.ip = multi2ip(addr)
     this.dialable = multiaddr(addr)
   }
@@ -131,6 +149,7 @@ class ZeroPeer extends Peer {
 class Lp2pPeer extends Peer {
   constructor(peer) {
     super(peer, peer.id)
+    this.type = "lp2p"
     this.dialable = peer
   }
   discoverZite(zite, cb) {

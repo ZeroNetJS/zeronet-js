@@ -15,7 +15,7 @@
     "merge-recursive": "0.0.3",
     "mkdirp": "^0.5.1",
     "mockery": "^2.1.0",
-    "moment": "^2.19.1",
+    "moment": "^2.19.2",
     "node-bash-title": "0.0.2",
     "peer-id": "^0.10.2",
     "zeronet-client": "file:zeronet-client",
