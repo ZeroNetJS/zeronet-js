@@ -13,6 +13,8 @@ const log = debug("zeronet:crypto:tls")
 
 const toSocket = require("pull-stream-to-net-socket")
 
+const openssl = require("./openssl")
+
 function basicCrypto(type, protocol, handler) {
   let cert, certq = []
   gen[type]((err, _cert) => {
@@ -50,7 +52,8 @@ function basicCrypto(type, protocol, handler) {
 
 module.exports = function TLSSupport(protocol) {
   module.exports.tls_rsa(protocol)
-  // module.exports.tls_ecc(protocol)
+  /*if (openssl.supported()) module.exports.tls_ecc(protocol)
+  else console.warn("tls_ecc currently requires openssl support")*/
 }
 
 module.exports.tls_rsa = (protocol) => {
@@ -72,36 +75,21 @@ module.exports.tls_rsa = (protocol) => {
   })
 }
 
-/* TODO: fix and rewrite
 module.exports.tls_ecc = (protocol) => {
-  basicCrypto("ecc", protocol, (opt, host, port, cert, ready, cb) => {
-    let stream
-    if (opt.isServer) {
-      stream = tls.connect({
-        host,
-        port,
-        isServer: true,
-        key: cert.privkey,
-        cert: cert.cert,
-        requestCert: false,
-        rejectUnauthorized: false,
-        ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:" +
-          "!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK",
-        honorCipherOrder: true,
-        secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-      })
-    } else {
-      stream = tls.connect({
-        host,
-        port,
-        isServer: false,
-        requestCert: true,
-        rejectUnauthorized: false,
-        secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-      }, cb)
-    }
-    stream.on("secureConnect", () => cb(null, stream))
-    ready(null, stream)
+  basicCrypto("ecc", protocol, {
+    server: (cert) => tls.createServer({
+      key: cert.key,
+      cert: cert.cert,
+      ciphers: sslConfig.ciphers,
+      honorCipherOrder: true,
+      secureOptions: sslConfig.minimumTLSVersion
+    }),
+    client: (dest) => tls.connect(Object.assign(dest, {
+      requestCert: true,
+      rejectUnauthorized: false,
+      ciphers: sslConfig.ciphers,
+      honorCipherOrder: true,
+      secureOptions: sslConfig.minimumTLSVersion
+    }))
   })
 }
-*/
