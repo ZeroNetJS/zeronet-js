@@ -10,7 +10,7 @@ cd ..
 mkdir $r
 cd $r
 git init
-git commit --allow-empty
+git commit --allow-empty -m ""
 git remote add znjs ../zeronet-js
 git fetch znjs
 git reset --hard znjs/$r
