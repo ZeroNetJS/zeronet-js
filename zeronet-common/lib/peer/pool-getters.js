@@ -32,6 +32,10 @@ class Getter extends EventEmitter {
     this.peers.forEach(p => get.push(p))
     this.on("peer", p => get.push(p))
   }
+  stop() {
+    this.push = () => {}
+    this.peers = null
+  }
 }
 
 class OnlineGetter extends Getter {
@@ -103,6 +107,9 @@ class MetaGetter extends EventEmitter {
   }
   get peers() {
     return this.glist.filter(g => g.peers.length).length
+  }
+  stop() {
+    this.glist.map(g => g.stop())
   }
 }
 

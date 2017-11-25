@@ -1,15 +1,14 @@
 {
-  "name": "zeronet-client",
-  "version": "0.0.1-alpha18",
-  "description": "ZeroNet protocol client",
+  "name": "zeronet-ipld",
+  "version": "0.0.0",
+  "description": "ZeroNet IPLD wrappers",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "zeronet",
-    "protocol",
-    "client"
+    "ipld"
   ],
   "author": "Maciej Krüger <mkg20001@gmail.com>",
   "license": "MIT",
@@ -22,12 +21,5 @@
   },
   "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
   "dependencies": {
-    "bl": "^1.2.1",
-    "clone": "^2.1.1",
-    "data-queue": "0.0.3",
-    "msgpack5": "^3.6.0",
-    "pull-queue": "^0.1.4",
-    "pull-stream": "^3.6.1",
-    "zeronet-client": "file:../zeronet-client"
   }
 }

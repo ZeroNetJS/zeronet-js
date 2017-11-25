@@ -69,7 +69,7 @@ function PORTportcheckerco() {
   }
 }
 
-function PORTcanyouseemeorg() {
+/*function PORTcanyouseemeorg() {
   const self = this
   self.getPortOpen = (port, cb) => {
     return //TODO: fix this checker
@@ -85,7 +85,7 @@ function PORTcanyouseemeorg() {
       console.log("res", body)
     })
   }
-}
+}*/
 
 module.exports = function NatBroker(swarm, swarmopt) {
   const self = this
@@ -97,7 +97,7 @@ module.exports = function NatBroker(swarm, swarmopt) {
   ]
   const getPort = [
     new PORTportcheckerco(),
-    new PORTcanyouseemeorg()
+    //new PORTcanyouseemeorg()
   ]
 
   self.getIP = cb => cbTimeout(getIP.map(c => c.getIP), null, cb, log("getting external ip"))
@@ -106,14 +106,15 @@ module.exports = function NatBroker(swarm, swarmopt) {
   self.forwardIP = upclient.portMapping
 
   self.getAdvIP = cb => {
-    log("getting my public ip")
     self.getIP((err, ip) => {
       if (err) {
         log("failed")
         swarm.advertise.ip = "0.0.0.0"
         return cb(err)
       }
-      log(ip)
+      let s = ip.split(/[:\.]/g)
+      let l = s.pop()
+      log("ip: " + s.map(s => "X".repeat(s.length)).concat([l]).join("."))
       swarm.advertise.ip = ip
       return cb(null, ip)
     })

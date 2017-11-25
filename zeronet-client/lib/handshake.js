@@ -63,6 +63,7 @@ function HandshakeClient(conn, protocol, zeronet, opt) {
     if (d.ended()) return
     d.end()
     self.emit("end", e)
+    if (e !== true) log(e)
     self.write = () => {
       throw new Error("Offline")
     }
