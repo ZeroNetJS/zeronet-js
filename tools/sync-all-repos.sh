@@ -20,9 +20,17 @@ for r in $repos; do
   git pull origin master
 
   for f in $files; do
-    cp ../../../$f .
+    if [ -e ../../sync/$f ]; then
+      _f="../../sync/$f"
+    else
+      _f="../../../$f"
+    fi
+    cp $_f .
     git add $f
   done
+
+  node ../../sync-pkg-json $PWD/package.json
+  git add package.json
 
   git commit -m "misc: Sync repo files"
   git push

@@ -1,1 +1,1 @@
-LICENSE .gitignore
+LICENSE .gitignore .travis.yml appveyor.yml
