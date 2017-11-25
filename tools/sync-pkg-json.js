@@ -24,4 +24,19 @@ targets.forEach(target => {
 for (const p in t)
   json.scripts[p] = t[p]
 
+for (const pkg in t.dependencies)
+  json.dependencies[pkg] = json.dependencies[pkg].replace("^", "~")
+
+if (!json.devDependencies)
+  json.devDependencies = {}
+
+if (!json.devDependencies.aegir)
+  json.devDependencies.aegir = "^12.2.0"
+
+json.directories = {
+  test: "test",
+  src: "src",
+  lib: "src"
+}
+
 require("fs").writeFileSync(pkg, Buffer.from(JSON.stringify(json, null, 2) + "\n"))

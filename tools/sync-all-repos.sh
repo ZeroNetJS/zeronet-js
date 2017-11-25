@@ -12,12 +12,9 @@ cd tmp
 for r in $repos; do
   echo "[SYNC] $r"
 
-  [ ! -e $r ] && git clone git@github.com:ZeroNetJS/$r $r -b master
+  ([ ! -e $r ] && git clone git@github.com:ZeroNetJS/$r $r -b master) || git -C $r pull origin master
 
   cd $r
-
-  git fetch origin
-  git pull origin master
 
   for f in $files; do
     if [ -e ../../sync/$f ]; then

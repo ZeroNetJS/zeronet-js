@@ -8,6 +8,11 @@ config.json
 node_modules
 coverage
 .nyc_output
+package-lock.json
+
+# aegir
+dist
+docs
 
 # pkg
 zeronet-linux*
