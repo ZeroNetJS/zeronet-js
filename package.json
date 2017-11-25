@@ -23,6 +23,7 @@
     "zeronet-crypto": "file:zeronet-crypto",
     "zeronet-fallaby": "file:zeronet-fallaby",
     "zeronet-fileserver": "file:zeronet-fileserver",
+    "zeronet-ipld": "file:zeronet-ipld",
     "zeronet-node": "file:zeronet-node",
     "zeronet-protocol": "file:zeronet-protocol",
     "zeronet-storage-fs": "file:zeronet-storage-fs",

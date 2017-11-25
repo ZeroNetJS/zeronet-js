@@ -9,6 +9,7 @@ for file in . $(dir -w 1 | grep "^zeronet-"); do
     cd $file
     rm -rf node_modules package-lock.json
     ncu -u -a
+    ncu -u -d
     cd $op
   fi
 done

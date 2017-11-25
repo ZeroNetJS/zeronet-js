@@ -1,0 +1,25 @@
+{
+  "name": "zeronet-ipld",
+  "version": "0.0.0",
+  "description": "ZeroNet IPLD wrappers",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "zeronet",
+    "ipld"
+  ],
+  "author": "Maciej Krüger <mkg20001@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZeroNetJS/zeronet-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ZeroNetJS/zeronet-js/issues"
+  },
+  "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
+  "dependencies": {
+  }
+}
