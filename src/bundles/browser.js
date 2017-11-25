@@ -1,9 +1,9 @@
-"use strict"
+'use strict'
 
-const Bundler = require("./bundle")
-const WS = require("libp2p-websockets")
+const Bundler = require('./bundle')
+const WS = require('libp2p-websockets')
 module.exports = Bundler({
-  name: "ZeroNetBrowserBundle",
+  name: 'ZeroNetBrowserBundle',
   modules: {},
   override: {
     swarm: {

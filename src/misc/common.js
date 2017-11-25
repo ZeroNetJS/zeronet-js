@@ -1,16 +1,16 @@
-"use strict"
+'use strict'
 
-const logger = require("zeronet-common/lib/logger")
-const fs = require("fs")
+const logger = require('zeronet-common/src/logger')
+const fs = require('fs')
 
-module.exports = function ZeroNetCommon(config) {
-  //common module for logging
+module.exports = function ZeroNetCommon (config) {
+  // common module for logging
   const self = this
 
   self.config = config
 
   let streams = [{
-    level: (config.debug || process.env.DEBUG) ? 0 : "info",
+    level: (config.debug || process.env.DEBUG) ? 0 : 'info',
     stream: process.stdout
   }]
 
@@ -27,16 +27,16 @@ module.exports = function ZeroNetCommon(config) {
     global.ZeroLogWS = ws
 
     streams.push({
-      level: "debug",
+      level: 'debug',
       stream: ws
     })
   }
 
   self.logger = logger({
-    src: !!config.trace,
+    src: Boolean(config.trace),
     streams
   })
 
   self.title = () => {}
-  if (!process.platform.match(/^win/)) self.title = require("node-bash-title")
+  if (!process.platform.match(/^win/)) self.title = require('node-bash-title')
 }

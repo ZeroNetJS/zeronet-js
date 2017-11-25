@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /**
  * Copyright 2017 Trent Mick
  * Copyright 2017 Joyent Inc.

@@ -1,15 +1,14 @@
-"use strict"
+'use strict'
 
-const merge = require("merge-recursive").recursive
-const ZeroNet = require("zeronet-node")
-const MEM = require("zeronet-storage-memory")
-const clone = require("clone")
+const merge = require('merge-recursive').recursive
+const ZeroNet = require('zeronet-node')
+const MEM = require('zeronet-storage-memory')
+const clone = require('clone')
 
-const Id = require("peer-id")
+const Id = require('peer-id')
 
-module.exports = function ZeroNetBundler(opt) {
-
-  const bname = opt.name || "ZeroNetBundle"
+module.exports = function ZeroNetBundler (opt) {
+  const bname = opt.name || 'ZeroNetBundle'
   let r = {}
   const strict = {
     modules: opt.modules
@@ -20,7 +19,7 @@ module.exports = function ZeroNetBundler(opt) {
       zero: {
         listen: [],
         crypto: [
-          require("zeronet-crypto/secio")
+          require('zeronet-crypto').secio
         ]
       },
       libp2p: {
@@ -36,11 +35,12 @@ module.exports = function ZeroNetBundler(opt) {
     modules: {},
     storage: MEM
   })
-  r[bname] = function (opt, cb) { //hack to set function name
+  r[bname] = function (opt, cb) { // hack to set function name
     if (!cb) cb = () => {}
     if (!opt) opt = {}
     let config = merge(merge(clone(defaults), clone(strict)), merge(opt, clone(strict)))
-    if (!opt.storage) config.storage = new defaults.storage()
+    const Storage = defaults.storage
+    if (!opt.storage) config.storage = new Storage()
     let node
     const liftoff = (err, id) => {
       if (err) return cb(err)
@@ -57,5 +57,4 @@ module.exports = function ZeroNetBundler(opt) {
     } else return liftoff(null, opt.id)
   }
   return r[bname]
-
 }
