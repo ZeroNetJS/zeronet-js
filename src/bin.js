@@ -5,7 +5,7 @@
 require("colors")
 
 let node
-let dwait = require("./lib/hacky-logs.js")
+let dwait = require("./misc/hacky-logs.js")
 
 const fs = require("fs")
 const path = require("path")
@@ -16,9 +16,9 @@ const ZeroNet = require("zeronet-node")
 
 const FS = require("zeronet-storage-fs")
 
-const Common = require("./lib/common")
+const Common = require("./misc/common")
 
-let dir = require("./lib/storage-dir")()
+let dir = require("./misc/storage-dir")()
 
 mkdirp.sync(dir)
 mkdirp.sync(path.join(dir, "logs"))
