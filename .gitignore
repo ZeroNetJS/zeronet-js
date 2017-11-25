@@ -1,30 +1,34 @@
+# File is synced from zeronet-js repo
+
+# Configs, etc.
 *.pem
+config.json
+
+# NodeJS
 node_modules
-NOTES.*
+coverage
+.nyc_output
+
+# pkg
 zeronet-linux*
 zeronet-macos*
 zeronet-win*
-*.bak
-config.json
 .pkg
-py
-*.pyc
-coverage
-.nyc_output
-*.tar.gz
 
-#zn
+# Other garbage
+*.bak
 *.log
+tmp
 /data
 .zeronet
 
-#snap
+# Python
+*.pyc
+
+# snap
 parts
 prime
 stage
 *.tar.bz2
 *.snap
 snap/.snapcraft
-
-#bundle
-/is-buffer
