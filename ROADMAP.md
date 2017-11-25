@@ -22,9 +22,9 @@
  - [ ] UPNP ([#58](https://github.com/ZeroNetJS/zeronet-js/issues/58))
  - [ ] ZeroFrame ([#59](https://github.com/ZeroNetJS/zeronet-js/issues/59))
  - [ ] Plugin API ([#60](https://github.com/ZeroNetJS/zeronet-js/issues/60))
- - [x] Connection encryption (ZeroNetJS 2 ZeroNetJS already works via libp2p-secio - [#54](https://github.com/ZeroNetJS/zeronet-js/issues/54))
+ - [x] Connection encryption ([#54](https://github.com/ZeroNetJS/zeronet-js/issues/54))
 
-### Big bugs:
+### Bugs:
  - [x] Streams are buggy ([#5](https://github.com/ZeroNetJS/zeronet-js/issues/5))
  - [x] New libp2p peer-id is slowing down startup ([#30](https://github.com/ZeroNetJS/zeronet-js/issues/30))
  - [x] TLS server => client is broken ([#1](https://github.com/ZeroNetJS/zeronet-js/issues/1))
