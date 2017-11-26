@@ -1,6 +1,6 @@
 'use strict'
 
-const crypto = require('zeronet-crypto/tls').tls_rsa
+const crypto = require('zeronet-crypto').tls.tls_rsa
 const ZeroNet = require('../..')
 const EE = require('events').EventEmitter
 const ee = new EE()
