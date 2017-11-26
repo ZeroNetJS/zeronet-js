@@ -1,34 +1,39 @@
-language:         node_js
-services:
-  - docker
-os:
-  - linux
-  - osx
-node_js:
-  - 8
-  - 6
+sudo: false
+language: node_js
+
 matrix:
-  allow_failures:
-    - node_js:    "node"
   include:
-    - node_js:    "node"
-      env:        NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/nightly/
-dist:             trusty
-before_install:
-- bash scripts/tarball.sh
-- pip install --user codecov
-- '(docker pull mkg20001/zeronet-docker && touch .do_interop ) || echo "Skipping interop tests"'
-- '(node -v | grep "^v8" > /dev/null && touch .do_cov) || echo "Skipping coverage"'
-- '([ -e /etc/lsb-release ] && node -v | grep "^v8" > /dev/null && touch .do_pkg) || echo "Skipping pkg"'
-install:
-- bash scripts/install.sh
+  - node_js: 6
+    env: CXX=g++-4.8
+  - node_js: 8
+    env: CXX=g++-4.8
+    #  - node_js: stable
+    #    env: CXX=g++-4.8
+
 script:
-- npm test
-- '[ ! -e .do_interop ] || bash scripts/interop-test.sh'
-#- npm run docs
-- '[ ! -e .do_pkg ] || bash scripts/pkg.sh'
+  - npm run lint
+  - npm run coverage
+  - '[ ! -e .do_interop ] || bash scripts/interop-test.sh'
+  - npm run test
+
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - '(docker pull mkg20001/zeronet-docker && touch .do_interop ) || echo "Skipping interop tests"'
+  - '([ -e /etc/lsb-release ] && node -v | grep "^v8" > /dev/null && touch .do_pkg) || echo "Skipping pkg"'
+
 after_success:
-- '[ ! -e .do_cov ] || npm run report-coverage'
+  - npm run coverage-publish
+  - '[ ! -e .do_pkg ] || bash scripts/pkg.sh'
+
+addons:
+  firefox: 'latest'
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+
 deploy:
   provider:       releases
   api_key:

@@ -2,12 +2,18 @@
   "name": "zeronet",
   "version": "0.0.1-alpha18",
   "description": "ZeroNet JS",
-  "main": "index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "test"
+  "main": "src/index.js",
+  "bin": {
+    "zeronet": "zeronet.js"
   },
-  "browser": "browser.js",
+  "directories": {
+    "test": "test",
+    "src": "src",
+    "lib": "src"
+  },
+  "browser": {
+    "./src/bundles/node.js": "./src/bundles/browser.js"
+  },
   "dependencies": {
     "colors": "^1.1.2",
     "libp2p-tcp": "^0.11.1",
@@ -18,19 +24,10 @@
     "moment": "^2.19.2",
     "node-bash-title": "0.0.2",
     "peer-id": "^0.10.2",
-    "zeronet-client": "file:zeronet-client",
-    "zeronet-common": "file:zeronet-common",
-    "zeronet-crypto": "file:zeronet-crypto",
-    "zeronet-fallaby": "file:zeronet-fallaby",
-    "zeronet-fileserver": "file:zeronet-fileserver",
-    "zeronet-ipld": "file:zeronet-ipld",
-    "zeronet-node": "file:zeronet-node",
-    "zeronet-protocol": "file:zeronet-protocol",
-    "zeronet-storage-fs": "file:zeronet-storage-fs",
-    "zeronet-storage-memory": "file:zeronet-storage-memory",
-    "zeronet-swarm": "file:zeronet-swarm",
-    "zeronet-uiserver": "file:zeronet-uiserver",
-    "zeronet-zite": "file:zeronet-zite"
+    "zeronet-node": "^0.0.1",
+    "zeronet-storage-fs": "^0.0.2",
+    "zeronet-storage-memory": "^0.0.1",
+    "zeronet-uiserver": "^0.1.0"
   },
   "devDependencies": {
     "app-module-path": "^2.2.0",
@@ -47,10 +44,11 @@
     "pkg-fetch-mkg": "^2.3.83",
     "pkg-natives": "^0.1.1",
     "sinon": "^4.1.2",
-    "sinon-chai": "^2.14.0"
+    "sinon-chai": "^2.14.0",
+    "aegir": "^12.2.0"
   },
   "scripts": {
-    "test": "nyc mocha",
+    "test": "aegir test",
     "test:nocov": "mocha",
     "test:watch": "nodemon -x \"DEBUG=zeronet*,libp2p* npm run test || echo\"",
     "test:debug": "nodemon -x \"DEBUG=zeronet*,libp2p* mocha || echo\"",
@@ -59,16 +57,22 @@
     "docs:mod": "node docs-gen/bin/",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "pkg": "bash scripts/pkg.sh",
-    "start": "node zeronet.js"
+    "start": "node zeronet.js",
+    "lint": "aegir lint",
+    "build": "aegir build",
+    "test:node": "aegir test -t node",
+    "test:browser": "aegir test -t browser",
+    "release": "aegir release",
+    "release-minor": "aegir release --type minor",
+    "release-major": "aegir release --type major",
+    "coverage": "aegir coverage",
+    "coverage-publish": "aegir-coverage publish"
   },
   "keywords": [
     "zeronet",
     "js",
     "p2p"
   ],
-  "bin": {
-    "zeronet": "zeronet.js"
-  },
   "pkg": {
     "scripts": [
       "node_modules/zeronet-swarm/hacks/**"
