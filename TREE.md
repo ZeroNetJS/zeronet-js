@@ -12,4 +12,4 @@ zeronet
 ### Explain
 
  - \* = Requires duct tape (aka zeronet-common)
- - \+ = Requires to be split up
+ - \+ = Will be split up
