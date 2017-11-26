@@ -31,7 +31,7 @@ const fs = require('fs')
 const files = fs.readdirSync(__dirname + '/').filter(file => fs.lstatSync(__dirname + '/' + file).isDirectory()).sort()
 const cp = require('child_process')
 
-it.zero = (args, opts) => cp.spawn('docker', ['run', '-p', '13355:15541', '-p', '127.0.0.1:44220:43110', 'mkg20001/zeronet-docker', process.env.DEBUG ? '--debug' : '--silent', '--ui_ip', '0.0.0.0'].concat(Array.isArray(args) ? args : [args]), opts || {
+it.zero = (args, opts) => cp.spawn('docker', ['run', /* '-p', '13355:15541', '-p', '127.0.0.1:44220:43110', */ 'mkg20001/zeronet-docker', process.env.DEBUG ? '--debug' : '--silent', '--ui_ip', '0.0.0.0'].concat(Array.isArray(args) ? args : [args]), opts || {
   stdio: 'inherit'
 })
 it.zhost = cp.execSync("ip -4 addr show docker0 | grep -Po 'inet \\K[\\d.]+'").toString().split('\n').shift()
