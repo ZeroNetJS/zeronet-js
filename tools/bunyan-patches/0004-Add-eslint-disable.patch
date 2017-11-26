@@ -1,0 +1,21 @@
+From 27ddcd618b3aca506f2747af7c298a30593535f3 Mon Sep 17 00:00:00 2001
+From: mkg20001 <mkg20001@gmail.com>
+Date: Sat, 25 Nov 2017 21:09:48 +0100
+Subject: [PATCH] Add eslint disable
+
+---
+ src/misc/bunyan.js | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/misc/bunyan.js b/src/misc/bunyan.js
+index 3a24ccf..51edb4d 100755
+--- a/src/misc/bunyan.js
++++ b/src/misc/bunyan.js
+@@ -1,3 +1,5 @@
++/* eslint-disable */
++
+ /**
+  * Copyright 2017 Trent Mick
+  * Copyright 2017 Joyent Inc.
+--
+2.7.4

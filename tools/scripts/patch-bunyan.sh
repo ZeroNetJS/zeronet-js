@@ -12,6 +12,6 @@ file="$1"
 set -x
 
 cp $file bunyan.js
-for f in $(dir -w 1 scripts/bunyan-patches | sort); do
-  patch bunyan.js scripts/bunyan-patches/$f
+for f in $(dir -w 1 tools/bunyan-patches | sort); do
+  patch bunyan.js tools/bunyan-patches/$f
 done
