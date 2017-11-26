@@ -21,6 +21,7 @@ install:
 
   # Install our package dependencies
   - npm install
+  - cmd /C .\tools\scripts\pkg.cmd
 
 test_script:
   - npm run test:node
