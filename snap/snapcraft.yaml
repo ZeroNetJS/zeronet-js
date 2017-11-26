@@ -17,7 +17,7 @@ apps:
       - network-bind
 
 parts:
-  node:
+  znjs:
     plugin: nodejs
     node-engine: 8.9.1
     source: .
@@ -29,7 +29,7 @@ parts:
     plugin: nil
     source: .empty
     after:
-      - zeronetjs
+      - znjs
     build: |
       #HACK: reset the timestamp of every file
       find $SNAPCRAFT_STAGE -print0 | xargs -0i touch -a -m -t 200001010000.00 {}
