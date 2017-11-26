@@ -1,5 +1,5 @@
 name: zeronet-js
-version: 0.0.1-alpha18
+version: 0.0.1
 summary: ZeroNet in JS
 description: |
   ZeroNet in JavaScript
@@ -19,35 +19,17 @@ apps:
 parts:
   node:
     plugin: nodejs
-    node-engine: 8.4.0
-    source: .empty
+    node-engine: 8.9.1
+    source: .
     build-packages:
       - python
       - g++
       - make
-  source:
-    plugin: nil
-    after:
-      - node
-    source: .
-    build: |
-      set -e
-      bash scripts/tarball.sh
-    install: |
-      set -e
-      TMP=/tmp/zeronet-js-build
-      rm -rf $TMP
-      mkdir -p $TMP/.{npm,node_gyp}
-      npm_config_cache="$TMP/.npm" npm_config_devdir="$TMP/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" npm shrinkwrap
-      node scripts/no-git-deps.js npm-shrinkwrap.json
-      node scripts/no-dev-deps.js npm-shrinkwrap.json > /dev/null
-      npm_config_cache="$TMP/.npm" npm_config_devdir="$TMP/.node-gyp" npm_config_prefix="$SNAPCRAFT_PART_INSTALL" bash scripts/global.sh
-      rm -rf $TMP
   strip-nondeterminism:
     plugin: nil
     source: .empty
     after:
-      - source
+      - zeronetjs
     build: |
       #HACK: reset the timestamp of every file
       find $SNAPCRAFT_STAGE -print0 | xargs -0i touch -a -m -t 200001010000.00 {}
