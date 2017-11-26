@@ -15,19 +15,19 @@
     "./src/bundles/node.js": "./src/bundles/browser.js"
   },
   "dependencies": {
-    "colors": "^1.1.2",
-    "libp2p-tcp": "^0.11.1",
-    "libp2p-websockets": "^0.10.4",
+    "colors": "~1.1.2",
+    "libp2p-tcp": "~0.11.1",
+    "libp2p-websockets": "~0.10.4",
     "merge-recursive": "0.0.3",
-    "mkdirp": "^0.5.1",
-    "mockery": "^2.1.0",
-    "moment": "^2.19.2",
+    "mkdirp": "~0.5.1",
+    "mockery": "~2.1.0",
+    "moment": "~2.19.2",
     "node-bash-title": "0.0.2",
-    "peer-id": "^0.10.2",
-    "zeronet-node": "^0.0.1",
-    "zeronet-storage-fs": "^0.0.2",
-    "zeronet-storage-memory": "^0.0.1",
-    "zeronet-uiserver": "^0.1.0"
+    "peer-id": "~0.10.2",
+    "zeronet-node": "~0.0.1",
+    "zeronet-storage-fs": "~0.0.2",
+    "zeronet-storage-memory": "~0.0.1",
+    "zeronet-uiserver": "~0.1.0"
   },
   "devDependencies": {
     "app-module-path": "^2.2.0",
@@ -55,7 +55,6 @@
     "debug": "bash debug/debug.sh",
     "docs": "node docs-gen/bin/document",
     "docs:mod": "node docs-gen/bin/",
-    "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "pkg": "bash scripts/pkg.sh",
     "start": "node zeronet.js",
     "lint": "aegir lint",
@@ -66,7 +65,7 @@
     "release-minor": "aegir release --type minor",
     "release-major": "aegir release --type major",
     "coverage": "aegir coverage",
-    "coverage-publish": "aegir-coverage publish"
+    "coverage-publish": "aegir coverage -u"
   },
   "keywords": [
     "zeronet",
