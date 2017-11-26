@@ -1,6 +1,10 @@
 sudo: false
 language: node_js
 
+os:
+  - linux
+  - osx
+
 matrix:
   include:
   - node_js: 6
@@ -13,8 +17,8 @@ matrix:
 script:
   - npm run lint
   - npm run coverage
-  - '[ ! -e .do_interop ] || bash scripts/interop-test.sh'
-  - npm run test
+  - '[ ! -e .do_interop ] || bash tools/scripts/interop-test.sh'
+  - npm run test -- -t node
 
 before_script:
   - export DISPLAY=:99.0
@@ -24,7 +28,7 @@ before_script:
 
 after_success:
   - npm run coverage-publish
-  - '[ ! -e .do_pkg ] || bash scripts/pkg.sh'
+  - '[ ! -e .do_pkg ] || bash tools/scripts/pkg.sh'
 
 addons:
   firefox: 'latest'

@@ -4,7 +4,7 @@
   "description": "ZeroNet JS",
   "main": "src/index.js",
   "bin": {
-    "zeronet": "zeronet.js"
+    "zeronet": "src/bin.js"
   },
   "directories": {
     "test": "test",
@@ -41,8 +41,8 @@
     "mock-fs": "^4.4.2",
     "nyc": "^11.3.0",
     "pkg": "^4.3.0-beta.1",
-    "pkg-fetch-mkg": "^2.3.83",
-    "pkg-natives": "^0.1.1",
+    "pkg-fetch": "^2.5.3",
+    "pkg-natives": "^0.1.2",
     "sinon": "^4.1.2",
     "sinon-chai": "^2.14.0",
     "aegir": "^12.2.0"

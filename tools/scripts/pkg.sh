@@ -19,12 +19,12 @@ if node -v | grep "^v8" > /dev/null; then
 
   rm -rf .pkg
   mkdir .pkg
-  for f in package* bootstrappers.js zeronet.js lib; do cp -r $f .pkg; done
+  for f in package* src; do cp -r $f .pkg; done
   #ver=$(echo $(cat package.json | grep "version" | sed "s|\"||g" | sed "s|  ||g" | grep " .*" -o) | sed "s|,||g")
   cd .pkg
   for f in package*; do sed -r 's|"([a-z-]+)": "file:(.*)"|"\1": "file:../\2.tar.gz"|g' -i $f; done
   npm i --production
-  v="8.3.0" #Change with every new node version if that version gets available in pkg
+  v="8.9.0" #Change with every new node version if that version gets available in pkg
   t=$(node -e 'switch(process.platform){case"win32":"win";break;case"darwin":"macos";break;default:process.platform}' -p)
   target="node$v-$t-x64"
   tt=$(echo "$target" | sed "s|-| |g")
@@ -40,7 +40,7 @@ if node -v | grep "^v8" > /dev/null; then
   for f in $(dir -w 0); do
     [ "$f" == "$bin" ] || rm -rf $f
   done
-  RUNINCWD=1 TESTOK=1 ./$bin
+  RUNINCWD=1 TESTOK=1 DEBUG=pkg-natives ./$bin
   rm -rf .zeronet
   echo "Created $bin!"
 else
