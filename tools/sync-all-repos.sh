@@ -26,7 +26,7 @@ for r in $repos; do
     git add $f
   done
 
-  node ../../sync-pkg-json $PWD/package.json
+  node ../../sync-pkg-json "$PWD/package.json" "$r"
   git add package.json
 
   git commit -m "misc: Sync repo files"

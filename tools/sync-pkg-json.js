@@ -1,4 +1,5 @@
 const pkg = process.argv[2]
+const repo = process.argv[3]
 const json = require(pkg)
 
 console.log('Updating', pkg)
@@ -35,6 +36,20 @@ if (!json.devDependencies) {
 
 if (!json.devDependencies.aegir) {
   json.devDependencies.aegir = '^12.2.0'
+}
+
+if (repo) {
+  const tmp = {
+    'repository': {
+      'type': 'git',
+      'url': 'git+https://github.com/ZeroNetJS/' + repo + '.git'
+    },
+    'bugs': {
+      'url': 'https://github.com/ZeroNetJS/' + repo + '/issues'
+    },
+    'homepage': 'https://github.com/ZeroNetJS/' + repo + '#readme'
+  }
+  Object.assign(json, tmp)
 }
 
 json.directories = {
