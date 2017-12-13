@@ -2,14 +2,15 @@
 
 zeronet
   + zeronet-node*
-    + zeronet-swarm*
-      + zeronet-protocol*
-        + zeronet-client*
+    + zeronet-swarm
+      + zeronet-protocol
+        + zeronet-client
     + zeronet-zite*+
     + zeronet-fileserver
+  + zeronet-crypto
   + zeronet-storage-{fs,memory}
 
 ### Explain
 
- - \* = Requires duct tape (aka zeronet-common)
+ - \* = Still requires zeronet-common (is being deperacted)
  - \+ = Will be split up
