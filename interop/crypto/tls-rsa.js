@@ -37,7 +37,7 @@ before(cb => {
 it('should handshake with tls-rsa', (cb) => {
   node.swarm.dial(multiaddr('/ip4/127.0.0.1/tcp/13344'), (e, c) => {
     if (e) return cb(e)
-    if (c.handshakeData.commonCrypto() != 'tls-rsa') return cb(new Error('Failing: Wrong crypto used ' + c.handshakeData.commonCrypto() + ' != tls-rsa'))
+    if (c.handshake.local.commonCrypto() != 'tls-rsa') return cb(new Error('Failing: Wrong crypto used ' + c.handshake.local.commonCrypto() + ' != tls-rsa'))
     c.cmd.ping({}, cb)
   })
 }).timeout(20000)
@@ -45,7 +45,7 @@ it('should handshake with tls-rsa', (cb) => {
 it('should handshake with tls-rsa as server', (cb) => {
   ee.once('client', (e, c) => {
     if (e) return cb(e)
-    if (c.handshakeData.commonCrypto() != 'tls-rsa') return cb(new Error('Failing: Wrong crypto used ' + c.handshakeData.commonCrypto() + ' != tls-rsa'))
+    if (c.handshake.local.commonCrypto() != 'tls-rsa') return cb(new Error('Failing: Wrong crypto used ' + c.handshake.local.commonCrypto() + ' != tls-rsa'))
     cb()
   })
   it.zero(['peerCmd', it.zhost, '25335', 'ping'])
