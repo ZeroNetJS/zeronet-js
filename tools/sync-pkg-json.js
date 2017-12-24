@@ -26,8 +26,18 @@ targets.forEach(target => {
 
 for (const p in t) { json.scripts[p] = t[p] }
 
+const vRe = /.*([0-9]+)\.([0-9]+)\.([0-9]+)/
+
 for (const pkg in json.dependencies) {
-  json.dependencies[pkg] = json.dependencies[pkg].replace('^', '~')
+  let v = json.dependencies[pkg]
+  const vs = v.match(vRe)
+  console.log(v, vs)
+  if (vs) {
+    v = vs[1] + '.' + vs[2] + '.' + vs[3]
+    if (parseInt(vs[2], 10)) v = '~' + vs[1] + '.' + vs[2] + '.' + vs[3]
+    if (parseInt(vs[1], 10)) v = '^' + vs[1] + '.' + vs[2] + '.' + vs[3]
+    json.dependencies[pkg] = v
+  }
 }
 
 if (!json.devDependencies) {
@@ -35,7 +45,7 @@ if (!json.devDependencies) {
 }
 
 if (!json.devDependencies.aegir) {
-  json.devDependencies.aegir = '^12.2.0'
+  json.devDependencies.aegir = '^12.3.0'
 }
 
 if (repo) {
