@@ -7,6 +7,8 @@ require('colors')
 let node
 let dwait = require('./misc/hacky-logs.js')
 
+const Peers = require('./peers')
+
 const fs = require('fs')
 const path = require('path')
 const mkdirp = require('mkdirp')
@@ -42,17 +44,7 @@ const defaults = {
       transports: [
         new TCP()
       ],
-      trackers: [
-        // "zero://boot3rdez4rzn36x.onion:15441",
-        // "zero://boot.zeronet.io#f36ca555bee6ba216b14d10f38c16f7769ff064e0e37d887603548cc2e64191d:15441",
-        'udp://tracker.coppersurfer.tk:6969',
-        'udp://tracker.leechers-paradise.org:6969',
-        'udp://9.rarbg.com:2710',
-        'http://tracker.opentrackr.org:1337/announce',
-        'http://explodie.org:6969/announce',
-        'http://tracker1.wasabii.com.tw:6969/announce'
-        // "http://localhost:25534/announce"
-      ],
+      trackers: Peers.trackers,
       crypto: [
         require('zeronet-crypto').secio,
         require('zeronet-crypto').tls
@@ -71,10 +63,10 @@ const defaults = {
         new TCP(),
         new WS()
       ],
-      bootstrap: require('./bootstrappers').libp2p,
+      bootstrap: Peers.bootstrap_libp2p,
       mdns: true,
       dht: false,
-      wstar: require('./bootstrappers').wstar,
+      wstar: Peers.wstar,
       wstar_ignore: true
     }
   },

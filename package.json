@@ -24,7 +24,7 @@
     "moment": "~2.20.1",
     "node-bash-title": "0.0.2",
     "peer-id": "~0.10.4",
-    "zeronet-node": "~0.0.3",
+    "zeronet-node": "~0.0.4",
     "zeronet-storage-fs": "~0.0.2",
     "zeronet-storage-memory": "~0.0.1",
     "zeronet-uiserver": "~0.1.0"

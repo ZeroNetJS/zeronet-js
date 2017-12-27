@@ -3,6 +3,7 @@
 const Bundler = require('./bundle')
 const TCP = require('libp2p-tcp')
 const WS = require('libp2p-websockets')
+const Peers = require('../peers')
 module.exports = Bundler({
   name: 'ZeroNetNodeJSBundle',
   modules: {
@@ -16,21 +17,13 @@ module.exports = Bundler({
         transports: [
           new TCP()
         ],
-        trackers: [
-          // "zero://boot3rdez4rzn36x.onion:15441",
-          // "zero://boot.zeronet.io#f36ca555bee6ba216b14d10f38c16f7769ff064e0e37d887603548cc2e64191d:15441",
-          'udp://tracker.coppersurfer.tk:6969',
-          'udp://tracker.leechers-paradise.org:6969',
-          'udp://9.rarbg.com:2710',
-          'http://tracker.opentrackr.org:1337/announce',
-          'http://explodie.org:6969/announce',
-          'http://tracker1.wasabii.com.tw:6969/announce'
-          // "http://localhost:25534/announce"
-        ]/*,
+        trackers: Peers.trackers/*,
         nat: false */
       },
       libp2p: {
         listen: [],
+        bootstrap: Peers.bootstrap_libp2p,
+        wstar: Peers.wstar,
         transports: [
           new TCP(),
           new WS()
