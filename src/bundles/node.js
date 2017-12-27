@@ -4,6 +4,7 @@ const Bundler = require('./bundle')
 const TCP = require('libp2p-tcp')
 const WS = require('libp2p-websockets')
 const Peers = require('../peers')
+const crypto = require('zeronet-crypto')
 module.exports = Bundler({
   name: 'ZeroNetNodeJSBundle',
   modules: {
@@ -13,6 +14,10 @@ module.exports = Bundler({
   override: {
     swarm: {
       zero: {
+        crypto: [
+          crypto.secio,
+          crypto.tls
+        ],
         listen: [],
         transports: [
           new TCP()

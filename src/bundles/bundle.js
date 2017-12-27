@@ -4,6 +4,7 @@ const merge = require('merge-recursive').recursive
 const ZeroNet = require('zeronet-node')
 const MEM = require('zeronet-storage-memory')
 const clone = require('clone')
+const crypto = require('zeronet-crypto')
 
 const Id = require('peer-id')
 
@@ -19,7 +20,7 @@ module.exports = function ZeroNetBundler (opt) {
       zero: {
         listen: [],
         crypto: [
-          require('zeronet-crypto').secio
+          crypto.secio
         ]
       },
       libp2p: {
