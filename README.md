@@ -1,5 +1,5 @@
-[![Waffle.io - Columns and their card count](https://badge.waffle.io/ZeroNetJS/zeronet-js.png?columns=all)](https://waffle.io/ZeroNetJS/zeronet-js?utm_source=badge)
 # ZeroNet JS
+[![Waffle.io board](https://badge.waffle.io/ZeroNetJS/zeronet-js.png?columns=all)](https://waffle.io/ZeroNetJS/zeronet-js?utm_source=badge)
 [![Build Status](https://travis-ci.org/ZeroNetJS/zeronet-js.svg?branch=master)](https://travis-ci.org/ZeroNetJS/zeronet-js)
 [![Build status](https://ci.appveyor.com/api/projects/status/u5sbs9ofetft3d8c/branch/master?svg=true)](https://ci.appveyor.com/project/mkg20001/zeronet-js/branch/master)
 [![codecov](https://codecov.io/gh/ZeroNetJS/zeronet-js/branch/master/graph/badge.svg)](https://codecov.io/gh/ZeroNetJS/zeronet-js)
