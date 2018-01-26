@@ -24,13 +24,7 @@ module.exports = function ZeroNetBundler (opt) {
         ]
       },
       libp2p: {
-        relay: {
-          enabled: true,
-          hop: {
-            enabled: true,
-            active: false // passive
-          }
-        }
+        circuit: true
       }
     },
     modules: {},

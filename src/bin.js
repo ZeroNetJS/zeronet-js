@@ -19,6 +19,7 @@ const ZeroNet = require('zeronet-node')
 const FS = require('zeronet-storage-fs')
 
 const Common = require('./misc/common')
+const Swarm = require('zeronet-swarm')
 
 let dir = require('./misc/storage-dir')()
 
@@ -36,6 +37,7 @@ const defaults = {
     uiserver: require('zeronet-uiserver'),
     nat: require('zeronet-swarm/src/zero/nat')
   },
+  swarmModules: Swarm.modules.all(),
   swarm: {
     zero: {
       listen: [

@@ -15,18 +15,19 @@
     "./src/bundles/node.js": "./src/bundles/browser.js"
   },
   "dependencies": {
-    "colors": "~1.1.2",
-    "libp2p-tcp": "~0.11.1",
+    "colors": "^1.1.2",
+    "libp2p-tcp": "~0.11.2",
     "libp2p-websockets": "~0.10.4",
     "merge-recursive": "0.0.3",
     "mkdirp": "~0.5.1",
-    "mockery": "~2.1.0",
-    "moment": "~2.20.1",
+    "mockery": "^2.1.0",
+    "moment": "^2.20.1",
     "node-bash-title": "0.0.2",
     "peer-id": "~0.10.4",
-    "zeronet-node": "~0.0.4",
-    "zeronet-storage-fs": "~0.0.2",
-    "zeronet-storage-memory": "~0.0.1",
+    "zeronet-node": "0.0.6",
+    "zeronet-relay": "0.0.4",
+    "zeronet-storage-fs": "0.0.2",
+    "zeronet-storage-memory": "0.0.1",
     "zeronet-uiserver": "~0.1.0"
   },
   "devDependencies": {
@@ -35,17 +36,15 @@
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
     "extract-comments": "^0.10.1",
-    "jsdoc-to-markdown": "^3.0.3",
+    "jsdoc-to-markdown": "^4.0.1",
     "gene-rator": "0.0.1-pre",
-    "mocha": "^4.0.1",
     "mock-fs": "^4.4.2",
-    "nyc": "^11.4.1",
-    "pkg": "^4.3.0-beta.5",
+    "pkg": "^4.3.0",
     "pkg-fetch": "^2.5.4",
     "pkg-natives": "^0.1.2",
-    "sinon": "^4.1.3",
+    "sinon": "^4.2.1",
     "sinon-chai": "^2.14.0",
-    "aegir": "^12.3.0"
+    "aegir": "^12.4.0"
   },
   "scripts": {
     "test": "aegir test",

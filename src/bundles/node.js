@@ -4,6 +4,7 @@ const Bundler = require('./bundle')
 const TCP = require('libp2p-tcp')
 const WS = require('libp2p-websockets')
 const Peers = require('../peers')
+const Swarm = require('zeronet-swarm')
 const crypto = require('zeronet-crypto')
 module.exports = Bundler({
   name: 'ZeroNetNodeJSBundle',
@@ -12,6 +13,7 @@ module.exports = Bundler({
     nat: require('zeronet-swarm/src/zero/nat')
   },
   override: {
+    swarmModules: Swarm.modules.all(), // enable upgrading
     swarm: {
       zero: {
         crypto: [
