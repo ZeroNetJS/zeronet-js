@@ -14,7 +14,7 @@ module.exports = {
 
   ],
   relay: [
-    '/dnsaddr/znjs-relay.servep2p.com/tcp/443/wss/p2p-znjs-relay'
+    '/dnsaddr/znjs-relay.servep2p.com/tcp/443/wss/p2p-znjs-relay/ipfs/QmVdTP7ve4AhrYMzQALEtbXojAYsZAMXTTwyJq8w46CosQ'
   ],
   trackers: [
     // "zero://boot3rdez4rzn36x.onion:15441", // TODO: need onion transport

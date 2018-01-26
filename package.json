@@ -64,7 +64,8 @@
     "release-minor": "aegir release --type minor",
     "release-major": "aegir release --type major",
     "coverage": "aegir coverage",
-    "coverage-publish": "aegir coverage -u"
+    "coverage-publish": "aegir coverage -u",
+    "postinstall": "npm r bufferutil"
   },
   "keywords": [
     "zeronet",
