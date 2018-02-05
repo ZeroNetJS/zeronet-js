@@ -1,1 +1,1 @@
-zeronet-client zeronet-common zeronet-crypto zeronet-fallaby zeronet-fileserver zeronet-ipld zeronet-node zeronet-protocol zeronet-storage-fs zeronet-storage-memory zeronet-swarm zeronet-uiserver zeronet-zite zeronet-relay
+zeronet-client zeronet-common zeronet-crypto zeronet-fallaby zeronet-fileserver zeronet-ipld zeronet-node zeronet-protocol zeronet-storage-fs zeronet-storage-memory zeronet-swarm zeronet-uiserver zeronet-zite zeronet-relay zeronet-zeroframe zeronet-auth

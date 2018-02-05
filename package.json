@@ -24,6 +24,8 @@
     "moment": "^2.20.1",
     "node-bash-title": "0.0.2",
     "peer-id": "~0.10.4",
+    "raven": "^2.4.0",
+    "raven-js": "^3.22.1",
     "zeronet-node": "0.0.6",
     "zeronet-relay": "0.0.4",
     "zeronet-storage-fs": "0.0.2",

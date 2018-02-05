@@ -45,7 +45,7 @@ if (!json.devDependencies) {
 }
 
 if (!json.devDependencies.aegir) {
-  json.devDependencies.aegir = '^12.3.0'
+  json.devDependencies.aegir = '^12.4.0'
 }
 
 if (repo) {
