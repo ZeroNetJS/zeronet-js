@@ -16,7 +16,7 @@ if (process.env.SNAP && !process.env.SNAP_REVISION.startsWith('x')) { // detect 
 } else if (typeof window === 'object' && window.location.host == 'zeronetjs.github.io') { // detect web production
   log('setting up sentry for web')
   Raven.config('https://f2a666530dc342d3994e3a91aa7ea903@sentry.zion.host/5').install()
-} else if (process.argv[1].matches(/^\/usr.*\/bin\/zeronet$/) && __dirname.matches(/^\/usr\/.*\/node_modules\/.+$/)) {
+} else if (process.argv && process.argv[1] && process.argv[1].matches(/^\/usr.*\/bin\/zeronet$/) && __dirname.matches(/^\/usr\/.*\/node_modules\/.+$/)) {
   log('setting up sentry for nodejs-cli')
   setup()
 } else {
