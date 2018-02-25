@@ -48,8 +48,8 @@ const defaults = {
       ],
       trackers: Peers.trackers,
       crypto: [
-        require('zeronet-crypto').secio,
-        require('zeronet-crypto').tls
+        require('zeronet-crypto').transport.secio,
+        require('zeronet-crypto').transport.tls
       ],
       nat: true
     },
