@@ -19,9 +19,8 @@ module.exports = Bundler({
       },
       libp2p: {
         listen: [],
-        wstar: [],
+        wstar: Peers.wstar,
         wstar_ignore: true,
-        // wstar: Peers.wstar, TODO: re-enable when new ws-star comes out
         transports: [
           new WS()
         ]

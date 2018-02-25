@@ -17,8 +17,8 @@ module.exports = Bundler({
     swarm: {
       zero: {
         crypto: [
-          crypto.secio,
-          crypto.tls
+          crypto.transport.secio,
+          crypto.transport.tls
         ],
         listen: [],
         transports: [

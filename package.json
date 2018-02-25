@@ -16,37 +16,37 @@
   },
   "dependencies": {
     "colors": "^1.1.2",
-    "libp2p-tcp": "~0.11.2",
-    "libp2p-websockets": "~0.10.4",
+    "libp2p-tcp": "~0.11.6",
+    "libp2p-websockets": "~0.10.5",
     "merge-recursive": "0.0.3",
     "mkdirp": "~0.5.1",
     "mockery": "^2.1.0",
     "moment": "^2.20.1",
     "node-bash-title": "0.0.2",
-    "peer-id": "~0.10.4",
-    "raven": "^2.4.0",
-    "raven-js": "^3.22.1",
-    "zeronet-node": "0.0.6",
-    "zeronet-relay": "0.0.4",
+    "peer-id": "~0.10.6",
+    "raven": "^2.4.1",
+    "raven-js": "^3.22.3",
+    "zeronet-node": "0.0.7",
+    "zeronet-relay": "0.0.6",
     "zeronet-storage-fs": "0.0.2",
     "zeronet-storage-memory": "0.0.1",
-    "zeronet-uiserver": "~0.1.0"
+    "zeronet-uiserver": "~0.1.1"
   },
   "devDependencies": {
     "app-module-path": "^2.2.0",
     "bl": "^1.2.1",
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
-    "extract-comments": "^0.10.1",
+    "extract-comments": "^1.0.0",
     "jsdoc-to-markdown": "^4.0.1",
     "gene-rator": "0.0.1-pre",
     "mock-fs": "^4.4.2",
     "pkg": "^4.3.0",
     "pkg-fetch": "^2.5.4",
     "pkg-natives": "^0.1.2",
-    "sinon": "^4.2.1",
+    "sinon": "^4.4.2",
     "sinon-chai": "^2.14.0",
-    "aegir": "^12.4.0"
+    "aegir": "^13.0.5"
   },
   "scripts": {
     "test": "aegir test",
@@ -66,8 +66,7 @@
     "release-minor": "aegir release --type minor",
     "release-major": "aegir release --type major",
     "coverage": "aegir coverage",
-    "coverage-publish": "aegir coverage -u",
-    "postinstall": "npm r bufferutil"
+    "coverage-publish": "aegir coverage -u"
   },
   "keywords": [
     "zeronet",

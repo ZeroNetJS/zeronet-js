@@ -20,7 +20,7 @@ module.exports = function ZeroNetBundler (opt) {
       zero: {
         listen: [],
         crypto: [
-          crypto.secio
+          crypto.transport.secio
         ]
       },
       libp2p: {
