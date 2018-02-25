@@ -12,7 +12,8 @@
     "lib": "src"
   },
   "browser": {
-    "./src/bundles/node.js": "./src/bundles/browser.js"
+    "./src/bundles/node.js": "./src/bundles/browser.js",
+    "raven": "raven-js"
   },
   "dependencies": {
     "bunyan": "^1.8.12",
