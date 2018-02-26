@@ -20,12 +20,12 @@ module.exports = {
     // "zero://boot3rdez4rzn36x.onion:15441", TODO: tor
     // "zero://zero.booth.moe#f36ca555bee6ba216b14d10f38c16f7769ff064e0e37d887603548cc2e64191d:15441", TODO: figure out what the hashtag means
     // "zero://216.189.144.82:15441", TODO: https://github.com/ZeroNetJS/zeronet-tracker/issues/4
-    'udp://tracker.coppersurfer.tk:6969',
-    'udp://tracker.leechers-paradise.org:6969',
-    'udp://9.rarbg.com:2710',
-    'http://tracker.opentrackr.org:1337/announce',
-    'http://explodie.org:6969/announce',
-    'http://retracker.spark-rostov.ru:80/announce'
+    "udp://tracker.coppersurfer.tk:6969",  // DE
+    "udp://tracker.leechers-paradise.org:6969",  // NL
+    "udp://9.rarbg.com:2710",  // FR
+    "http://tracker.city9x.com:2710/announce",  // US/LA
+    "http://0d.kebhana.mx:443/announce",  // FR
+    "http://retracker.spark-rostov.ru:80/announce"  // RU
     // "http://localhost:25534/announce" // DEV ONLY
   ]
 }
