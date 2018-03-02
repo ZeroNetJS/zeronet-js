@@ -25,3 +25,5 @@ parts:
       - python
       - g++
       - make
+    build: |
+      rm -rf .git/hooks
