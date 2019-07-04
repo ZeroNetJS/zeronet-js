@@ -1,0 +1,876 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.13.5
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-LODASH-450202:
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-relay > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-storage-fs > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - libp2p-tcp > ip-address > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-relay > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-railing > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-relay > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > ip-address > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-railing > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > libp2p-tcp > ip-address > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > nat-upnp > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-railing > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-mplex > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-relay > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-railing > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-relay > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-mdns > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > interface-datastore > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > ip-address > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > ip-address > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-railing > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-mdns > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > libp2p-record > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-mdns > libp2p-tcp > ip-address > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-book > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-relay > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-mdns > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-railing > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-relay > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-floodsub > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > multistream-select > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-relay > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > libp2p-record > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-railing > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-railing > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-mdns > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-multiplex > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > nat-upnp > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-identify > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-relay > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-book > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-mdns > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > libp2p-record > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-railing > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > interface-datastore > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-mdns > libp2p-tcp > ip-address > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > libp2p-record > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > multistream-select > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > multistream-select > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > multistream-select > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-relay > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-railing > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-mdns > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > libp2p-record > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-book > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-mdns > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-railing > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-book > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > libp2p-record > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-floodsub > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-ping > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > ip-address > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-mdns > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-railing > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-identify > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-railing > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-railing > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-railing > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-floodsub > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-book > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-ping > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-floodsub > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > libp2p-record > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-book > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-ping > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > libp2p-record > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-mdns > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-railing > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-book > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-identify > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > libp2p-record > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-ping > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-mdns > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > multistream-select > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-identify > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-book > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > multistream-select > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > multistream-select > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-mdns > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-railing > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-mdns > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-mdns > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-identify > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-identify > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > libp2p-record > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-book > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-identify > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-railing > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-mdns > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-book > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > multistream-select > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-ping > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-book > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-railing > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-mdns > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > libp2p-record > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-book > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-railing > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-mdns > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-book > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-identify > peer-info > peer-id > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > libp2p-record > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-secio > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-railing > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-mdns > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-kad-dht > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-mdns > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-railing > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-ping > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-book > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-mdns > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-identify > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-identify > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-book > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-railing > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-identify > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-mdns > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-uiserver > zeronet-zite > zeronet-crypto > libp2p-secio > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > libp2p-record > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-kad-dht > libp2p-record > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-identify > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-book > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-book > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > peer-book > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-zite > zeronet-crypto > libp2p-secio > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > peer-info > peer-id > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-secio > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-identify > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-railing > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-book > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-identify > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-circuit > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-identify > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > peer-info > peer-id > libp2p-crypto > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-swarm > libp2p-identify > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > peer-book > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-identify > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-swarm > libp2p > libp2p-switch > libp2p-circuit > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-identify > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-identify > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p-websocket-star-multi > libp2p-websocket-star > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-identify > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-circuit > peer-info > peer-id > libp2p-crypto > multihashing-async > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'
+    - zeronet-node > zeronet-tracker > zeronet-swarm > libp2p > libp2p-swarm > libp2p-identify > peer-info > peer-id > libp2p-crypto > libp2p-crypto-secp256k1 > async > lodash:
+        patched: '2019-07-04T07:38:57.972Z'

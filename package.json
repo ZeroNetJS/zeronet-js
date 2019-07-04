@@ -32,7 +32,8 @@
     "zeronet-relay": "0.0.6",
     "zeronet-storage-fs": "0.0.2",
     "zeronet-storage-memory": "0.0.1",
-    "zeronet-uiserver": "~0.1.2"
+    "zeronet-uiserver": "~0.1.2",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "app-module-path": "^2.2.0",
@@ -68,7 +69,9 @@
     "release-minor": "aegir release --type minor",
     "release-major": "aegir release --type major",
     "coverage": "aegir coverage",
-    "coverage-publish": "aegir coverage -u"
+    "coverage-publish": "aegir coverage -u",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "keywords": [
     "zeronet",
@@ -94,5 +97,6 @@
   "bugs": {
     "url": "https://github.com/ZeroNetJS/zeronet-js/issues"
   },
-  "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme"
+  "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
+  "snyk": true
 }
