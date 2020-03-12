@@ -21,7 +21,7 @@
     "libp2p-tcp": "~0.11.6",
     "libp2p-websockets": "~0.10.5",
     "merge-recursive": "0.0.3",
-    "mkdirp": "~0.5.1",
+    "mkdirp": "~1.0.0",
     "mockery": "^2.1.0",
     "moment": "^2.20.1",
     "node-bash-title": "0.0.2",
