@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "app-module-path": "^2.2.0",
-    "bl": "^1.2.1",
+    "bl": "^4.0.3",
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
     "extract-comments": "^1.0.0",
